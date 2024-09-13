@@ -9,8 +9,14 @@ CQL package extends your base payload configuration with predefined configuratio
 Add this code in your `payload.config.ts` file to get a base configuration
 
 ```ts
+import path from "path";
+import { fileURLToPath } from "url";
 import { cqlConfig } from "cql";
 import { buildConfig } from "payload";
+
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+const finalPath = path.resolve(dirname, "payload-types.ts");
 
 // Add the configuration you want!
 const coreConfig = cqlConfig({
