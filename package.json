@@ -27,8 +27,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "swc ./src -d ./dist --config-file .swcrc --source-maps --strip-leading-paths",
-    "build:types": "tsc --emitDeclarationOnly --outDir ./dist"
+    "build": "swc ./src -d ./dist --config-file .swcrc --source-maps --strip-leading-paths && tsc --emitDeclarationOnly --outDir ./dist"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "3.0.0-beta.91",

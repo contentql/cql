@@ -19,7 +19,7 @@ const dirname = path.dirname(filename);
 const finalPath = path.resolve(dirname, "payload-types.ts");
 
 // Add the configuration you want!
-const coreConfig = cqlConfig({
+export default cqlConfig({
   dbURL: process.env.DATABASE_URI,
   s3: {
     bucket: process.env.S3_BUCKET,
@@ -40,6 +40,4 @@ const coreConfig = cqlConfig({
     defaultFromName: process.env.RESEND_SENDER_NAME,
   },
 });
-
-export default buildConfig(coreConfig);
 ```

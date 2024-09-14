@@ -1,4 +1,4 @@
-import { type Config as PayloadConfig } from "payload";
+import { type Config as PayloadConfig, buildConfig } from "payload";
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { slateEditor } from "@payloadcms/richtext-slate";
@@ -34,8 +34,34 @@ export interface CQLConfigType extends Partial<PayloadConfig> {
   resend?: ResendType;
 }
 
+/**
+ * Configures and builds a ContentQL configuration object.
+ * This function extends the Payload CMS configuration by providing default collections
+ * and you can pass all parameters that Payload config accepts.
+ *
+ * @example
+ * // This is an example of a cql configuration
+ * // By default if dbURL is not specified then the default will 'default-db'
+ * // Default payload secret key is 'TESTING'
+ * export default cqlConfig({
+ *   dbURL: "mongodb://mydb:27017/default-db",
+ *   s3: {
+ *     bucket: "my-bucket",
+ *     accessKeyId: "ACCESS_KEY",
+ *     secretAccessKey: "SECRET_KEY",
+ *     region: "us-west-2",
+ *     endpoint: "https://s3.amazonaws.com"
+ *   },
+ *   resend: {
+ *     apiKey: "RESEND_API_KEY",
+ *     defaultFromAddress: "noreply@example.com",
+ *     defaultFromName: "My App"
+ *   }
+ * });
+ */
+
 const cqlConfig = ({
-  dbURL = "mongodb://localhost:27017/defaultDB",
+  dbURL = "mongodb://localhost:27017/default-db",
   cors = ["http://localhost:3000"],
   csrf = ["http://localhost:3000"],
   s3,
@@ -46,7 +72,7 @@ const cqlConfig = ({
   globals = [],
   resend,
   ...config
-}: CQLConfigType): PayloadConfig => {
+}: CQLConfigType) => {
   const plugins: CQLConfigType["plugins"] = config.plugins || [];
 
   if (s3) {
@@ -70,7 +96,7 @@ const cqlConfig = ({
     );
   }
 
-  return {
+  return buildConfig({
     ...config,
     admin: {
       ...admin,
@@ -98,7 +124,7 @@ const cqlConfig = ({
           defaultFromName: resend.defaultFromName,
         })
       : undefined,
-  };
+  });
 };
 
 export default cqlConfig;
