@@ -1,3 +1,6 @@
 node_modules
 dist
 *.tgz
+
+# adding vs code to git igonre
+.vscode/*
