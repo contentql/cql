@@ -1,6 +1,6 @@
-# CQL
+# ContentQL Core
 
-CQL package extends your base payload configuration with predefined configuration
+`@contentql/core` package extends your base payload configuration with predefined configuration
 
 ## Getting Started
 
