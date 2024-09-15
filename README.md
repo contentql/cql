@@ -14,6 +14,11 @@ import { fileURLToPath } from "url";
 import { cqlConfig } from "cql";
 import { buildConfig } from "payload";
 
+// payload block-configuration files
+import DetailsConfig from "@/payload/blocks/Details/config";
+import HomeConfig from "@/payload/blocks/Home/config";
+import ListConfig from "@/payload/blocks/List/config";
+
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const finalPath = path.resolve(dirname, "payload-types.ts");
@@ -39,5 +44,7 @@ export default cqlConfig({
     defaultFromAddress: process.env.RESEND_SENDER_EMAIL,
     defaultFromName: process.env.RESEND_SENDER_NAME,
   },
+  // pass the configuration to blocks field these will appear in pages collection in admin panel
+  blocks: [HomeConfig, DetailsConfig, ListConfig],
 });
 ```
