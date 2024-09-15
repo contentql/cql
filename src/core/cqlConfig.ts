@@ -1,4 +1,4 @@
-import { type Config as PayloadConfig, buildConfig } from "payload";
+import { type Config as PayloadConfig, buildConfig, type Block } from "payload";
 import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { slateEditor } from "@payloadcms/richtext-slate";
@@ -32,6 +32,7 @@ export interface CQLConfigType extends Partial<PayloadConfig> {
   dbURL: string;
   s3?: S3Type;
   resend?: ResendType;
+  blocks?: Block[];
 }
 
 /**
@@ -71,6 +72,7 @@ const cqlConfig = ({
   collections = [],
   globals = [],
   resend,
+  blocks,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType["plugins"] = config.plugins || [];
@@ -106,7 +108,7 @@ const cqlConfig = ({
         ...(admin.meta || {}),
       },
     },
-    collections: [Users, Tags, Blogs, Media, Pages, ...collections],
+    collections: [Users, Tags, Blogs, Media, Pages({ blocks }), ...collections],
     globals: [siteSettings, ...globals],
     db: mongooseAdapter({
       url: dbURL,
