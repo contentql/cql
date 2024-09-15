@@ -50,7 +50,7 @@ const slugField: SlugField = (fieldToUse, overrides = {}) => {
         },
         components: {
           Field: {
-            path: 'cql-core/client#CustomSlugField',
+            path: '@contentql/core/client#CustomSlugField',
             clientProps: {
               fieldToUse: String(fieldToUse),
             },

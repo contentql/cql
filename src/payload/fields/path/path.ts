@@ -43,7 +43,7 @@ const pathField: PathField = (overrides = {}) =>
       admin: {
         position: 'sidebar',
         components: {
-          Field: 'cql-core/client#CustomPathField',
+          Field: '@contentql/core/client#CustomPathField',
         },
       },
     },
