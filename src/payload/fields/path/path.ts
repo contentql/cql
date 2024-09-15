@@ -1,8 +1,8 @@
-import deepmerge from "deepmerge";
-import type { Field } from "payload";
+import deepmerge from 'deepmerge';
+import type { Field } from 'payload';
 
-import { generateAndValidatePath } from "./hooks/generateAndValidatePath.js";
-import { PathField } from "./types.js";
+import { generateAndValidatePath } from './hooks/generateAndValidatePath.js';
+import { PathField } from './types.js';
 
 /**
  * Creates a configuration object for a "path" field in Payload CMS with optional overrides.
@@ -32,22 +32,22 @@ import { PathField } from "./types.js";
 const pathField: PathField = (overrides = {}) =>
   deepmerge<Field, Partial<Field>>(
     {
-      type: "text",
-      name: "path",
+      type: 'text',
+      name: 'path',
       unique: true,
       index: true,
-      label: "Path",
+      label: 'Path',
       hooks: {
         beforeValidate: [generateAndValidatePath],
       },
       admin: {
-        position: "sidebar",
+        position: 'sidebar',
         components: {
-          Field: "cql/client#CustomPathField",
+          Field: 'cql-core/client#CustomPathField',
         },
       },
     },
-    overrides
+    overrides,
   );
 
 export default pathField;

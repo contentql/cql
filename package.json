@@ -1,7 +1,7 @@
 {
-  "name": "cql",
+  "name": "cql-core",
   "description": "CQL package extends your base payload configuration with predefined configuration",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "type": "module",
   "license": "MIT",
   "keywords": [
