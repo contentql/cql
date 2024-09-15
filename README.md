@@ -11,8 +11,7 @@ Add this code in your `payload.config.ts` file to get a base configuration
 ```ts
 import path from "path";
 import { fileURLToPath } from "url";
-import { cqlConfig } from "cql";
-import { buildConfig } from "payload";
+import { cqlConfig } from "@contentql/core";
 
 // payload block-configuration files
 import DetailsConfig from "@/payload/blocks/Details/config";
@@ -23,7 +22,7 @@ const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
 const finalPath = path.resolve(dirname, "payload-types.ts");
 
-// Add the configuration you want!
+// Add the extra payload configuration you want!
 export default cqlConfig({
   dbURL: process.env.DATABASE_URI,
   s3: {
