@@ -1,7 +1,12 @@
 {
   "name": "@contentql/core",
   "description": "CQL package extends your base payload configuration with predefined configuration",
-  "version": "0.1.4",
+  "homepage:": "https://contentql.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/contentql/cql"
+  },
+  "version": "0.1.5",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -34,10 +39,12 @@
     "@payloadcms/email-resend": "3.0.0-beta.91",
     "@payloadcms/next": "3.0.0-beta.91",
     "@payloadcms/plugin-nested-docs": "3.0.0-beta.91",
+    "@payloadcms/plugin-seo": "3.0.0-beta.91",
     "@payloadcms/richtext-slate": "3.0.0-beta.91",
     "@payloadcms/storage-s3": "3.0.0-beta.91",
     "@payloadcms/ui": "3.0.0-beta.91",
     "deepmerge": "4.3.1",
+    "node-schedule": "^2.1.1",
     "slugify": "1.6.6",
     "zod": "^3.23.8"
   },
@@ -52,6 +59,7 @@
     "@swc/cli": "^0.4.0",
     "@swc/core": "^1.7.26",
     "@types/node": "^22.5.4",
+    "@types/node-schedule": "^2.1.7",
     "@types/react": "npm:types-react@19.0.0-rc.0",
     "@types/react-dom": "npm:types-react-dom@19.0.0-rc.0",
     "typescript": "^5.5.3"
@@ -85,6 +93,5 @@
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "registry": "https://registry.npmjs.org/"
-  },
-  "homepage:": "https://contentql.io"
+  }
 }

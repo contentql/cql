@@ -1,10 +1,10 @@
 import type { Block, CollectionConfig } from "payload";
 
-import { COLLECTION_SLUG_PAGE } from "../constants.js";
 import { layoutField } from "../../fields/layout/index.js";
 import { pathField, pathModeField } from "../../fields/path/index.js";
 import { slugField, slugModeField } from "../../fields/slug/index.js";
 import homeBlockConfig from "../../blocks/homeBlockConfig.js";
+import { collectionSlug } from "../../../core/collectionSlug.js";
 
 type BlocksType = {
   blocks?: Block[];
@@ -12,7 +12,7 @@ type BlocksType = {
 
 export const Pages = ({ blocks = [] }: BlocksType): CollectionConfig => {
   return {
-    slug: COLLECTION_SLUG_PAGE,
+    slug: collectionSlug.pages,
     labels: {
       singular: "Page",
       plural: "Pages",

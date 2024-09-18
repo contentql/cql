@@ -2,6 +2,8 @@
 
 `@contentql/core` package extends your base payload configuration with predefined configuration
 
+<a href="https://www.npmjs.com/package/@contentql/core"><img alt="npm" src="https://img.shields.io/npm/v/@contentql/core?style=flat-square" /></a>
+
 ## Getting Started
 
 **Example Usage**
@@ -24,6 +26,8 @@ const finalPath = path.resolve(dirname, "payload-types.ts");
 
 // Add the extra payload configuration you want!
 export default cqlConfig({
+  // baseURL is required for Live-Preview & SEO generation
+  baseUrl: "http://localhost:3000",
   dbURL: process.env.DATABASE_URI,
   s3: {
     bucket: process.env.S3_BUCKET,
@@ -47,3 +51,41 @@ export default cqlConfig({
   blocks: [HomeConfig, DetailsConfig, ListConfig],
 });
 ```
+
+**Slug Access**
+
+You can access the slugs of collections by using this import
+
+```ts
+// This will provide the slugs of all collections
+import { collectionSlug } from "@contentql/core";
+
+const { docs } = await payload.find({
+  collection: collectionSlug["blogs"],
+  depth: 5,
+  draft: false,
+});
+```
+
+## 📦Out of box contents
+
+**Collections**
+
+These collections will be automatically added
+
+- users
+- pages
+- blogs
+- tags
+- media
+- site-settings
+
+**Plugins**
+
+These plugins will be automatically added
+
+- `@payloadcms/plugin-nested-docs`, `@payloadcms/plugin-seo`
+  - These plugins are enabled for `pages` collection
+- `scheduleDocPlugin`
+  - This is our custom plugin which will provide an option to schedule the publish of a document
+  - It's enabled to `blogs` collection you can extend it but passing you own options in `schedulePluginOptions` parameter in `cqlConfig`

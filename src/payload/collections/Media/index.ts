@@ -1,4 +1,5 @@
 import type { CollectionConfig, Field } from "payload";
+import { collectionSlug } from "../../../core/collectionSlug.js";
 
 const urlField: Field = {
   name: "url",
@@ -6,7 +7,7 @@ const urlField: Field = {
 };
 
 export const Media: CollectionConfig = {
-  slug: "media",
+  slug: collectionSlug.media,
   access: {
     read: () => true,
   },

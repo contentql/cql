@@ -3,9 +3,10 @@ import type { CollectionConfig } from "payload";
 import { slugField } from "../../fields/slug/index.js";
 
 import { assignUserId } from "./field-level-hooks/assignUserId.js";
+import { collectionSlug } from "../../../core/collectionSlug.js";
 
 export const Blogs: CollectionConfig = {
-  slug: "blogs",
+  slug: collectionSlug.blogs,
   labels: {
     singular: "Blog",
     plural: "Blogs",

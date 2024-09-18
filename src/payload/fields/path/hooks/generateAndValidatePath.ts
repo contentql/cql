@@ -2,8 +2,8 @@ import { willPathConflict } from "../utils/willPathConflict.js";
 import { getParents } from "@payloadcms/plugin-nested-docs";
 import { APIError, type FieldHook } from "payload";
 
-import { COLLECTION_SLUG_PAGE } from "../../../collections/constants.js";
 import { generateBreadcrumbsUrl } from "../../../../utils/generateBreadcrumbsUrl.js";
+import { collectionSlug } from "../../../../core/collectionSlug.js";
 
 export const generateAndValidatePath: FieldHook = async ({
   collection,
@@ -46,8 +46,8 @@ export const generateAndValidatePath: FieldHook = async ({
     payload,
     path: updatedPath,
     currentDocId: currentDoc.id,
-    currentCollection: collection ? collection.slug : COLLECTION_SLUG_PAGE,
-    collectionsToCheck: [COLLECTION_SLUG_PAGE], // Add more collections as needed
+    currentCollection: collection ? collection.slug : collectionSlug.pages,
+    collectionsToCheck: [collectionSlug.pages], // Add more collections as needed
   });
 
   if (isNewPathConflicting) {

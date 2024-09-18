@@ -3,6 +3,9 @@ import { mongooseAdapter } from "@payloadcms/db-mongodb";
 import { s3Storage } from "@payloadcms/storage-s3";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { resendAdapter } from "@payloadcms/email-resend";
+import { nestedDocsPlugin } from "@payloadcms/plugin-nested-docs";
+import { seoPlugin } from "@payloadcms/plugin-seo";
+import { generateBreadcrumbsUrl } from "../utils/generateBreadcrumbsUrl.js";
 
 import { Blogs } from "../payload/collections/Blogs/index.js";
 import { Media } from "../payload/collections/Media/index.js";
@@ -10,9 +13,18 @@ import { Pages } from "../payload/collections/Pages/index.js";
 import { Tags } from "../payload/collections/Tags/index.js";
 import { Users } from "../payload/collections/Users/index.js";
 import { siteSettings } from "../payload/globals/SiteSettings/index.js";
+import { collectionSlug } from "./collectionSlug.js";
+import scheduleDocPlugin from "../payload/plugins/scheduleDocPlugin.js";
 
 // added sharp as peer dependencies because nextjs-image recommends to install it
 import sharp from "sharp";
+import { PluginTypes } from "../payload/fields/publish/types.js";
+import {
+  generateURL,
+  generateTitle,
+  generateImage,
+  generateDescription,
+} from "../utils/seo.js";
 
 type S3Type = {
   bucket: string;
@@ -30,9 +42,11 @@ type ResendType = {
 
 export interface CQLConfigType extends Partial<PayloadConfig> {
   dbURL: string;
+  baseURL: string;
   s3?: S3Type;
   resend?: ResendType;
   blocks?: Block[];
+  schedulePluginOptions?: PluginTypes;
 }
 
 /**
@@ -58,11 +72,14 @@ export interface CQLConfigType extends Partial<PayloadConfig> {
  *     defaultFromAddress: "noreply@example.com",
  *     defaultFromName: "My App"
  *   }
+ * // baseURL is required for Live-Preview & SEO generation
+ *   baseUrl: "http://localhost:3000"
  * });
  */
 
 const cqlConfig = ({
   dbURL = "mongodb://localhost:27017/default-db",
+  baseURL = "http://localhost:3000",
   cors = ["http://localhost:3000"],
   csrf = ["http://localhost:3000"],
   s3,
@@ -73,6 +90,12 @@ const cqlConfig = ({
   globals = [],
   resend,
   blocks,
+  schedulePluginOptions = {
+    enabled: true,
+    collections: [collectionSlug["blogs"]],
+    position: "sidebar",
+  },
+  email,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType["plugins"] = config.plugins || [];
@@ -98,6 +121,24 @@ const cqlConfig = ({
     );
   }
 
+  const defaultCollections = [Users, Tags, Blogs, Media, Pages({ blocks })];
+
+  if (collections.length) {
+    // mapping through user collections
+    collections.forEach((collection) => {
+      // need to implement deepMerge functionality for now skipping with console warning
+      if (collection.slug in collectionSlug) {
+        console.warn(
+          `${collection.slug} collection already exists, skipping collection mapping`
+        );
+      }
+      // else pushing the user collection to default collection
+      else {
+        defaultCollections.push(collection);
+      }
+    });
+  }
+
   return buildConfig({
     ...config,
     admin: {
@@ -107,14 +148,63 @@ const cqlConfig = ({
         titleSuffix: "- ContentQL",
         ...(admin.meta || {}),
       },
+      livePreview: {
+        url: ({ data, collectionConfig, locale }) => {
+          return `${baseURL}/${data.path}${
+            locale ? `?locale=${locale.code}` : ""
+          }`;
+        },
+
+        collections: [collectionSlug["blogs"], collectionSlug["pages"]],
+
+        breakpoints: [
+          {
+            label: "Mobile",
+            name: "mobile",
+            width: 375,
+            height: 667,
+          },
+          {
+            label: "Tablet",
+            name: "tablet",
+            width: 768,
+            height: 1024,
+          },
+          {
+            label: "Desktop",
+            name: "desktop",
+            width: 1440,
+            height: 900,
+          },
+        ],
+
+        ...(admin.livePreview || {}),
+      },
     },
-    collections: [Users, Tags, Blogs, Media, Pages({ blocks }), ...collections],
+    collections: defaultCollections,
     globals: [siteSettings, ...globals],
     db: mongooseAdapter({
       url: dbURL,
     }),
     secret,
-    plugins,
+    plugins: [
+      ...plugins,
+      nestedDocsPlugin({
+        collections: [collectionSlug["pages"]],
+        generateURL: generateBreadcrumbsUrl,
+      }),
+      // this is for scheduling document publish
+      scheduleDocPlugin(schedulePluginOptions),
+      seoPlugin({
+        collections: [collectionSlug["pages"]],
+        uploadsCollection: "media",
+        tabbedUI: true,
+        generateURL: (data) => generateURL({ data, baseURL }),
+        generateTitle,
+        generateDescription,
+        generateImage,
+      }),
+    ],
     cors,
     csrf,
     editor,
@@ -125,7 +215,7 @@ const cqlConfig = ({
           defaultFromAddress: resend.defaultFromAddress,
           defaultFromName: resend.defaultFromName,
         })
-      : undefined,
+      : email,
   });
 };
 

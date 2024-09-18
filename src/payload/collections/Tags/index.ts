@@ -1,9 +1,10 @@
 import type { CollectionConfig } from "payload";
 
 import { slugField } from "../../fields/slug/index.js";
+import { collectionSlug } from "../../../core/collectionSlug.js";
 
 export const Tags: CollectionConfig = {
-  slug: "tags",
+  slug: collectionSlug.tags,
   labels: {
     singular: "Tag",
     plural: "Tags",

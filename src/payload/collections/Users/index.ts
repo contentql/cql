@@ -5,9 +5,10 @@ import { slugField } from "../../fields/slug/index.js";
 
 import { assignAdminRoleIfNoAdminsExist } from "./hooks/assignAdminRoleIfNoAdminsExist.js";
 import { authorAccessAfterUpdate } from "./hooks/authorAccessAfterUpdate.js";
+import { collectionSlug } from "../../../core/collectionSlug.js";
 
 export const Users: CollectionConfig = {
-  slug: "users",
+  slug: collectionSlug.users,
   admin: {
     group: "Auth",
     useAsTitle: "email",

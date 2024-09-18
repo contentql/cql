@@ -2,9 +2,7 @@ import { revalidateTag } from "next/cache.js";
 import type { Field, GlobalConfig } from "payload";
 import { z } from "zod";
 
-import { COLLECTION_SLUG_PAGE } from "../../../payload/collections/constants.js";
-
-export const GLOBAL_SETTINGS_SLUG = "site-settings";
+import { collectionSlug } from "../../../core/collectionSlug.js";
 
 const validateURL = z
   .string({
@@ -18,33 +16,41 @@ const menuItem: Field[] = [
     type: "row",
     fields: [
       {
-        name: "externalLink",
-        type: "checkbox",
-        label: "External Link",
-        defaultValue: false,
-        admin: {
-          description: "Other website link",
-        },
-      },
-      {
-        name: "newPage",
-        type: "checkbox",
-        label: "New Page",
-        defaultValue: true,
-        admin: {
-          condition: (_data, siblingData) => siblingData.external_link,
-          description: "Open website in new-page",
-        },
+        type: "row",
+        fields: [
+          {
+            name: "type",
+            type: "radio",
+            admin: {
+              layout: "horizontal",
+              width: "50%",
+            },
+            defaultValue: "reference",
+            options: [
+              {
+                label: "Internal link",
+                value: "reference",
+              },
+              {
+                label: "Custom URL",
+                value: "custom",
+              },
+            ],
+          },
+          {
+            name: "newTab",
+            type: "checkbox",
+            admin: {
+              style: {
+                alignSelf: "flex-end",
+              },
+              width: "50%",
+            },
+            label: "Open in new tab",
+          },
+        ],
       },
     ],
-  },
-  {
-    type: "relationship",
-    name: "page",
-    relationTo: [COLLECTION_SLUG_PAGE],
-    admin: {
-      condition: (_data, siblingData) => !siblingData.external_link,
-    },
   },
   {
     type: "row",
@@ -53,21 +59,31 @@ const menuItem: Field[] = [
         name: "label",
         type: "text",
         label: "Label",
-        admin: {
-          condition: (_data, siblingData) => siblingData.external_link,
-        },
+        required: true,
       },
       {
-        name: "link",
-        type: "text",
-        label: "Link",
+        type: "relationship",
+        name: "page",
+        relationTo: ["pages"],
         admin: {
-          condition: (_data, siblingData) => siblingData.external_link,
+          condition: (_data, siblingData) => {
+            return siblingData.type === "reference";
+          },
+        },
+        required: true,
+      },
+      {
+        name: "url",
+        type: "text",
+        label: "URL",
+        admin: {
+          condition: (_data, siblingData) => siblingData.type === "custom",
         },
         validate: (value) => {
           const { success } = validateURL.safeParse(value);
           return success || "Link is not valid";
         },
+        required: true,
       },
     ],
   },
@@ -227,9 +243,6 @@ const socialLinksField: Field = {
       required: true,
       validate: (value, args) => {
         const { success } = validateURL.safeParse(value);
-        // console.log({ success, operation }, success || 'Link is not valid')
-
-        // return text(value, args)
 
         return success || "Link is not valid";
       },
@@ -238,10 +251,9 @@ const socialLinksField: Field = {
 };
 
 export const siteSettings: GlobalConfig = {
-  slug: GLOBAL_SETTINGS_SLUG,
+  slug: collectionSlug["site-settings"],
   access: {
     read: () => true,
-    // update: isAdmin,
   },
   hooks: {
     afterChange: [async () => revalidateTag("site-settings")],
@@ -253,10 +265,11 @@ export const siteSettings: GlobalConfig = {
       tabs: [
         {
           label: "General",
+          name: "general",
           fields: [
             { type: "text", name: "title", required: true },
             {
-              type: "text",
+              type: "textarea",
               name: "description",
               required: true,
             },
@@ -276,6 +289,9 @@ export const siteSettings: GlobalConfig = {
               required: true,
               relationTo: "media",
               label: "OG Image",
+              admin: {
+                description: "We recommend a maximum size of 1200 * 630 pixels",
+              },
             },
             {
               name: "keywords",
@@ -285,13 +301,14 @@ export const siteSettings: GlobalConfig = {
           ],
         },
         {
+          label: "Navbar",
           name: "header",
           fields: [
             {
               name: "logo",
               type: "group",
               interfaceName: "BrandLogo", // optional
-              label: "Navbar Logo",
+              label: "Logo",
               fields: logoField,
             },
             {
@@ -303,13 +320,14 @@ export const siteSettings: GlobalConfig = {
           ],
         },
         {
+          label: "Footer",
           name: "footer",
           fields: [
             {
               name: "logo",
               type: "group",
               interfaceName: "BrandLogo", // optional
-              label: "Footer Logo",
+              label: "Logo",
               fields: [
                 ...logoField,
                 {
