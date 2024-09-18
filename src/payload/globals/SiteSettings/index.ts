@@ -71,6 +71,7 @@ const menuItem: Field[] = [
           },
         },
         required: true,
+        maxDepth: 1,
       },
       {
         name: "url",
@@ -234,6 +235,10 @@ const socialLinksField: Field = {
           label: "Quora",
           value: "quora",
         },
+        {
+          label: "Discord",
+          value: "discord",
+        },
       ],
     },
     {
@@ -302,7 +307,7 @@ export const siteSettings: GlobalConfig = {
         },
         {
           label: "Navbar",
-          name: "header",
+          name: "navbar",
           fields: [
             {
               name: "logo",
