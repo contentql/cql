@@ -4,10 +4,11 @@ export type SlugType =
   | "blogs"
   | "media"
   | "pages"
-  | "site-settings";
+  | "site-settings"
+  | "search";
 
 export type CollectionSlugType = {
-  [key in SlugType]: SlugType;
+  [key in SlugType]: key;
 };
 
 /**
@@ -19,5 +20,6 @@ export const collectionSlug: CollectionSlugType = {
   blogs: "blogs",
   media: "media",
   pages: "pages",
+  search: "search",
   "site-settings": "site-settings",
 };

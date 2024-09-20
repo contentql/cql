@@ -3,6 +3,7 @@ import type { Field, GlobalConfig } from "payload";
 import { z } from "zod";
 
 import { collectionSlug } from "../../../core/collectionSlug.js";
+import { isAdmin } from "../../access/index.js";
 
 const validateURL = z
   .string({
@@ -258,7 +259,8 @@ const socialLinksField: Field = {
 export const siteSettings: GlobalConfig = {
   slug: collectionSlug["site-settings"],
   access: {
-    read: () => true,
+    read: isAdmin,
+    update: isAdmin,
   },
   hooks: {
     afterChange: [async () => revalidateTag("site-settings")],

@@ -1,6 +1,6 @@
 # ContentQL Core
 
-`@contentql/core` package extends your base payload configuration with predefined configuration
+`@contentql/core` gives configuration which is ready to build a **content-oriented, blog website** you can add this to your payload existing project.
 
 <a href="https://www.npmjs.com/package/@contentql/core"><img alt="npm" src="https://img.shields.io/npm/v/@contentql/core?style=flat-square" /></a>
 
@@ -52,6 +52,8 @@ export default cqlConfig({
 });
 ```
 
+> Note: We can't extend the existing collections as of now. New collections can be added
+
 **Slug Access**
 
 You can access the slugs of collections by using this import
@@ -88,4 +90,7 @@ These plugins will be automatically added
   - These plugins are enabled for `pages` collection
 - `scheduleDocPlugin`
   - This is our custom plugin which will provide an option to schedule the publish of a document
-  - It's enabled to `blogs` collection you can extend it but passing you own options in `schedulePluginOptions` parameter in `cqlConfig`
+  - It's enabled to `blogs` collection you can extend it but passing your own options in `schedulePluginOptions` parameter in `cqlConfig`
+- `@payloadcms/plugin-search`
+  - Search plugin is by-default enabled for blogs, tags, users collections
+  - you can extend it by passing your own options in `searchPluginOptions` parameter in `cqlConfig`

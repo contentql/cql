@@ -5,6 +5,7 @@ import { pathField, pathModeField } from "../../fields/path/index.js";
 import { slugField, slugModeField } from "../../fields/slug/index.js";
 import homeBlockConfig from "../../blocks/homeBlockConfig.js";
 import { collectionSlug } from "../../../core/collectionSlug.js";
+import { isAdmin } from "../../access/index.js";
 
 type BlocksType = {
   blocks?: Block[];
@@ -18,7 +19,10 @@ export const Pages = ({ blocks = [] }: BlocksType): CollectionConfig => {
       plural: "Pages",
     },
     access: {
-      read: () => true,
+      read: isAdmin,
+      update: isAdmin,
+      create: isAdmin,
+      delete: isAdmin,
     },
     admin: {
       useAsTitle: "title",

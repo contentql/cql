@@ -4,6 +4,9 @@ import { s3Storage } from "@payloadcms/storage-s3";
 import { slateEditor } from "@payloadcms/richtext-slate";
 import { resendAdapter } from "@payloadcms/email-resend";
 import { nestedDocsPlugin } from "@payloadcms/plugin-nested-docs";
+import { searchPlugin } from "@payloadcms/plugin-search";
+import type { SearchPluginConfig } from "@payloadcms/plugin-search/dist/types.js";
+
 import { seoPlugin } from "@payloadcms/plugin-seo";
 import { generateBreadcrumbsUrl } from "../utils/generateBreadcrumbsUrl.js";
 
@@ -25,6 +28,8 @@ import {
   generateImage,
   generateDescription,
 } from "../utils/seo.js";
+import { BeforeSyncConfig } from "../utils/beforeSync.js";
+import { isAdmin } from "../payload/access/index.js";
 
 type S3Type = {
   bucket: string;
@@ -47,6 +52,7 @@ export interface CQLConfigType extends Partial<PayloadConfig> {
   resend?: ResendType;
   blocks?: Block[];
   schedulePluginOptions?: PluginTypes;
+  searchPluginOptions?: SearchPluginConfig;
 }
 
 /**
@@ -95,6 +101,7 @@ const cqlConfig = ({
     collections: [collectionSlug["blogs"]],
     position: "sidebar",
   },
+  searchPluginOptions = {},
   email,
   ...config
 }: CQLConfigType) => {
@@ -195,6 +202,7 @@ const cqlConfig = ({
       }),
       // this is for scheduling document publish
       scheduleDocPlugin(schedulePluginOptions),
+      // this plugin generates metadata field for every page created
       seoPlugin({
         collections: [collectionSlug["pages"]],
         uploadsCollection: "media",
@@ -203,6 +211,26 @@ const cqlConfig = ({
         generateTitle,
         generateDescription,
         generateImage,
+      }),
+      // this plugin is for global search across the defined collections
+      searchPlugin({
+        collections: [
+          collectionSlug["blogs"],
+          collectionSlug["tags"],
+          collectionSlug["users"],
+        ],
+        defaultPriorities: {
+          [collectionSlug["blogs"]]: 10,
+          [collectionSlug["tags"]]: 20,
+          [collectionSlug["users"]]: 30,
+        },
+        beforeSync: BeforeSyncConfig,
+        searchOverrides: {
+          access: {
+            read: isAdmin,
+          },
+        },
+        ...searchPluginOptions,
       }),
     ],
     cors,

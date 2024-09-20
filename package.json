@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/contentql/cql"
   },
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -39,6 +39,7 @@
     "@payloadcms/email-resend": "3.0.0-beta.91",
     "@payloadcms/next": "3.0.0-beta.91",
     "@payloadcms/plugin-nested-docs": "3.0.0-beta.91",
+    "@payloadcms/plugin-search": "3.0.0-beta.91",
     "@payloadcms/plugin-seo": "3.0.0-beta.91",
     "@payloadcms/richtext-slate": "3.0.0-beta.91",
     "@payloadcms/storage-s3": "3.0.0-beta.91",

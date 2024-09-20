@@ -1,5 +1,6 @@
 import type { CollectionConfig, Field } from "payload";
 import { collectionSlug } from "../../../core/collectionSlug.js";
+import { isAdminOrCurrentUser, isAdminOrAuthor } from "../../access/index.js";
 
 const urlField: Field = {
   name: "url",
@@ -9,7 +10,10 @@ const urlField: Field = {
 export const Media: CollectionConfig = {
   slug: collectionSlug.media,
   access: {
-    read: () => true,
+    read: isAdminOrCurrentUser,
+    update: isAdminOrCurrentUser,
+    delete: isAdminOrCurrentUser,
+    create: isAdminOrAuthor,
   },
   upload: {
     imageSizes: [
