@@ -38,8 +38,8 @@ export const Blogs: CollectionConfig = {
       required: true,
     },
     {
-      name: "subTitle",
-      label: "Sub Title",
+      name: "description",
+      label: "Description",
       type: "textarea",
       required: true,
       admin: {

@@ -10,7 +10,7 @@ const urlField: Field = {
 export const Media: CollectionConfig = {
   slug: collectionSlug.media,
   access: {
-    read: isAdminOrCurrentUser,
+    read: () => true,
     update: isAdminOrCurrentUser,
     delete: isAdminOrCurrentUser,
     create: isAdminOrAuthor,
