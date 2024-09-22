@@ -1,10 +1,10 @@
-import type { CollectionConfig } from "payload";
+import { CustomCollectionConfig } from "../../../core/payload-overrides.js";
 
 import { slugField } from "../../fields/slug/index.js";
 import { collectionSlug } from "../../../core/collectionSlug.js";
 import { isAdminOrCurrentUser, isAdminOrAuthor } from "../../access/index.js";
 
-export const Tags: CollectionConfig = {
+export const Tags: CustomCollectionConfig = {
   slug: collectionSlug.tags,
   labels: {
     singular: "Tag",

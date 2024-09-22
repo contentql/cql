@@ -1,4 +1,4 @@
-import { Field } from 'payload'
+import type { CustomField } from "../../../core/payload-overrides.js";
 
-export type PathField = (overrides?: Partial<Field>) => Field
-export type PathModeField = (overrides?: Partial<Field>) => Field
+export type PathField = (overrides?: Partial<CustomField>) => CustomField;
+export type PathModeField = (overrides?: Partial<CustomField>) => CustomField;

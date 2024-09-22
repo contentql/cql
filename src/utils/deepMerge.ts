@@ -1,4 +1,5 @@
 // @ts-nocheck
+import uniq from "lodash.uniq";
 
 /**
  * Simple object check.
@@ -13,7 +14,6 @@ export const deepMerge = <T, R>(
   defaultConfiguration: T,
   userConfiguration: R
 ): T => {
-  // spreading default-config in output config
   const outputConfiguration = { ...defaultConfiguration };
 
   // checking both are objects or not
@@ -38,15 +38,56 @@ export const deepMerge = <T, R>(
           Object.assign(outputConfiguration, { [key]: userConfiguration[key] });
         }
 
-        // if value is array then spreading it with default-config
         if (
           Array.isArray(defaultConfiguration[key]) &&
           Array.isArray(userConfiguration[key])
         ) {
-          outputConfiguration[key] = [
-            ...defaultConfiguration[key],
-            ...userConfiguration[key],
-          ];
+          // creating boolean array based on if the array elements are object or not
+          const objectsArray = defaultConfiguration[key].map((item) =>
+            isObject(item)
+          );
+
+          // if array has object then assuming it as fields object and checking the name property
+          if (objectsArray.every(Boolean)) {
+            // spreading the list of default configuration array
+            const defaultList = [...defaultConfiguration[key]];
+
+            // mapping through user array
+            userConfiguration[key].forEach((userFieldDetails) => {
+              const index = defaultList.findIndex((defaultFieldValue) => {
+                // checking for name for fields array
+                if (defaultFieldValue?.name) {
+                  return defaultFieldValue?.name === userFieldDetails?.name;
+                }
+
+                // checking for value in options array
+                if (defaultFieldValue?.value) {
+                  return defaultFieldValue?.value === userFieldDetails?.value;
+                }
+              });
+
+              // if anything is overlapping doing a deepMerge
+              if (index !== -1) {
+                defaultList[index] = deepMerge(
+                  defaultList[index],
+                  userFieldDetails
+                );
+              }
+              // else pushing that to default configuration
+              else {
+                defaultList.push(userFieldDetails);
+              }
+            });
+
+            outputConfiguration[key] = defaultList;
+          }
+          // else using ramda uniq for maintaining unique elements
+          else {
+            outputConfiguration[key] = uniq([
+              ...defaultConfiguration[key],
+              ...userConfiguration[key],
+            ]);
+          }
         }
       }
     });

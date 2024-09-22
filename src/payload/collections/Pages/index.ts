@@ -1,4 +1,5 @@
-import type { Block, CollectionConfig } from "payload";
+import type { Block } from "payload";
+import { CustomCollectionConfig } from "../../../core/payload-overrides.js";
 
 import { layoutField } from "../../fields/layout/index.js";
 import { pathField, pathModeField } from "../../fields/path/index.js";
@@ -11,7 +12,7 @@ type BlocksType = {
   blocks?: Block[];
 };
 
-export const Pages = ({ blocks = [] }: BlocksType): CollectionConfig => {
+export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
   return {
     slug: collectionSlug.pages,
     labels: {

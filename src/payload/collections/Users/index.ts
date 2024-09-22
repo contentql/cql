@@ -1,4 +1,4 @@
-import type { CollectionConfig } from "payload";
+import type { CustomCollectionConfig } from "../../../core/payload-overrides.js";
 
 import {
   isAdminOrCurrentUser,
@@ -11,7 +11,7 @@ import { assignAdminRoleIfNoAdminsExist } from "./hooks/assignAdminRoleIfNoAdmin
 import { authorAccessAfterUpdate } from "./hooks/authorAccessAfterUpdate.js";
 import { collectionSlug } from "../../../core/collectionSlug.js";
 
-export const Users: CollectionConfig = {
+export const Users: CustomCollectionConfig = {
   slug: collectionSlug.users,
   admin: {
     group: "Auth",
@@ -70,7 +70,20 @@ export const Users: CollectionConfig = {
     {
       name: "role",
       type: "select",
-      options: ["admin", "user", "author"],
+      options: [
+        {
+          label: "Admin",
+          value: "admin",
+        },
+        {
+          label: "Author",
+          value: "author",
+        },
+        {
+          label: "User",
+          value: "user",
+        },
+      ],
       saveToJWT: true,
       defaultValue: "user",
       required: true,
@@ -80,4 +93,4 @@ export const Users: CollectionConfig = {
       type: "date",
     },
   ],
-} as const;
+};

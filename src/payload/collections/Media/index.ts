@@ -1,13 +1,16 @@
-import type { CollectionConfig, Field } from "payload";
 import { collectionSlug } from "../../../core/collectionSlug.js";
 import { isAdminOrCurrentUser, isAdminOrAuthor } from "../../access/index.js";
+import {
+  CustomCollectionConfig,
+  CustomField,
+} from "../../../core/payload-overrides.js";
 
-const urlField: Field = {
+const urlField: CustomField = {
   name: "url",
   type: "text",
 };
 
-export const Media: CollectionConfig = {
+export const Media: CustomCollectionConfig = {
   slug: collectionSlug.media,
   access: {
     read: () => true,

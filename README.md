@@ -52,8 +52,6 @@ export default cqlConfig({
 });
 ```
 
-> Note: We can't extend the existing collections as of now. New collections can be added
-
 **Slug Access**
 
 You can access the slugs of collections by using this import
@@ -94,3 +92,33 @@ These plugins will be automatically added
 - `@payloadcms/plugin-search`
   - Search plugin is by-default enabled for blogs, tags, users collections
   - you can extend it by passing your own options in `searchPluginOptions` parameter in `cqlConfig`
+
+## 📔Note
+
+- You can add new fields to the existing Collections or Globals but can't modify existing fields
+- radio, select field-type accept options parameter as `OptionObject[]`, we added this to support the merging of configuration
+
+```ts
+ {
+      name: "role",
+      type: "select",
+      options: [
+        {
+          label: "Admin",
+          value: "admin",
+        },
+        {
+          label: "Author",
+          value: "author",
+        },
+        {
+          label: "User",
+          value: "user",
+        },
+        // editor -> ️️string is not allowed
+      ],
+      saveToJWT: true,
+      defaultValue: "user",
+      required: true,
+    },
+```

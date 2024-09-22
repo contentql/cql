@@ -1,11 +1,11 @@
-import type { CollectionConfig } from "payload";
+import { CustomCollectionConfig } from "../../../core/payload-overrides.js";
 
 import { slugField } from "../../fields/slug/index.js";
 
 import { assignUserId } from "./field-level-hooks/assignUserId.js";
 import { collectionSlug } from "../../../core/collectionSlug.js";
 
-export const Blogs: CollectionConfig = {
+export const Blogs: CustomCollectionConfig = {
   slug: collectionSlug.blogs,
   labels: {
     singular: "Blog",

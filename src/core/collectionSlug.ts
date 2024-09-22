@@ -12,7 +12,7 @@ export type CollectionSlugType = {
 };
 
 /**
- * You'll get [users, tags, blog, pages, media] collections out of the box
+ * You'll get [users, tags, blog, pages, media, search, site-settings] collections out of the box
  */
 export const collectionSlug: CollectionSlugType = {
   users: "users",

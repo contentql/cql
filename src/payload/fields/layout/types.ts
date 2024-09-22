@@ -1,3 +1,3 @@
-import { Field } from 'payload'
+import type { CustomField } from "../../../core/payload-overrides.js";
 
-export type LayoutField = (overrides?: Partial<Field>) => Field
+export type LayoutField = (overrides?: Partial<CustomField>) => CustomField;

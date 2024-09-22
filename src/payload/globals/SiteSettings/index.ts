@@ -1,6 +1,9 @@
 import { revalidateTag } from "next/cache.js";
-import type { Field, GlobalConfig } from "payload";
 import { z } from "zod";
+import {
+  CustomGlobalConfig,
+  CustomField,
+} from "../../../core/payload-overrides.js";
 
 import { collectionSlug } from "../../../core/collectionSlug.js";
 import { isAdmin } from "../../access/index.js";
@@ -12,7 +15,7 @@ const validateURL = z
   })
   .url();
 
-const menuItem: Field[] = [
+const menuItem: CustomField[] = [
   {
     type: "row",
     fields: [
@@ -91,7 +94,7 @@ const menuItem: Field[] = [
   },
 ];
 
-const menuGroupItem: Field = {
+const menuGroupItem: CustomField = {
   type: "group",
   name: "menuLinkGroup",
   label: "Link Group",
@@ -114,7 +117,7 @@ const menuGroupItem: Field = {
   },
 };
 
-const menuField: Field[] = [
+const menuField: CustomField[] = [
   {
     type: "checkbox",
     name: "group",
@@ -136,7 +139,7 @@ const menuField: Field[] = [
   menuGroupItem,
 ];
 
-const logoField: Field[] = [
+const logoField: CustomField[] = [
   {
     name: "imageUrl",
     type: "upload",
@@ -167,7 +170,7 @@ const logoField: Field[] = [
   },
 ];
 
-const socialLinksField: Field = {
+const socialLinksField: CustomField = {
   type: "row",
   fields: [
     {
@@ -256,7 +259,7 @@ const socialLinksField: Field = {
   ],
 };
 
-export const siteSettings: GlobalConfig = {
+export const siteSettings: CustomGlobalConfig = {
   slug: collectionSlug["site-settings"],
   access: {
     read: isAdmin,

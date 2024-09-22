@@ -22,7 +22,8 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
+
+    "skipLibCheck": true, // skips the type checking in libraries d.ts files
 
     "plugins": [
       {
@@ -31,5 +32,5 @@
     ]
   },
   "exclude": ["dist", "node_modules"],
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

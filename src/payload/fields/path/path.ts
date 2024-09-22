@@ -1,8 +1,8 @@
-import deepmerge from 'deepmerge';
-import type { Field } from 'payload';
+import deepmerge from "deepmerge";
 
-import { generateAndValidatePath } from './hooks/generateAndValidatePath.js';
-import { PathField } from './types.js';
+import { generateAndValidatePath } from "./hooks/generateAndValidatePath.js";
+import { PathField } from "./types.js";
+import type { CustomField } from "../../../core/payload-overrides.js";
 
 /**
  * Creates a configuration object for a "path" field in Payload CMS with optional overrides.
@@ -13,8 +13,8 @@ import { PathField } from './types.js';
  *
  * The function uses the `deepmerge` utility to combine default field settings with any provided overrides.
  *
- * @param {Partial<Field>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
- * @returns {Field} - The complete field configuration object, including default settings and any provided overrides.
+ * @param {Partial<CustomField>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
+ * @returns {CustomField} - The complete field configuration object, including default settings and any provided overrides.
  *
  * @example
  * // Example with custom field settings and overrides
@@ -30,24 +30,24 @@ import { PathField } from './types.js';
  * // including a custom label and admin position.
  */
 const pathField: PathField = (overrides = {}) =>
-  deepmerge<Field, Partial<Field>>(
+  deepmerge<CustomField, Partial<CustomField>>(
     {
-      type: 'text',
-      name: 'path',
+      type: "text",
+      name: "path",
       unique: true,
       index: true,
-      label: 'Path',
+      label: "Path",
       hooks: {
         beforeValidate: [generateAndValidatePath],
       },
       admin: {
-        position: 'sidebar',
+        position: "sidebar",
         components: {
-          Field: '@contentql/core/client#CustomPathField',
+          Field: "@contentql/core/client#CustomPathField",
         },
       },
     },
-    overrides,
+    overrides
   );
 
 export default pathField;

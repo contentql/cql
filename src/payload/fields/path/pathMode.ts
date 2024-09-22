@@ -1,7 +1,7 @@
 import deepmerge from "deepmerge";
-import type { Field } from "payload";
 
 import { PathModeField } from "./types.js";
+import { CustomField } from "../../../core/payload-overrides.js";
 
 /**
  * Creates a configuration object for a "pathMode" field in Payload CMS with optional overrides.
@@ -15,8 +15,8 @@ import { PathModeField } from "./types.js";
  *
  * **Note:** Avoid changing the name or options of this field, as it may affect path generation and customization logic.
  *
- * @param {Partial<Field>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
- * @returns {Field} - The complete field configuration object, including default settings and any provided overrides.
+ * @param {Partial<CustomField>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
+ * @returns {CustomField} - The complete field configuration object, including default settings and any provided overrides.
  *
  * @example
  * // Example with custom field settings and overrides
@@ -33,7 +33,7 @@ import { PathModeField } from "./types.js";
  * // including a custom label, default value, and admin layout.
  */
 const pathModeField: PathModeField = (overrides = {}) =>
-  deepmerge<Field, Partial<Field>>(
+  deepmerge<CustomField, Partial<CustomField>>(
     {
       name: "pathMode",
       label: "Path Mode",

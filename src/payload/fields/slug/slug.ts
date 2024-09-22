@@ -1,8 +1,8 @@
-import deepMerge from 'deepmerge';
-import type { Field } from 'payload';
+import deepMerge from "deepmerge";
 
-import { formatSlug } from './hooks/formatSlug.js';
-import { SlugField } from './types.js';
+import { formatSlug } from "./hooks/formatSlug.js";
+import { SlugField } from "./types.js";
+import { CustomField } from "../../../core/payload-overrides.js";
 
 /**
  * Creates a configuration object for a "slug" field in Payload CMS with optional overrides.
@@ -35,22 +35,22 @@ import { SlugField } from './types.js';
  * // including a custom name, label, and additional properties.
  */
 const slugField: SlugField = (fieldToUse, overrides = {}) => {
-  return deepMerge<Field, Partial<Field>>(
+  return deepMerge<CustomField, Partial<CustomField>>(
     {
-      name: 'slug',
-      label: 'Slug',
-      type: 'text',
+      name: "slug",
+      label: "Slug",
+      type: "text",
       index: true,
       required: false,
       admin: {
-        description: 'Contains only lowercase letters, numbers, and dashes.',
-        position: 'sidebar',
+        description: "Contains only lowercase letters, numbers, and dashes.",
+        position: "sidebar",
         condition: (data) => {
           return !data?.isHome && !data?.isDynamic;
         },
         components: {
           Field: {
-            path: '@contentql/core/client#CustomSlugField',
+            path: "@contentql/core/client#CustomSlugField",
             clientProps: {
               fieldToUse: String(fieldToUse),
             },
@@ -61,7 +61,7 @@ const slugField: SlugField = (fieldToUse, overrides = {}) => {
         beforeValidate: [formatSlug(fieldToUse)],
       },
     },
-    overrides,
+    overrides
   );
 };
 

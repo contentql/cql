@@ -30,6 +30,11 @@ import {
 } from "../utils/seo.js";
 import { BeforeSyncConfig } from "../utils/beforeSync.js";
 import { isAdmin } from "../payload/access/index.js";
+import { deepMerge } from "../utils/deepMerge.js";
+import {
+  CustomCollectionConfig,
+  CustomGlobalConfig,
+} from "./payload-overrides.js";
 
 type S3Type = {
   bucket: string;
@@ -45,7 +50,9 @@ type ResendType = {
   apiKey: string;
 };
 
-export interface CQLConfigType extends Partial<PayloadConfig> {
+// Updating the collections type to CustomCollectionConfig
+export interface CQLConfigType
+  extends Partial<Omit<PayloadConfig, "collections" | "globals">> {
   dbURL: string;
   baseURL: string;
   s3?: S3Type;
@@ -53,6 +60,8 @@ export interface CQLConfigType extends Partial<PayloadConfig> {
   blocks?: Block[];
   schedulePluginOptions?: PluginTypes;
   searchPluginOptions?: SearchPluginConfig;
+  collections?: CustomCollectionConfig[];
+  globals?: CustomGlobalConfig[];
 }
 
 /**
@@ -133,15 +142,44 @@ const cqlConfig = ({
   if (collections.length) {
     // mapping through user collections
     collections.forEach((collection) => {
-      // need to implement deepMerge functionality for now skipping with console warning
-      if (collection.slug in collectionSlug) {
-        console.warn(
-          `${collection.slug} collection already exists, skipping collection mapping`
+      // checking if the user collection overlaps with default collection
+      const index = defaultCollections.findIndex(
+        (collectionValue) => collectionValue.slug === collection.slug
+      );
+
+      // if collection overlaps with default collection then doing deepMerge
+      if (index !== -1) {
+        defaultCollections[index] = deepMerge(
+          defaultCollections[index],
+          collection
         );
       }
       // else pushing the user collection to default collection
       else {
         defaultCollections.push(collection);
+      }
+    });
+  }
+
+  const defaultGlobals = [siteSettings];
+
+  if (globals.length) {
+    globals.forEach((globalCollection) => {
+      // checking if the user globals overlaps with default globals
+      const index = defaultGlobals.findIndex(
+        (collectionValue) => collectionValue.slug === globalCollection.slug
+      );
+
+      // if globals overlaps with default globals then doing deepMerge
+      if (index !== -1) {
+        defaultGlobals[index] = deepMerge(
+          defaultGlobals[index],
+          defaultGlobals
+        );
+      }
+      // else pushing the user globals to default globals
+      else {
+        defaultGlobals.push(globalCollection);
       }
     });
   }
