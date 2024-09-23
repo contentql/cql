@@ -170,7 +170,7 @@ const logoField: CustomField[] = [
   },
 ];
 
-const socialLinksField: CustomField = {
+export const socialLinksField: CustomField = {
   type: "row",
   fields: [
     {

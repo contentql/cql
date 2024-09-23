@@ -66,7 +66,7 @@ export const Blogs: CustomCollectionConfig = {
         if (relationTo === "users") {
           return {
             role: {
-              equals: "author",
+              in: ["author"],
             },
           };
         } else {

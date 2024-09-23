@@ -42,6 +42,7 @@ export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
         required: true,
         unique: true,
       },
+      layoutField({ blocks: blocks.length ? blocks : [homeBlockConfig] }),
       {
         type: "row",
         fields: [
@@ -62,7 +63,6 @@ export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
           position: "sidebar",
         },
       },
-      layoutField({ blocks: blocks.length ? blocks : [homeBlockConfig] }),
       slugModeField(),
       slugField("title"),
       pathModeField(),

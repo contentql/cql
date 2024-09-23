@@ -10,6 +10,7 @@ import { slugField } from "../../fields/slug/index.js";
 import { assignAdminRoleIfNoAdminsExist } from "./hooks/assignAdminRoleIfNoAdminsExist.js";
 import { authorAccessAfterUpdate } from "./hooks/authorAccessAfterUpdate.js";
 import { collectionSlug } from "../../../core/collectionSlug.js";
+import { socialLinksField } from "../../globals/SiteSettings/index.js";
 
 export const Users: CustomCollectionConfig = {
   slug: collectionSlug.users,
@@ -29,7 +30,16 @@ export const Users: CustomCollectionConfig = {
   access: {
     admin: async ({ req }) => {
       // added author also to access the admin-panel
-      return ["admin", "author"].includes(req?.user?.role || "user");
+      if (req.user) {
+        const userRole: string[] = req?.user?.role || [];
+
+        const hasAccess = userRole
+          .map((role) => ["admin", "author"].includes(role))
+          .some(Boolean);
+        return hasAccess;
+      }
+
+      return false;
     },
     read: isAdminOrCurrentUser,
     create: isAdmin,
@@ -87,10 +97,17 @@ export const Users: CustomCollectionConfig = {
       saveToJWT: true,
       defaultValue: "user",
       required: true,
+      hasMany: true,
     },
     {
       name: "emailVerified",
       type: "date",
+    },
+    {
+      type: "array",
+      name: "socialLinks",
+      label: "Social Links",
+      fields: [socialLinksField],
     },
   ],
 };
