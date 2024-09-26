@@ -1,23 +1,23 @@
-import type { Block } from "payload";
-import { CustomCollectionConfig } from "../../../core/payload-overrides.js";
+import type { Block } from 'payload'
+import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 
-import { layoutField } from "../../fields/layout/index.js";
-import { pathField, pathModeField } from "../../fields/path/index.js";
-import { slugField, slugModeField } from "../../fields/slug/index.js";
-import homeBlockConfig from "../../blocks/homeBlockConfig.js";
-import { collectionSlug } from "../../../core/collectionSlug.js";
-import { isAdmin } from "../../access/index.js";
+import { collectionSlug } from '../../../core/collectionSlug.js'
+import { isAdmin } from '../../access/index.js'
+import homeBlockConfig from '../../blocks/homeBlockConfig.js'
+import { layoutField } from '../../fields/layout/index.js'
+import { pathField, pathModeField } from '../../fields/path/index.js'
+import { slugField, slugModeField } from '../../fields/slug/index.js'
 
 type BlocksType = {
-  blocks?: Block[];
-};
+  blocks?: Block[]
+}
 
 export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
   return {
     slug: collectionSlug.pages,
     labels: {
-      singular: "Page",
-      plural: "Pages",
+      singular: 'Page',
+      plural: 'Pages',
     },
     access: {
       read: isAdmin,
@@ -26,8 +26,8 @@ export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
       delete: isAdmin,
     },
     admin: {
-      useAsTitle: "title",
-      defaultColumns: ["title", "path", "updatedAt", "createdAt"],
+      useAsTitle: 'title',
+      defaultColumns: ['title', 'path', 'updatedAt', 'createdAt'],
     },
     versions: {
       drafts: {
@@ -37,36 +37,48 @@ export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
     },
     fields: [
       {
-        name: "title",
-        type: "text",
-        required: true,
-        unique: true,
+        type: 'tabs',
+        tabs: [
+          {
+            label: 'Page',
+            fields: [
+              {
+                name: 'title',
+                type: 'text',
+                required: true,
+                unique: true,
+              },
+              layoutField({
+                blocks: blocks.length ? blocks : [homeBlockConfig],
+              }),
+            ],
+          },
+        ],
       },
-      layoutField({ blocks: blocks.length ? blocks : [homeBlockConfig] }),
       {
-        type: "row",
+        type: 'row',
         fields: [
           {
-            name: "isHome",
-            label: "Home Page",
-            type: "checkbox",
+            name: 'isHome',
+            label: 'Home Page',
+            type: 'checkbox',
             defaultValue: false,
           },
           {
-            name: "isDynamic",
-            label: "Dynamic Page",
-            type: "checkbox",
+            name: 'isDynamic',
+            label: 'Dynamic Page',
+            type: 'checkbox',
             defaultValue: false,
           },
         ],
         admin: {
-          position: "sidebar",
+          position: 'sidebar',
         },
       },
       slugModeField(),
-      slugField("title"),
+      slugField('title'),
       pathModeField(),
       pathField(),
     ],
-  };
-};
+  }
+}
