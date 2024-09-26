@@ -1,19 +1,19 @@
-"use client";
+'use client'
 // This is a client component
 
-import { TextField, useFormFields } from "@payloadcms/ui";
-import { TextFieldProps } from "payload";
-import React from "react";
+import { TextField, useFormFields } from '@payloadcms/ui'
+import { TextFieldClientProps } from 'payload'
+import React from 'react'
 
-export const CustomPathField: React.FC<TextFieldProps> = (props) => {
+export const CustomPathField: React.FC<TextFieldClientProps> = props => {
   const { fields, dispatch } = useFormFields(([fields, dispatch]) => ({
     fields,
     dispatch,
-  }));
+  }))
 
   const readOnly = fields?.pathMode?.value
-    ? fields?.pathMode?.value === "generate"
-    : true;
+    ? fields?.pathMode?.value === 'generate'
+    : true
 
-  return <TextField {...props} readOnly={readOnly} />;
-};
+  return <TextField {...props} readOnly={readOnly} />
+}
