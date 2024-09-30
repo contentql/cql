@@ -1,4 +1,3 @@
-import { revalidateTag } from "next/cache.js";
 import { z } from "zod";
 import {
   CustomField,
@@ -7,6 +6,7 @@ import {
 
 import { collectionSlug } from "../../../core/collectionSlug.js";
 import { isAdmin } from "../../access/index.js";
+import { revalidateTag } from "next/cache.js";
 
 const validateURL = z
   .string({
@@ -83,10 +83,6 @@ const menuItem: CustomField[] = [
         label: "URL",
         admin: {
           condition: (_data, siblingData) => siblingData.type === "custom",
-        },
-        validate: (value: any) => {
-          const { success } = validateURL.safeParse(value);
-          return success || "Link is not valid";
         },
         required: true,
       },
@@ -270,7 +266,15 @@ export const siteSettings: CustomGlobalConfig = {
     update: isAdmin,
   },
   hooks: {
-    afterChange: [async () => revalidateTag("site-settings")],
+    afterChange: [
+      async () => {
+        try {
+          revalidateTag("site-settings");
+        } catch (error) {
+          console.log("Failed to revalidate tag", error);
+        }
+      },
+    ],
   },
   fields: [
     {

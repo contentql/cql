@@ -64,6 +64,12 @@ export const deepMerge = <T, R>(
                 if (defaultFieldValue?.value) {
                   return defaultFieldValue?.value === userFieldDetails?.value;
                 }
+
+                // checking if type is tabs because tabs won't have name field
+                return (
+                  defaultFieldValue?.type === "tabs" &&
+                  userFieldDetails?.type === "tabs"
+                );
               });
 
               // if anything is overlapping doing a deepMerge
