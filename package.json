@@ -37,15 +37,15 @@
     "watch": "nodemon --watch 'src/**/*' --ext ts,tsx,js,jsx,json --exec 'pnpm run build && yalc push'"
   },
   "dependencies": {
-    "@payloadcms/db-mongodb": "beta",
-    "@payloadcms/email-resend": "beta",
-    "@payloadcms/next": "beta",
-    "@payloadcms/plugin-nested-docs": "beta",
-    "@payloadcms/plugin-search": "beta",
-    "@payloadcms/plugin-seo": "beta",
-    "@payloadcms/richtext-slate": "beta",
-    "@payloadcms/storage-s3": "beta",
-    "@payloadcms/ui": "beta",
+    "@payloadcms/db-mongodb": "3.0.0-beta.110",
+    "@payloadcms/email-resend": "3.0.0-beta.110",
+    "@payloadcms/next": "3.0.0-beta.110",
+    "@payloadcms/plugin-nested-docs": "3.0.0-beta.110",
+    "@payloadcms/plugin-search": "3.0.0-beta.110",
+    "@payloadcms/plugin-seo": "3.0.0-beta.110",
+    "@payloadcms/richtext-slate": "3.0.0-beta.110",
+    "@payloadcms/storage-s3": "3.0.0-beta.110",
+    "@payloadcms/ui": "3.0.0-beta.110",
     "deepmerge": "^4.3.1",
     "lodash.uniq": "^4.5.0",
     "node-schedule": "^2.1.1",
@@ -55,7 +55,7 @@
   },
   "peerDependencies": {
     "next": "15.0.0-canary.160",
-    "payload": "beta",
+    "payload": "3.0.0-beta.110",
     "react": "^19.0.0 || ^19.0.0-rc-5dcb0097-20240918",
     "react-dom": "^19.0.0 || ^19.0.0-rc-5dcb0097-20240918",
     "sharp": "^0.33.5"
