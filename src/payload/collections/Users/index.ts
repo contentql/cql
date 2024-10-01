@@ -1,22 +1,22 @@
-import type { CustomCollectionConfig } from "../../../core/payload-overrides.js";
+import type { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 
 import {
-  isAdminOrCurrentUser,
-  isAdmin,
   adminOrCurrentUserFieldAccess,
-} from "../../access/index.js";
-import { slugField } from "../../fields/slug/index.js";
+  isAdmin,
+  isAdminOrCurrentUser,
+} from '../../access/index.js'
+import { slugField } from '../../fields/slug/index.js'
 
-import { assignAdminRoleIfNoAdminsExist } from "./hooks/assignAdminRoleIfNoAdminsExist.js";
-import { authorAccessAfterUpdate } from "./hooks/authorAccessAfterUpdate.js";
-import { collectionSlug } from "../../../core/collectionSlug.js";
-import { socialLinksField } from "../../globals/SiteSettings/index.js";
+import { collectionSlug } from '../../../core/collectionSlug.js'
+import { socialLinksField } from '../../globals/SiteSettings/index.js'
+import { assignAdminRoleIfNoAdminsExist } from './hooks/assignAdminRoleIfNoAdminsExist.js'
+import { authorAccessAfterUpdate } from './hooks/authorAccessAfterUpdate.js'
 
 export const Users: CustomCollectionConfig = {
   slug: collectionSlug.users,
   admin: {
-    group: "Auth",
-    useAsTitle: "email",
+    group: 'Auth',
+    useAsTitle: 'email',
   },
 
   auth: {
@@ -31,15 +31,15 @@ export const Users: CustomCollectionConfig = {
     admin: async ({ req }) => {
       // added author also to access the admin-panel
       if (req.user) {
-        const userRole: string[] = req?.user?.role || [];
+        const userRole: string[] = req?.user?.role || []
 
         const hasAccess = userRole
-          .map((role) => ["admin", "author"].includes(role))
-          .some(Boolean);
-        return hasAccess;
+          .map(role => ['admin', 'author'].includes(role))
+          .some(Boolean)
+        return hasAccess
       }
 
-      return false;
+      return false
     },
     read: isAdminOrCurrentUser,
     create: isAdmin,
@@ -48,66 +48,69 @@ export const Users: CustomCollectionConfig = {
   },
   fields: [
     {
-      name: "displayName",
-      label: "Display Name",
-      type: "text",
+      name: 'displayName',
+      label: 'Display Name',
+      type: 'text',
       saveToJWT: true,
       access: {
         update: adminOrCurrentUserFieldAccess,
       },
     },
-    slugField("username", {
-      name: "username",
-      label: "Username",
-      type: "text",
-      saveToJWT: true,
-      required: true,
-      unique: true,
-      admin: {
-        readOnly: false,
-        position: undefined,
+    slugField({
+      fieldToUse: 'username',
+      overrides: {
+        name: 'username',
+        label: 'Username',
+        type: 'text',
+        saveToJWT: true,
+        required: true,
+        unique: true,
+        admin: {
+          readOnly: false,
+          position: undefined,
+        },
       },
     }),
     {
-      name: "imageUrl",
-      type: "upload",
-      relationTo: "media",
+      name: 'imageUrl',
+      type: 'upload',
+      relationTo: 'media',
       access: {
         update: adminOrCurrentUserFieldAccess,
       },
     },
     // only admin can update the role field
     {
-      name: "role",
-      type: "select",
+      name: 'role',
+      type: 'select',
       options: [
         {
-          label: "Admin",
-          value: "admin",
+          label: 'Admin',
+          value: 'admin',
         },
         {
-          label: "Author",
-          value: "author",
+          label: 'Author',
+          value: 'author',
         },
         {
-          label: "User",
-          value: "user",
+          label: 'User',
+          value: 'user',
         },
       ],
       saveToJWT: true,
-      defaultValue: "user",
+      defaultValue: 'user',
       required: true,
       hasMany: true,
     },
     {
-      name: "emailVerified",
-      type: "date",
+      name: 'emailVerified',
+      type: 'date',
     },
     {
-      type: "array",
-      name: "socialLinks",
-      label: "Social Links",
+      type: 'array',
+      name: 'socialLinks',
+      label: 'Social Links',
       fields: [socialLinksField],
     },
   ],
-};
+}

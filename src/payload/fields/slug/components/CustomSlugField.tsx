@@ -1,10 +1,9 @@
 'use client'
-// This is a client component
 
-import { formatString } from '../utils/formatString.js'
 import { TextField, useFormFields } from '@payloadcms/ui'
 import { TextFieldClientProps } from 'payload'
 import React, { useEffect } from 'react'
+import { formatString } from '../utils/formatString'
 
 interface CustomClientProps {
   fieldToUse: string
@@ -27,10 +26,18 @@ export const CustomSlugField: React.FC<
   useEffect(() => {
     if (!title) return
 
-    const formattedTitle = isHome ? '/' : formatString(String(title))
-    const formattedFieldData = formatString(fieldValue)
-    const updatedValue =
-      slugMode === 'generate' ? formattedTitle : formattedFieldData
+    const formattedTitle = isHome ? '/' : formatString(String(title || ''))
+    const formattedFieldData = formatString(String(fieldValue || ''))
+
+    let updatedValue: string
+
+    if (slugMode === 'generate') {
+      updatedValue = formattedTitle
+    } else if (slugMode === 'custom') {
+      updatedValue = formattedFieldData
+    } else {
+      updatedValue = formattedTitle
+    }
 
     dispatch({
       type: 'UPDATE',
@@ -40,7 +47,8 @@ export const CustomSlugField: React.FC<
   }, [title, isHome, fieldValue, slugMode, dispatch, fieldName])
 
   const readOnly =
-    fieldToUse !== fieldName && (slugMode ? slugMode === 'generate' : true)
+    fieldToUse !== fieldName &&
+    (slugMode === 'generate' || slugMode === undefined)
 
   return <TextField {...props} readOnly={readOnly} />
 }

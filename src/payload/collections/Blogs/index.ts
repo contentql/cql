@@ -1,89 +1,89 @@
-import { CustomCollectionConfig } from "../../../core/payload-overrides.js";
+import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 
-import { slugField } from "../../fields/slug/index.js";
+import { slugField } from '../../fields/slug/index.js'
 
-import { assignUserId } from "./field-level-hooks/assignUserId.js";
-import { collectionSlug } from "../../../core/collectionSlug.js";
+import { collectionSlug } from '../../../core/collectionSlug.js'
+import { assignUserId } from './field-level-hooks/assignUserId.js'
 
 export const Blogs: CustomCollectionConfig = {
   slug: collectionSlug.blogs,
   labels: {
-    singular: "Blog",
-    plural: "Blogs",
+    singular: 'Blog',
+    plural: 'Blogs',
   },
   access: {
     read: () => true,
   },
   admin: {
-    useAsTitle: "title",
+    useAsTitle: 'title',
   },
   versions: {
     drafts: true,
   },
   fields: [
     {
-      name: "blogImage",
-      label: "Blog Image",
-      type: "upload",
-      relationTo: "media",
+      name: 'blogImage',
+      label: 'Blog Image',
+      type: 'upload',
+      relationTo: 'media',
       required: true,
       admin: {
-        description: "Upload blog image",
+        description: 'Upload blog image',
       },
     },
     {
-      name: "title",
-      label: "Title",
-      type: "text",
+      name: 'title',
+      label: 'Title',
+      type: 'text',
       required: true,
     },
     {
-      name: "description",
-      label: "Description",
-      type: "textarea",
+      name: 'description',
+      label: 'Description',
+      type: 'textarea',
       required: true,
       admin: {
-        description: "Add the summary of the blog post",
+        description: 'Add the summary of the blog post',
       },
     },
     {
-      name: "tags",
-      label: "Tags",
-      type: "relationship",
-      relationTo: ["tags"],
+      name: 'tags',
+      label: 'Tags',
+      type: 'relationship',
+      relationTo: ['tags'],
       hasMany: true,
     },
     {
-      name: "author",
-      type: "relationship",
-      label: "Author",
-      relationTo: ["users"],
+      name: 'author',
+      type: 'relationship',
+      label: 'Author',
+      relationTo: ['users'],
       hasMany: true,
       hooks: {
         beforeChange: [assignUserId],
       },
       filterOptions: ({ relationTo, data }) => {
-        if (relationTo === "users") {
+        if (relationTo === 'users') {
           return {
             role: {
-              in: ["author"],
+              in: ['author'],
             },
-          };
+          }
         } else {
-          return false;
+          return false
         }
       },
     },
     {
-      name: "content",
-      type: "richText",
-      label: "Content",
+      name: 'content',
+      type: 'richText',
+      label: 'Content',
       required: true,
       admin: {
         description:
-          "Main content of the blog post. Use the rich text editor for formatting.",
+          'Main content of the blog post. Use the rich text editor for formatting.',
       },
     },
-    slugField("title"),
+    slugField({ fieldToUse: 'title' }),
   ],
-};
+}

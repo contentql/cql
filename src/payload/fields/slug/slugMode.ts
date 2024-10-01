@@ -1,7 +1,8 @@
-import deepMerge from "deepmerge";
-import { CustomField } from "../../../core/payload-overrides.js";
+import deepMerge from 'deepmerge'
+import type { Field } from 'payload'
 
-import { SlugModeField } from "./types.js";
+import { CustomField } from 'src/core/payload-overrides'
+import { SlugModeField } from './types'
 
 /**
  * Creates a configuration object for a "slugMode" field in Payload CMS with optional overrides.
@@ -12,8 +13,8 @@ import { SlugModeField } from "./types.js";
  * **Warning:** Do not modify the `name` or `options` properties in the overrides. Changing these properties may
  * affect the slug field generation and lead to unexpected behavior.
  *
- * @param {Partial<CustomField>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
- * @returns {CustomField} - The complete field configuration object, including default settings and any provided overrides.
+ * @param {Partial<Field>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
+ * @returns {Field} - The complete field configuration object, including default settings and any provided overrides.
  *
  * @example
  * // Example with custom field settings and overrides, but not altering 'name' or 'options'
@@ -30,31 +31,33 @@ import { SlugModeField } from "./types.js";
  * // including a custom label and admin layout, but keeping the default 'name' and 'options' settings.
  */
 const slugModeField: SlugModeField = (overrides = {}) =>
-  deepMerge<CustomField, Partial<CustomField>>(
+  deepMerge<Field, Partial<CustomField>>(
     {
-      name: "slugMode",
-      label: "Slug Mode",
-      type: "radio",
+      name: 'slugMode',
+      label: 'Slug Mode',
+      type: 'radio',
       options: [
         {
-          label: "Generate",
-          value: "generate",
+          label: 'Generate',
+          value: 'generate',
         },
         {
-          label: "Custom",
-          value: "custom",
+          label: 'Custom',
+          value: 'custom',
         },
       ],
-      defaultValue: "generate",
+      defaultValue: 'generate',
       admin: {
-        position: "sidebar",
-        layout: "horizontal",
-        condition: (data) => {
-          return !data?.isHome && !data?.isDynamic;
+        position: 'sidebar',
+        layout: 'horizontal',
+        components: {
+          Field: {
+            path: '@contentql/core/client#CustomSlugModeField',
+          },
         },
       },
     },
-    overrides
-  );
+    overrides,
+  )
 
-export default slugModeField;
+export default slugModeField

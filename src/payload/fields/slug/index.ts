@@ -1,3 +1,2 @@
-export { default as slugField } from "./slug.js";
-export { default as slugModeField } from "./slugMode.js";
-export { formatString } from "./utils/formatString.js";
+export { default as slugField } from './slug'
+export { default as slugModeField } from './slugMode'

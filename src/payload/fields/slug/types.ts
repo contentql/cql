@@ -1,8 +1,10 @@
-import { CustomField } from "../../../core/payload-overrides.js";
+import { CustomField } from 'src/core/payload-overrides'
 
-export type SlugField = (
-  fieldToUse?: string,
+export type SlugField = (params: {
+  fieldToUse: string
+  prefix?: string
+  suffix?: string
   overrides?: Partial<CustomField>
-) => CustomField;
+}) => CustomField
 
-export type SlugModeField = (overrides?: Partial<CustomField>) => CustomField;
+export type SlugModeField = (overrides?: Partial<CustomField>) => CustomField

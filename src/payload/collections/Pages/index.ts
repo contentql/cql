@@ -76,7 +76,7 @@ export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
         },
       },
       slugModeField(),
-      slugField('title'),
+      slugField({ fieldToUse: 'title' }),
       pathModeField(),
       pathField(),
     ],
