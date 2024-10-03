@@ -1,16 +1,12 @@
-import type { CustomCollectionConfig } from '../../../core/payload-overrides.js'
-
-import {
-  adminOrCurrentUserFieldAccess,
-  isAdmin,
-  isAdminOrCurrentUser,
-} from '../../access/index.js'
-import { slugField } from '../../fields/slug/index.js'
-
 import { collectionSlug } from '../../../core/collectionSlug.js'
+import type { CustomCollectionConfig } from '../../../core/payload-overrides.js'
+import { adminOrCurrentUserFieldAccess } from '../../access/adminOrCurrentUserFieldAccess.js'
+import { slugField } from '../../fields/slug/index.js'
 import { socialLinksField } from '../../globals/SiteSettings/index.js'
-import { assignAdminRoleIfNoAdminsExist } from './hooks/assignAdminRoleIfNoAdminsExist.js'
+
+import { isAdminOrCurrentUser } from './access/isAdminOrCurrentUser.js'
 import { authorAccessAfterUpdate } from './hooks/authorAccessAfterUpdate.js'
+import { handleUserRoles } from './hooks/handleUserRoles.js'
 
 export const Users: CustomCollectionConfig = {
   slug: collectionSlug.users,
@@ -25,7 +21,7 @@ export const Users: CustomCollectionConfig = {
     },
   },
   hooks: {
-    beforeChange: [authorAccessAfterUpdate, assignAdminRoleIfNoAdminsExist],
+    beforeChange: [authorAccessAfterUpdate, handleUserRoles],
   },
   access: {
     admin: async ({ req }) => {
@@ -33,17 +29,18 @@ export const Users: CustomCollectionConfig = {
       if (req.user) {
         const userRole: string[] = req?.user?.role || []
 
-        const hasAccess = userRole
-          .map(role => ['admin', 'author'].includes(role))
-          .some(Boolean)
+        const hasAccess = userRole.some(role =>
+          ['admin', 'author'].includes(role),
+        )
+
         return hasAccess
       }
 
       return false
     },
     read: isAdminOrCurrentUser,
-    create: isAdmin,
-    update: isAdmin,
+    create: () => true,
+    update: isAdminOrCurrentUser,
     delete: isAdminOrCurrentUser,
   },
   fields: [
