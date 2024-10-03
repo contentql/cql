@@ -1,7 +1,6 @@
-import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
-
 import { collectionSlug } from '../../../core/collectionSlug.js'
-import { isAdminOrAuthor, isAdminOrCurrentUser } from '../../access/index.js'
+import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
+import { isAdminOrAuthor } from '../../access/isAdminOrAuthor.js'
 import { slugField } from '../../fields/slug/index.js'
 
 export const Tags: CustomCollectionConfig = {
@@ -11,9 +10,9 @@ export const Tags: CustomCollectionConfig = {
     plural: 'Tags',
   },
   access: {
-    read: isAdminOrCurrentUser,
-    update: isAdminOrCurrentUser,
-    delete: isAdminOrCurrentUser,
+    read: () => true,
+    update: isAdminOrAuthor,
+    delete: isAdminOrAuthor,
     create: isAdminOrAuthor,
   },
   admin: {
