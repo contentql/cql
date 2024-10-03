@@ -1,8 +1,9 @@
+import { collectionSlug } from '../../../core/collectionSlug.js'
 import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
-
+import { isAdminOrAuthor } from '../../access/isAdminOrAuthor.js'
 import { slugField } from '../../fields/slug/index.js'
 
-import { collectionSlug } from '../../../core/collectionSlug.js'
+import { isAdminOrSelf } from './access/isAdminOrSelf.js'
 import { assignUserId } from './field-level-hooks/assignUserId.js'
 
 export const Blogs: CustomCollectionConfig = {
@@ -13,6 +14,9 @@ export const Blogs: CustomCollectionConfig = {
   },
   access: {
     read: () => true,
+    create: isAdminOrAuthor,
+    update: isAdminOrSelf,
+    delete: isAdminOrSelf,
   },
   admin: {
     useAsTitle: 'title',
