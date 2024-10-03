@@ -1,379 +1,378 @@
-import { z } from "zod";
+import { collectionSlug } from '../../../core/collectionSlug.js'
 import {
   CustomField,
   CustomGlobalConfig,
-} from "../../../core/payload-overrides.js";
-
-import { collectionSlug } from "../../../core/collectionSlug.js";
-import { isAdmin } from "../../access/index.js";
-import { revalidateTag } from "next/cache.js";
+} from '../../../core/payload-overrides.js'
+import { isAdmin } from '../../access/isAdmin.js'
+import { revalidateTag } from 'next/cache.js'
+import { z } from 'zod'
 
 const validateURL = z
   .string({
-    required_error: "Name is required",
-    invalid_type_error: "Name must be a string",
+    required_error: 'Name is required',
+    invalid_type_error: 'Name must be a string',
   })
-  .url();
+  .url()
 
 const menuItem: CustomField[] = [
   {
-    type: "row",
+    type: 'row',
     fields: [
       {
-        type: "row",
+        type: 'row',
         fields: [
           {
-            name: "type",
-            type: "radio",
+            name: 'type',
+            type: 'radio',
             admin: {
-              layout: "horizontal",
-              width: "50%",
+              layout: 'horizontal',
+              width: '50%',
             },
-            defaultValue: "reference",
+            defaultValue: 'reference',
             options: [
               {
-                label: "Internal link",
-                value: "reference",
+                label: 'Internal link',
+                value: 'reference',
               },
               {
-                label: "Custom URL",
-                value: "custom",
+                label: 'Custom URL',
+                value: 'custom',
               },
             ],
           },
           {
-            name: "newTab",
-            type: "checkbox",
+            name: 'newTab',
+            type: 'checkbox',
             admin: {
               style: {
-                alignSelf: "flex-end",
+                alignSelf: 'flex-end',
               },
-              width: "50%",
+              width: '50%',
             },
-            label: "Open in new tab",
+            label: 'Open in new tab',
           },
         ],
       },
     ],
   },
   {
-    type: "row",
+    type: 'row',
     fields: [
       {
-        name: "label",
-        type: "text",
-        label: "Label",
+        name: 'label',
+        type: 'text',
+        label: 'Label',
         required: true,
       },
       {
-        type: "relationship",
-        name: "page",
-        relationTo: ["pages"],
+        type: 'relationship',
+        name: 'page',
+        relationTo: ['pages'],
         admin: {
           condition: (_data, siblingData) => {
-            return siblingData.type === "reference";
+            return siblingData.type === 'reference'
           },
         },
         required: true,
         maxDepth: 1,
       },
       {
-        name: "url",
-        type: "text",
-        label: "URL",
+        name: 'url',
+        type: 'text',
+        label: 'URL',
         admin: {
-          condition: (_data, siblingData) => siblingData.type === "custom",
+          condition: (_data, siblingData) => siblingData.type === 'custom',
         },
         required: true,
       },
     ],
   },
-];
+]
 
 const menuGroupItem: CustomField = {
-  type: "group",
-  name: "menuLinkGroup",
-  label: "Link Group",
+  type: 'group',
+  name: 'menuLinkGroup',
+  label: 'Link Group',
   fields: [
     {
-      type: "text",
-      name: "groupTitle",
-      label: "Group Title",
+      type: 'text',
+      name: 'groupTitle',
+      label: 'Group Title',
       required: true,
     },
     {
-      type: "array",
-      name: "groupLinks",
-      label: "Links",
+      type: 'array',
+      name: 'groupLinks',
+      label: 'Links',
       fields: menuItem,
     },
   ],
   admin: {
     condition: (_data, siblingData) => siblingData.group,
   },
-};
+}
 
 const menuField: CustomField[] = [
   {
-    type: "checkbox",
-    name: "group",
-    label: "Group",
+    type: 'checkbox',
+    name: 'group',
+    label: 'Group',
     defaultValue: false,
     admin: {
-      description: "Check to create group of links",
+      description: 'Check to create group of links',
     },
   },
   {
-    name: "menuLink",
-    type: "group",
-    label: "Link",
+    name: 'menuLink',
+    type: 'group',
+    label: 'Link',
     fields: menuItem,
     admin: {
       condition: (_data, siblingData) => !siblingData.group,
     },
   },
   menuGroupItem,
-];
+]
 
 const logoField: CustomField[] = [
   {
-    name: "imageUrl",
-    type: "upload",
+    name: 'imageUrl',
+    type: 'upload',
     required: true,
-    relationTo: "media",
-    label: "Image",
+    relationTo: 'media',
+    label: 'Image',
   },
   {
-    type: "row",
+    type: 'row',
     fields: [
       {
-        label: "Height",
-        name: "height",
-        type: "number",
+        label: 'Height',
+        name: 'height',
+        type: 'number',
         admin: {
-          description: "Adjust to the height of the logo",
+          description: 'Adjust to the height of the logo',
         },
       },
       {
-        label: "Width",
-        name: "width",
-        type: "number",
+        label: 'Width',
+        name: 'width',
+        type: 'number',
         admin: {
-          description: "Adjust to the width of the logo",
+          description: 'Adjust to the width of the logo',
         },
       },
     ],
   },
-];
+]
 
 export const socialLinksField: CustomField = {
-  type: "row",
+  type: 'row',
   fields: [
     {
-      type: "select",
-      name: "platform",
-      label: "Platform",
+      type: 'select',
+      name: 'platform',
+      label: 'Platform',
       required: true,
       options: [
         {
-          label: "Website",
-          value: "website",
+          label: 'Website',
+          value: 'website',
         },
         {
-          label: "Facebook",
-          value: "facebook",
+          label: 'Facebook',
+          value: 'facebook',
         },
         {
-          label: "Instagram",
-          value: "instagram",
+          label: 'Instagram',
+          value: 'instagram',
         },
         {
-          label: "Twitter",
-          value: "twitter",
+          label: 'Twitter',
+          value: 'twitter',
         },
         {
-          label: "LinkedIn",
-          value: "linkedin",
+          label: 'LinkedIn',
+          value: 'linkedin',
         },
         {
-          label: "YouTube",
-          value: "youtube",
+          label: 'YouTube',
+          value: 'youtube',
         },
         {
-          label: "TikTok",
-          value: "tiktok",
+          label: 'TikTok',
+          value: 'tiktok',
         },
         {
-          label: "Pinterest",
-          value: "pinterest",
+          label: 'Pinterest',
+          value: 'pinterest',
         },
         {
-          label: "Snapchat",
-          value: "snapchat",
+          label: 'Snapchat',
+          value: 'snapchat',
         },
         {
-          label: "Reddit",
-          value: "reddit",
+          label: 'Reddit',
+          value: 'reddit',
         },
         {
-          label: "Tumblr",
-          value: "tumblr",
+          label: 'Tumblr',
+          value: 'tumblr',
         },
         {
-          label: "WhatsApp",
-          value: "whatsapp",
+          label: 'WhatsApp',
+          value: 'whatsapp',
         },
         {
-          label: "Telegram",
-          value: "telegram",
+          label: 'Telegram',
+          value: 'telegram',
         },
         {
-          label: "GitHub",
-          value: "github",
+          label: 'GitHub',
+          value: 'github',
         },
         {
-          label: "Medium",
-          value: "medium",
+          label: 'Medium',
+          value: 'medium',
         },
         {
-          label: "Quora",
-          value: "quora",
+          label: 'Quora',
+          value: 'quora',
         },
         {
-          label: "Discord",
-          value: "discord",
+          label: 'Discord',
+          value: 'discord',
         },
       ],
     },
     {
-      type: "text",
-      name: "value",
-      label: "Link",
+      type: 'text',
+      name: 'value',
+      label: 'Link',
       required: true,
       validate: (value: any, args: any) => {
-        const { success } = validateURL.safeParse(value);
+        const { success } = validateURL.safeParse(value)
 
-        return success || "Link is not valid";
+        return success || 'Link is not valid'
       },
     },
   ],
-};
+}
 
 export const siteSettings: CustomGlobalConfig = {
-  slug: collectionSlug["site-settings"],
+  slug: collectionSlug['site-settings'],
   access: {
-    read: isAdmin,
+    read: () => true,
     update: isAdmin,
   },
   hooks: {
     afterChange: [
       async () => {
         try {
-          revalidateTag("site-settings");
+          revalidateTag('site-settings')
         } catch (error) {
-          console.log("Failed to revalidate tag", error);
+          console.log('Failed to revalidate tag', error)
         }
       },
     ],
   },
   fields: [
     {
-      type: "tabs",
-      label: "Settings",
+      type: 'tabs',
+      label: 'Settings',
       tabs: [
         {
-          label: "General",
-          name: "general",
+          label: 'General',
+          name: 'general',
           fields: [
-            { type: "text", name: "title", required: true },
+            { type: 'text', name: 'title', required: true },
             {
-              type: "textarea",
-              name: "description",
+              type: 'textarea',
+              name: 'description',
               required: true,
             },
             {
-              name: "faviconUrl",
-              type: "upload",
+              name: 'faviconUrl',
+              type: 'upload',
               required: true,
-              relationTo: "media",
-              label: "Favicon",
+              relationTo: 'media',
+              label: 'Favicon',
               admin: {
-                description: "We recommend a maximum size of 256 * 256 pixels",
+                description: 'We recommend a maximum size of 256 * 256 pixels',
               },
             },
             {
-              name: "ogImageUrl",
-              type: "upload",
+              name: 'ogImageUrl',
+              type: 'upload',
               required: true,
-              relationTo: "media",
-              label: "OG Image",
+              relationTo: 'media',
+              label: 'OG Image',
               admin: {
-                description: "We recommend a maximum size of 1200 * 630 pixels",
+                description: 'We recommend a maximum size of 1200 * 630 pixels',
               },
             },
             {
-              name: "keywords",
-              type: "text",
+              name: 'keywords',
+              type: 'text',
               hasMany: true,
             },
           ],
         },
         {
-          label: "Navbar",
-          name: "navbar",
+          label: 'Navbar',
+          name: 'navbar',
           fields: [
             {
-              name: "logo",
-              type: "group",
-              interfaceName: "BrandLogo", // optional
-              label: "Logo",
+              name: 'logo',
+              type: 'group',
+              interfaceName: 'BrandLogo', // optional
+              label: 'Logo',
               fields: logoField,
             },
             {
-              name: "menuLinks",
-              label: "Menu Links",
-              type: "array",
+              name: 'menuLinks',
+              label: 'Menu Links',
+              type: 'array',
               fields: menuField,
             },
           ],
         },
         {
-          label: "Footer",
-          name: "footer",
+          label: 'Footer',
+          name: 'footer',
           fields: [
             {
-              name: "logo",
-              type: "group",
-              interfaceName: "BrandLogo", // optional
-              label: "Logo",
+              name: 'logo',
+              type: 'group',
+              interfaceName: 'BrandLogo', // optional
+              label: 'Logo',
               fields: [
                 ...logoField,
                 {
-                  type: "text",
-                  label: "Description",
-                  name: "description",
+                  type: 'text',
+                  label: 'Description',
+                  name: 'description',
                   admin: {
-                    description: "This text appears below the footer image",
+                    description: 'This text appears below the footer image',
                   },
                 },
               ],
             },
             {
-              name: "footerLinks",
-              type: "array",
-              label: "Footer Links",
+              name: 'footerLinks',
+              type: 'array',
+              label: 'Footer Links',
               fields: menuField,
             },
             {
-              type: "array",
-              name: "socialLinks",
-              label: "Social Links",
+              type: 'array',
+              name: 'socialLinks',
+              label: 'Social Links',
               fields: [socialLinksField],
             },
-            { type: "text", name: "copyright", label: "Copyright" },
+            { type: 'text', name: 'copyright', label: 'Copyright' },
           ],
         },
       ],
     },
   ],
-};
+}
