@@ -1,4 +1,4 @@
-import { CustomField } from 'src/core/payload-overrides'
+import { CustomField } from '../../../core/payload-overrides'
 
 export type SlugField = (params: {
   fieldToUse: string

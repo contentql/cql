@@ -1,67 +1,65 @@
-import { mongooseAdapter } from "@payloadcms/db-mongodb";
-import { resendAdapter } from "@payloadcms/email-resend";
-import { nestedDocsPlugin } from "@payloadcms/plugin-nested-docs";
-import { searchPlugin } from "@payloadcms/plugin-search";
-import type { SearchPluginConfig } from "@payloadcms/plugin-search/dist/types.js";
-import { slateEditor } from "@payloadcms/richtext-slate";
-import { s3Storage } from "@payloadcms/storage-s3";
-import { buildConfig, type Block, type Config as PayloadConfig } from "payload";
-
-import { seoPlugin } from "@payloadcms/plugin-seo";
-import { generateBreadcrumbsUrl } from "../utils/generateBreadcrumbsUrl.js";
-
-import { Blogs } from "../payload/collections/Blogs/index.js";
-import { Media } from "../payload/collections/Media/index.js";
-import { Pages } from "../payload/collections/Pages/index.js";
-import { Tags } from "../payload/collections/Tags/index.js";
-import { Users } from "../payload/collections/Users/index.js";
-import { siteSettings } from "../payload/globals/SiteSettings/index.js";
-import { collectionSlug } from "./collectionSlug.js";
-
-// added sharp as peer dependencies because nextjs-image recommends to install it
-import sharp from "sharp";
-import { isAdmin } from "../payload/access/index.js";
-import { scheduleDocPublishPlugin } from "../payload/plugins/schedule-doc-publish-plugin/index.js";
-import type { PluginTypes as ScheduleDocPublishPluginTypes } from "../payload/plugins/schedule-doc-publish-plugin/types.js";
-import { BeforeSyncConfig } from "../utils/beforeSync.js";
-import { deepMerge } from "../utils/deepMerge.js";
+import { isAdmin } from '../payload/access/isAdmin.js'
+import { Blogs } from '../payload/collections/Blogs/index.js'
+import { Media } from '../payload/collections/Media/index.js'
+import { Pages } from '../payload/collections/Pages/index.js'
+import { Tags } from '../payload/collections/Tags/index.js'
+import { Users } from '../payload/collections/Users/index.js'
+import { siteSettings } from '../payload/globals/SiteSettings/index.js'
+import { scheduleDocPublishPlugin } from '../payload/plugins/schedule-doc-publish-plugin/index.js'
+import type { PluginTypes as ScheduleDocPublishPluginTypes } from '../payload/plugins/schedule-doc-publish-plugin/types.js'
+import { BeforeSyncConfig } from '../utils/beforeSync.js'
+import { deepMerge } from '../utils/deepMerge.js'
+import { generateBreadcrumbsUrl } from '../utils/generateBreadcrumbsUrl.js'
 import {
   generateDescription,
   generateImage,
   generateTitle,
   generateURL,
-} from "../utils/seo.js";
+} from '../utils/seo.js'
+import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { resendAdapter } from '@payloadcms/email-resend'
+import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
+import { searchPlugin } from '@payloadcms/plugin-search'
+import type { SearchPluginConfig } from '@payloadcms/plugin-search/dist/types.js'
+import { seoPlugin } from '@payloadcms/plugin-seo'
+import { slateEditor } from '@payloadcms/richtext-slate'
+import { s3Storage } from '@payloadcms/storage-s3'
+import { type Block, type Config as PayloadConfig, buildConfig } from 'payload'
+// added sharp as peer dependencies because nextjs-image recommends to install it
+import sharp from 'sharp'
+
+import { collectionSlug } from './collectionSlug.js'
 import {
   CustomCollectionConfig,
   CustomGlobalConfig,
-} from "./payload-overrides.js";
+} from './payload-overrides.js'
 
 type S3Type = {
-  bucket: string;
-  endpoint: string;
-  accessKeyId: string;
-  secretAccessKey: string;
-  region: string;
-};
+  bucket: string
+  endpoint: string
+  accessKeyId: string
+  secretAccessKey: string
+  region: string
+}
 
 type ResendType = {
-  defaultFromAddress: string;
-  defaultFromName: string;
-  apiKey: string;
-};
+  defaultFromAddress: string
+  defaultFromName: string
+  apiKey: string
+}
 
 // Updating the collections type to CustomCollectionConfig
 export interface CQLConfigType
-  extends Partial<Omit<PayloadConfig, "collections" | "globals">> {
-  dbURL: string;
-  baseURL: string;
-  s3?: S3Type;
-  resend?: ResendType;
-  blocks?: Block[];
-  schedulePluginOptions?: ScheduleDocPublishPluginTypes;
-  searchPluginOptions?: SearchPluginConfig;
-  collections?: CustomCollectionConfig[];
-  globals?: CustomGlobalConfig[];
+  extends Partial<Omit<PayloadConfig, 'collections' | 'globals'>> {
+  dbURL: string
+  baseURL: string
+  s3?: S3Type
+  resend?: ResendType
+  blocks?: Block[]
+  schedulePluginOptions?: ScheduleDocPublishPluginTypes
+  searchPluginOptions?: SearchPluginConfig
+  collections?: CustomCollectionConfig[]
+  globals?: CustomGlobalConfig[]
 }
 
 /**
@@ -93,13 +91,13 @@ export interface CQLConfigType
  */
 
 const cqlConfig = ({
-  dbURL = "mongodb://localhost:27017/default-db",
-  baseURL = "http://localhost:3000",
-  cors = ["http://localhost:3000"],
-  csrf = ["http://localhost:3000"],
+  dbURL = 'mongodb://localhost:27017/default-db',
+  baseURL = 'http://localhost:3000',
+  cors = ['http://localhost:3000'],
+  csrf = ['http://localhost:3000'],
   s3,
   admin = {},
-  secret = "TESTING",
+  secret = 'TESTING',
   editor = slateEditor({}),
   collections = [],
   globals = [],
@@ -107,22 +105,22 @@ const cqlConfig = ({
   blocks,
   schedulePluginOptions = {
     enabled: true,
-    collections: [collectionSlug["blogs"]],
-    position: "sidebar",
+    collections: [collectionSlug['blogs']],
+    position: 'sidebar',
   },
   searchPluginOptions = {},
   email,
   ...config
 }: CQLConfigType) => {
-  const plugins: CQLConfigType["plugins"] = config.plugins || [];
+  const plugins: CQLConfigType['plugins'] = config.plugins || []
 
   if (s3) {
-    const { bucket, accessKeyId, endpoint, region, secretAccessKey } = s3;
+    const { bucket, accessKeyId, endpoint, region, secretAccessKey } = s3
 
     plugins.push(
       s3Storage({
         collections: {
-          ["media"]: true,
+          ['media']: true,
         },
         bucket,
         config: {
@@ -133,55 +131,55 @@ const cqlConfig = ({
           },
           region,
         },
-      })
-    );
+      }),
+    )
   }
 
-  const defaultCollections = [Users, Tags, Blogs, Media, Pages({ blocks })];
+  const defaultCollections = [Users, Tags, Blogs, Media, Pages({ blocks })]
 
   if (collections.length) {
     // mapping through user collections
-    collections.forEach((collection) => {
+    collections.forEach(collection => {
       // checking if the user collection overlaps with default collection
       const index = defaultCollections.findIndex(
-        (collectionValue) => collectionValue.slug === collection.slug
-      );
+        collectionValue => collectionValue.slug === collection.slug,
+      )
 
       // if collection overlaps with default collection then doing deepMerge
       if (index !== -1) {
         defaultCollections[index] = deepMerge(
           defaultCollections[index],
-          collection
-        );
+          collection,
+        )
       }
       // else pushing the user collection to default collection
       else {
-        defaultCollections.push(collection);
+        defaultCollections.push(collection)
       }
-    });
+    })
   }
 
-  const defaultGlobals = [siteSettings];
+  const defaultGlobals = [siteSettings]
 
   if (globals.length) {
-    globals.forEach((globalCollection) => {
+    globals.forEach(globalCollection => {
       // checking if the user globals overlaps with default globals
       const index = defaultGlobals.findIndex(
-        (collectionValue) => collectionValue.slug === globalCollection.slug
-      );
+        collectionValue => collectionValue.slug === globalCollection.slug,
+      )
 
       // if globals overlaps with default globals then doing deepMerge
       if (index !== -1) {
         defaultGlobals[index] = deepMerge(
           defaultGlobals[index],
-          globalCollection
-        );
+          globalCollection,
+        )
       }
       // else pushing the user globals to default globals
       else {
-        defaultGlobals.push(globalCollection);
+        defaultGlobals.push(globalCollection)
       }
-    });
+    })
   }
 
   return buildConfig({
@@ -190,34 +188,34 @@ const cqlConfig = ({
       ...admin,
       user: Users.slug,
       meta: {
-        titleSuffix: "- ContentQL",
+        titleSuffix: '- ContentQL',
         ...(admin.meta || {}),
       },
       livePreview: {
         url: ({ data, collectionConfig, locale }) => {
           return `${baseURL}/${data.path}${
-            locale ? `?locale=${locale.code}` : ""
-          }`;
+            locale ? `?locale=${locale.code}` : ''
+          }`
         },
 
-        collections: [collectionSlug["blogs"], collectionSlug["pages"]],
+        collections: [collectionSlug['blogs'], collectionSlug['pages']],
 
         breakpoints: [
           {
-            label: "Mobile",
-            name: "mobile",
+            label: 'Mobile',
+            name: 'mobile',
             width: 375,
             height: 667,
           },
           {
-            label: "Tablet",
-            name: "tablet",
+            label: 'Tablet',
+            name: 'tablet',
             width: 768,
             height: 1024,
           },
           {
-            label: "Desktop",
-            name: "desktop",
+            label: 'Desktop',
+            name: 'desktop',
             width: 1440,
             height: 900,
           },
@@ -235,17 +233,17 @@ const cqlConfig = ({
     plugins: [
       ...plugins,
       nestedDocsPlugin({
-        collections: [collectionSlug["pages"]],
+        collections: [collectionSlug['pages']],
         generateURL: generateBreadcrumbsUrl,
       }),
       // this is for scheduling document publish
       scheduleDocPublishPlugin(schedulePluginOptions),
       // this plugin generates metadata field for every page created
       seoPlugin({
-        collections: [collectionSlug["pages"]],
-        uploadsCollection: "media",
+        collections: [collectionSlug['pages']],
+        uploadsCollection: 'media',
         tabbedUI: true,
-        generateURL: (data) => generateURL({ data, baseURL }),
+        generateURL: data => generateURL({ data, baseURL }),
         generateTitle,
         generateDescription,
         generateImage,
@@ -253,14 +251,14 @@ const cqlConfig = ({
       // this plugin is for global search across the defined collections
       searchPlugin({
         collections: [
-          collectionSlug["blogs"],
-          collectionSlug["tags"],
-          collectionSlug["users"],
+          collectionSlug['blogs'],
+          collectionSlug['tags'],
+          collectionSlug['users'],
         ],
         defaultPriorities: {
-          [collectionSlug["blogs"]]: 10,
-          [collectionSlug["tags"]]: 20,
-          [collectionSlug["users"]]: 30,
+          [collectionSlug['blogs']]: 10,
+          [collectionSlug['tags']]: 20,
+          [collectionSlug['users']]: 30,
         },
         beforeSync: BeforeSyncConfig,
         searchOverrides: {
@@ -282,7 +280,7 @@ const cqlConfig = ({
           defaultFromName: resend.defaultFromName,
         })
       : email,
-  });
-};
+  })
+}
 
-export default cqlConfig;
+export default cqlConfig

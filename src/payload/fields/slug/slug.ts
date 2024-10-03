@@ -1,7 +1,6 @@
+import { CustomField } from '../../../core/payload-overrides'
 import deepMerge from 'deepmerge'
-import type { Field } from 'payload'
 
-import { CustomField } from 'src/core/payload-overrides'
 import { formatSlug } from './hooks/formatSlug'
 import { SlugField } from './types'
 
@@ -16,9 +15,9 @@ import { SlugField } from './types'
  * @param {string} [params.fieldToUse] - The field to use for generating the slug, used in the clientProps for the custom field component.
  * @param {string} [params.prefix] - Optional prefix to prepend to the slug.
  * @param {string} [params.suffix] - Optional suffix to append to the slug.
- * @param {Partial<Field>} [params.overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
+ * @param {Partial<CustomField>} [params.overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
  *
- * @returns {Field} - The complete field configuration object, including default settings and any provided overrides.
+ * @returns {CustomField} - The complete field configuration object, including default settings and any provided overrides.
  *
  * @example
  * // Example usage with custom field settings and overrides
