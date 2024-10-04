@@ -2,6 +2,7 @@ import { collectionSlug } from '../../../core/collectionSlug.js'
 import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { isAdminOrAuthor } from '../../access/isAdminOrAuthor.js'
 import { slugField } from '../../fields/slug/index.js'
+import { CONTENT_GROUP } from '../constants.js'
 
 export const Tags: CustomCollectionConfig = {
   slug: collectionSlug.tags,
@@ -18,6 +19,7 @@ export const Tags: CustomCollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'path', 'updatedAt', 'createdAt'],
+    group: CONTENT_GROUP,
   },
   versions: {
     drafts: {

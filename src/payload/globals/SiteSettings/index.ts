@@ -4,6 +4,7 @@ import {
   CustomGlobalConfig,
 } from '../../../core/payload-overrides.js'
 import { isAdmin } from '../../access/isAdmin.js'
+import { SETTINGS_GROUP } from '../../collections/constants.js'
 import { revalidateTag } from 'next/cache.js'
 import { z } from 'zod'
 
@@ -260,6 +261,7 @@ export const socialLinksField: CustomField = {
 
 export const siteSettings: CustomGlobalConfig = {
   slug: collectionSlug['site-settings'],
+  label: 'General',
   access: {
     read: () => true,
     update: isAdmin,
@@ -275,13 +277,16 @@ export const siteSettings: CustomGlobalConfig = {
       },
     ],
   },
+  admin: {
+    group: SETTINGS_GROUP,
+  },
   fields: [
     {
       type: 'tabs',
       label: 'Settings',
       tabs: [
         {
-          label: 'General',
+          label: 'Site Settings',
           name: 'general',
           fields: [
             { type: 'text', name: 'title', required: true },

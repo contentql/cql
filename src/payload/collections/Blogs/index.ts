@@ -2,6 +2,7 @@ import { collectionSlug } from '../../../core/collectionSlug.js'
 import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { isAdminOrAuthor } from '../../access/isAdminOrAuthor.js'
 import { slugField } from '../../fields/slug/index.js'
+import { CONTENT_GROUP } from '../constants.js'
 
 import { isAdminOrSelf } from './access/isAdminOrSelf.js'
 import { assignUserId } from './field-level-hooks/assignUserId.js'
@@ -20,6 +21,7 @@ export const Blogs: CustomCollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
+    group: CONTENT_GROUP,
   },
   versions: {
     drafts: true,

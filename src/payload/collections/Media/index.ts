@@ -4,6 +4,7 @@ import {
   CustomField,
 } from '../../../core/payload-overrides.js'
 import { isAdminOrAuthor } from '../../access/isAdminOrAuthor.js'
+import { UPLOADS_GROUP } from '../constants.js'
 
 const urlField: CustomField = {
   name: 'url',
@@ -17,6 +18,9 @@ export const Media: CustomCollectionConfig = {
     update: isAdminOrAuthor,
     delete: isAdminOrAuthor,
     create: isAdminOrAuthor,
+  },
+  admin: {
+    group: UPLOADS_GROUP,
   },
   upload: {
     imageSizes: [

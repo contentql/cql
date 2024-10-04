@@ -3,6 +3,7 @@ import type { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { adminOrCurrentUserFieldAccess } from '../../access/adminOrCurrentUserFieldAccess.js'
 import { slugField } from '../../fields/slug/index.js'
 import { socialLinksField } from '../../globals/SiteSettings/index.js'
+import { AUTH_GROUP } from '../constants.js'
 
 import { isAdminOrCurrentUser } from './access/isAdminOrCurrentUser.js'
 import { authorAccessAfterUpdate } from './hooks/authorAccessAfterUpdate.js'
@@ -11,7 +12,7 @@ import { handleUserRoles } from './hooks/handleUserRoles.js'
 export const Users: CustomCollectionConfig = {
   slug: collectionSlug.users,
   admin: {
-    group: 'Auth',
+    group: AUTH_GROUP,
     useAsTitle: 'email',
   },
   auth: {

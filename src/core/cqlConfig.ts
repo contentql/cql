@@ -135,7 +135,7 @@ const cqlConfig = ({
     )
   }
 
-  const defaultCollections = [Users, Tags, Blogs, Media, Pages({ blocks })]
+  const defaultCollections = [Pages({ blocks }), Blogs, Tags, Media, Users]
 
   if (collections.length) {
     // mapping through user collections
