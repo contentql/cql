@@ -240,7 +240,12 @@ const cqlConfig = ({
       scheduleDocPublishPlugin(schedulePluginOptions),
       // this plugin generates metadata field for every page created
       seoPlugin({
-        collections: [collectionSlug['pages']],
+        collections: [
+          collectionSlug['pages'],
+          collectionSlug['blogs'],
+          collectionSlug['tags'],
+          collectionSlug['users'],
+        ],
         uploadsCollection: 'media',
         tabbedUI: true,
         generateURL: data => generateURL({ data, baseURL }),

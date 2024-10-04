@@ -27,44 +27,54 @@ export const Tags: CustomCollectionConfig = {
   },
   fields: [
     {
-      name: 'tagImage',
-      label: 'Tag Image',
-      type: 'upload',
-      relationTo: 'media',
-      required: true,
-      admin: {
-        description: 'Upload tag image',
-      },
-    },
-    {
-      name: 'title',
-      label: 'Title',
-      type: 'text',
-      required: true,
-      unique: true,
-    },
-    {
-      name: 'description',
-      label: 'Description',
-      type: 'textarea',
-      required: true,
-    },
-    slugField({ fieldToUse: 'title' }),
-    {
-      name: 'color',
-      label: 'Tag Color',
-      type: 'select',
-      defaultValue: 'blue',
-      options: [
-        { label: 'Blue', value: 'blue' },
-        { label: 'Gray', value: 'gray' },
-        { label: 'Red', value: 'red' },
-        { label: 'Green', value: 'green' },
-        { label: 'Yellow', value: 'yellow' },
-        { label: 'Indigo', value: 'indigo' },
-        { label: 'Purple', value: 'purple' },
-        { label: 'Pink', value: 'pink' },
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Tag',
+          fields: [
+            {
+              name: 'tagImage',
+              label: 'Tag Image',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              admin: {
+                description: 'Upload tag image',
+              },
+            },
+            {
+              name: 'title',
+              label: 'Title',
+              type: 'text',
+              required: true,
+              unique: true,
+            },
+            {
+              name: 'description',
+              label: 'Description',
+              type: 'textarea',
+              required: true,
+            },
+            {
+              name: 'color',
+              label: 'Tag Color',
+              type: 'select',
+              defaultValue: 'blue',
+              options: [
+                { label: 'Blue', value: 'blue' },
+                { label: 'Gray', value: 'gray' },
+                { label: 'Red', value: 'red' },
+                { label: 'Green', value: 'green' },
+                { label: 'Yellow', value: 'yellow' },
+                { label: 'Indigo', value: 'indigo' },
+                { label: 'Purple', value: 'purple' },
+                { label: 'Pink', value: 'pink' },
+              ],
+            },
+          ],
+        },
       ],
     },
+    slugField({ fieldToUse: 'title' }),
   ],
 }
