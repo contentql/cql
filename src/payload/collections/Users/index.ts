@@ -1,6 +1,7 @@
 import { collectionSlug } from '../../../core/collectionSlug.js'
 import type { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { adminOrCurrentUserFieldAccess } from '../../access/adminOrCurrentUserFieldAccess.js'
+import { isAdminFieldAccess } from '../../access/isAdminFieldAccess.js'
 import { slugField } from '../../fields/slug/index.js'
 import { socialLinksField } from '../../globals/SiteSettings/index.js'
 import { AUTH_GROUP } from '../constants.js'
@@ -100,6 +101,10 @@ export const Users: CustomCollectionConfig = {
                   value: 'user',
                 },
               ],
+              access: {
+                create: isAdminFieldAccess,
+                update: isAdminFieldAccess,
+              },
               saveToJWT: true,
               defaultValue: 'user',
               required: true,
@@ -108,12 +113,19 @@ export const Users: CustomCollectionConfig = {
             {
               name: 'emailVerified',
               type: 'date',
+              access: {
+                create: isAdminFieldAccess,
+                update: isAdminFieldAccess,
+              },
             },
             {
               type: 'array',
               name: 'socialLinks',
               label: 'Social Links',
               fields: [socialLinksField],
+              access: {
+                update: adminOrCurrentUserFieldAccess,
+              },
             },
           ],
         },

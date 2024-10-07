@@ -6,7 +6,11 @@ export const handleUserRoles: CollectionBeforeChangeHook = async ({
   operation,
   originalDoc,
 }) => {
-  const { payload } = req
+  const { payload, context } = req
+
+  if (context?.preventRoleOverride) {
+    return data
+  }
 
   if (operation === 'create') {
     const { totalDocs: totalUsers } = await payload.count({
@@ -20,17 +24,6 @@ export const handleUserRoles: CollectionBeforeChangeHook = async ({
 
     if (totalUsers === 0) {
       return { ...data, role: ['admin'] }
-    }
-  }
-
-  if (data.role?.includes('admin')) {
-    const formattedRoles = (data.role || []).filter(
-      (role: string) => role !== 'admin',
-    )
-
-    return {
-      ...data,
-      role: formattedRoles.length === 0 ? ['user'] : formattedRoles,
     }
   }
 
