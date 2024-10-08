@@ -286,7 +286,7 @@ const cqlConfig = ({
     cors,
     csrf,
     editor,
-    sharp,
+    sharp: input => sharp(input).toFormat('avif'),
     email: resend
       ? resendAdapter({
           apiKey: resend.apiKey,

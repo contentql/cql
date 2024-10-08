@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/contentql/cql"
   },
-  "version": "0.2.6",
+  "version": "0.2.7",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -63,7 +63,7 @@
     "payload": "3.0.0-beta.111",
     "react": "19.0.0-rc-3edc000d-20240926",
     "react-dom": "19.0.0-rc-3edc000d-20240926",
-    "sharp": "0.33.5"
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@swc/cli": "^0.4.0",

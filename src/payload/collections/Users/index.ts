@@ -39,7 +39,7 @@ export const Users: CustomCollectionConfig = {
 
       return false
     },
-    read: isAdminOrCurrentUser,
+    read: () => true,
     create: () => true,
     update: isAdminOrCurrentUser,
     delete: isAdminOrCurrentUser,
