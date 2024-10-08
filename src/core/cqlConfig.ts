@@ -5,6 +5,8 @@ import { Pages } from '../payload/collections/Pages/index.js'
 import { Tags } from '../payload/collections/Tags/index.js'
 import { Users } from '../payload/collections/Users/index.js'
 import { siteSettings } from '../payload/globals/SiteSettings/index.js'
+import { DisqusCommentsPlugin } from '../payload/plugins/disqus-comments'
+import type { PluginTypes as DisqusCommentsPluginTypes } from '../payload/plugins/disqus-comments/types.js'
 import { scheduleDocPublishPlugin } from '../payload/plugins/schedule-doc-publish-plugin/index.js'
 import type { PluginTypes as ScheduleDocPublishPluginTypes } from '../payload/plugins/schedule-doc-publish-plugin/types.js'
 import { BeforeSyncConfig } from '../utils/beforeSync.js'
@@ -57,6 +59,8 @@ export interface CQLConfigType
   resend?: ResendType
   blocks?: Block[]
   schedulePluginOptions?: ScheduleDocPublishPluginTypes
+  disqusCommentsOptions?: DisqusCommentsPluginTypes
+
   searchPluginOptions?: SearchPluginConfig
   collections?: CustomCollectionConfig[]
   globals?: CustomGlobalConfig[]
@@ -103,6 +107,9 @@ const cqlConfig = ({
   globals = [],
   resend,
   blocks,
+  disqusCommentsOptions = {
+    enabled: true,
+  },
   schedulePluginOptions = {
     enabled: true,
     collections: [collectionSlug['blogs']],
@@ -238,6 +245,8 @@ const cqlConfig = ({
       }),
       // this is for scheduling document publish
       scheduleDocPublishPlugin(schedulePluginOptions),
+      // disqus comments plugin
+      DisqusCommentsPlugin(disqusCommentsOptions),
       // this plugin generates metadata field for every page created
       seoPlugin({
         collections: [

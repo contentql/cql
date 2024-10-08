@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/contentql/cql"
   },
-  "version": "0.2.5",
+  "version": "0.2.6",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -50,6 +50,7 @@
     "@payloadcms/ui": "3.0.0-beta.111",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "deepmerge": "^4.3.1",
+    "disqus-react": "^1.1.5",
     "lodash.uniq": "^4.5.0",
     "node-schedule": "^2.1.1",
     "prettier": "^3.3.3",
