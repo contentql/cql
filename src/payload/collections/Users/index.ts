@@ -46,90 +46,80 @@ export const Users: CustomCollectionConfig = {
   },
   fields: [
     {
-      type: 'tabs',
-      tabs: [
+      name: 'displayName',
+      label: 'Display Name',
+      type: 'text',
+      saveToJWT: true,
+      access: {
+        update: adminOrCurrentUserFieldAccess,
+      },
+    },
+    slugField({
+      fieldToUse: 'username',
+      overrides: {
+        name: 'username',
+        label: 'Username',
+        type: 'text',
+        saveToJWT: true,
+        required: true,
+        unique: true,
+        admin: {
+          readOnly: false,
+          position: undefined,
+        },
+      },
+    }),
+    {
+      name: 'imageUrl',
+      type: 'upload',
+      relationTo: 'media',
+      access: {
+        update: adminOrCurrentUserFieldAccess,
+      },
+    },
+    // only admin can update the role field
+    {
+      name: 'role',
+      type: 'select',
+      options: [
+        {
+          label: 'Admin',
+          value: 'admin',
+        },
+        {
+          label: 'Author',
+          value: 'author',
+        },
         {
           label: 'User',
-          fields: [
-            {
-              name: 'displayName',
-              label: 'Display Name',
-              type: 'text',
-              saveToJWT: true,
-              access: {
-                update: adminOrCurrentUserFieldAccess,
-              },
-            },
-            slugField({
-              fieldToUse: 'username',
-              overrides: {
-                name: 'username',
-                label: 'Username',
-                type: 'text',
-                saveToJWT: true,
-                required: true,
-                unique: true,
-                admin: {
-                  readOnly: false,
-                  position: undefined,
-                },
-              },
-            }),
-            {
-              name: 'imageUrl',
-              type: 'upload',
-              relationTo: 'media',
-              access: {
-                update: adminOrCurrentUserFieldAccess,
-              },
-            },
-            // only admin can update the role field
-            {
-              name: 'role',
-              type: 'select',
-              options: [
-                {
-                  label: 'Admin',
-                  value: 'admin',
-                },
-                {
-                  label: 'Author',
-                  value: 'author',
-                },
-                {
-                  label: 'User',
-                  value: 'user',
-                },
-              ],
-              access: {
-                create: isAdminFieldAccess,
-                update: isAdminFieldAccess,
-              },
-              saveToJWT: true,
-              defaultValue: 'user',
-              required: true,
-              hasMany: true,
-            },
-            {
-              name: 'emailVerified',
-              type: 'date',
-              access: {
-                create: isAdminFieldAccess,
-                update: isAdminFieldAccess,
-              },
-            },
-            {
-              type: 'array',
-              name: 'socialLinks',
-              label: 'Social Links',
-              fields: [socialLinksField],
-              access: {
-                update: adminOrCurrentUserFieldAccess,
-              },
-            },
-          ],
+          value: 'user',
         },
       ],
+      access: {
+        create: isAdminFieldAccess,
+        update: isAdminFieldAccess,
+      },
+      saveToJWT: true,
+      defaultValue: 'user',
+      required: true,
+      hasMany: true,
+    },
+    {
+      name: 'emailVerified',
+      type: 'date',
+      access: {
+        create: isAdminFieldAccess,
+        update: isAdminFieldAccess,
+      },
+    },
+    {
+      type: 'array',
+      name: 'socialLinks',
+      label: 'Social Links',
+      fields: [socialLinksField],
+      access: {
+        update: adminOrCurrentUserFieldAccess,
+      },
     },
   ],
 }

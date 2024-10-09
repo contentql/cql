@@ -253,7 +253,6 @@ const cqlConfig = ({
           collectionSlug['pages'],
           collectionSlug['blogs'],
           collectionSlug['tags'],
-          collectionSlug['users'],
         ],
         uploadsCollection: 'media',
         tabbedUI: true,
@@ -286,7 +285,7 @@ const cqlConfig = ({
     cors,
     csrf,
     editor,
-    sharp: input => sharp(input).toFormat('avif'),
+    sharp,
     email: resend
       ? resendAdapter({
           apiKey: resend.apiKey,
