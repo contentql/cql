@@ -261,7 +261,7 @@ export const socialLinksField: CustomField = {
 
 export const siteSettings: CustomGlobalConfig = {
   slug: collectionSlug['site-settings'],
-  label: 'General',
+  label: 'Site Settings',
   access: {
     read: () => true,
     update: isAdmin,
@@ -286,7 +286,7 @@ export const siteSettings: CustomGlobalConfig = {
       label: 'Settings',
       tabs: [
         {
-          label: 'Site Settings',
+          label: 'General',
           name: 'general',
           fields: [
             { type: 'text', name: 'title', required: true },
@@ -376,6 +376,59 @@ export const siteSettings: CustomGlobalConfig = {
             },
             { type: 'text', name: 'copyright', label: 'Copyright' },
           ],
+        },
+        {
+          label: 'Redirection Links',
+          name: 'redirectionLinks',
+          fields: [
+            {
+              name: 'blogLink',
+              type: 'relationship',
+              relationTo: 'pages',
+              label: 'Blog redirect link',
+              maxDepth: 1,
+              admin: {
+                description: 'This redirects to a blog details page',
+              },
+            },
+            {
+              name: 'authorLink',
+              type: 'relationship',
+              relationTo: 'pages',
+              label: 'Author redirect link',
+              maxDepth: 1,
+              admin: {
+                description: 'This redirects to a author details page',
+              },
+            },
+            {
+              name: 'tagLink',
+              type: 'relationship',
+              relationTo: 'pages',
+              label: 'Tag redirect link',
+              maxDepth: 1,
+              admin: {
+                description: 'This redirects to a tag details page',
+              },
+            },
+          ],
+        },
+        {
+          label: 'Monetization',
+          name: 'monetization',
+          fields: [
+            {
+              name: 'adSenseId',
+              type: 'text',
+              label: 'Google AdSense',
+              admin: {
+                description: 'Add the publisher-id from Google AdSense Console',
+              },
+            },
+          ],
+          admin: {
+            hidden: true,
+          },
         },
       ],
     },
