@@ -425,6 +425,15 @@ export const siteSettings: CustomGlobalConfig = {
                 description: 'Add the publisher-id from Google AdSense Console',
               },
             },
+            {
+              name: 'measurementId',
+              type: 'text',
+              label: 'Google Analytics Measurement ID',
+              admin: {
+                description:
+                  'Add the measurement id from Google Analytics dashboard',
+              },
+            },
           ],
           admin: {
             hidden: true,
