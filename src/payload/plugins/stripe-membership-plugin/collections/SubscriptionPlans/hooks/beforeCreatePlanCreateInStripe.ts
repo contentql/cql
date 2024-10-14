@@ -20,8 +20,13 @@ export const handleStripeProductAndPrice: CollectionBeforeChangeHook = async ({
       recurring: { interval: 'month' },
     })
 
+    const paymentLink = await stripeSdk.paymentLinks.create({
+      line_items: [{ price: price.id, quantity: 1 }],
+    })
+
     data.stripeProductId = product.id
     data.stripePriceId = price.id
+    data.stripePaymentLink = paymentLink.url
   } else if (operation === 'update') {
     // Check if name has changed
     if (data.name !== originalDoc.name) {
@@ -38,7 +43,15 @@ export const handleStripeProductAndPrice: CollectionBeforeChangeHook = async ({
         currency: 'usd',
         recurring: { interval: 'month' },
       })
+
+      // Generate new payment link with the updated price
+      const newPaymentLink = await stripeSdk.paymentLinks.create({
+        line_items: [{ price: newPrice.id, quantity: 1 }],
+      })
+
+      // Update data with the new price ID and payment link
       data.stripePriceId = newPrice.id
+      data.stripePaymentLink = newPaymentLink.url
     }
   }
   return data
