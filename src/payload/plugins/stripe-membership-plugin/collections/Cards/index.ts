@@ -1,49 +1,52 @@
-import type { CollectionConfig } from 'payload'
-
 import { ADMIN_STRIPE_GROUP } from '../constants'
+import type { CollectionConfig } from 'payload'
+import Stripe from 'stripe'
+
 import { afterDeleteCard } from './hooks/afterDeleteCard'
 
-export const Cards: CollectionConfig = {
-  slug: 'cards',
-  labels: {
-    singular: 'card',
-    plural: 'Cards',
-  },
-  access: {
-    read: () => true,
-  },
-  admin: {
-    useAsTitle: 'name',
-    defaultColumns: ['name', 'paymentMethodId', 'user'],
-    group: ADMIN_STRIPE_GROUP
-  },
-  versions: {
-    drafts: {
-      autosave: false,
+export const Cards = (stripe: Stripe): CollectionConfig => {
+  return {
+    slug: 'cards',
+    labels: {
+      singular: 'card',
+      plural: 'Cards',
     },
-    maxPerDoc: 10,
-  },
-  hooks: {
-    afterDelete: [afterDeleteCard],
-  },
-  fields: [
-    {
-      name: 'name',
-      label: 'Card Name',
-      type: 'text',
-      required: true,
+    access: {
+      read: () => true,
     },
-    {
-      name: 'paymentMethodId',
-      label: 'Payment Method Id',
-      type: 'text',
-      required: true,
+    admin: {
+      useAsTitle: 'name',
+      defaultColumns: ['name', 'paymentMethodId', 'user'],
+      group: ADMIN_STRIPE_GROUP,
     },
-    {
-      name: 'user',
-      type: 'relationship',
-      label: 'User',
-      relationTo: ['users'],
+    versions: {
+      drafts: {
+        autosave: false,
+      },
+      maxPerDoc: 10,
     },
-  ],
+    hooks: {
+      afterDelete: [properties => afterDeleteCard({ ...properties, stripe })],
+    },
+    fields: [
+      {
+        name: 'name',
+        label: 'Card Name',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'paymentMethodId',
+        label: 'Payment Method Id',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'user',
+        type: 'relationship',
+        label: 'User',
+        relationTo: ['users'],
+      },
+    ],
+  }
 }

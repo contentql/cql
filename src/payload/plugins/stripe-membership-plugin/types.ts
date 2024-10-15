@@ -1,4 +1,6 @@
-export interface PluginTypes {
-  secretKey: string
-  webhookSecretKey: string
-}
+export type PluginTypes =
+  | {
+      secretKey: string
+      webhookSecretKey: string
+    }
+  | undefined

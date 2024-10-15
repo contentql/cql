@@ -1,10 +1,20 @@
-import { env } from '@env'
-import { CollectionAfterDeleteHook } from 'payload'
+import {
+  PayloadRequest,
+  RequestContext,
+  SanitizedCollectionConfig,
+} from 'payload'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(env.STRIPE_SECRET_KEY!)
+interface HookType {
+  stripe: Stripe
+  collection: SanitizedCollectionConfig
+  context: RequestContext
+  doc: any
+  id: number | string
+  req: PayloadRequest
+}
 
-export const afterDeleteCard: CollectionAfterDeleteHook = async ({ doc }) => {
+export const afterDeleteCard = async ({ doc, stripe }: HookType) => {
   const { paymentMethodId } = doc
 
   try {

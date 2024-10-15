@@ -5,6 +5,7 @@ import Stripe from 'stripe'
 import { Cards } from './collections/Cards'
 import { Orders } from './collections/Orders'
 import { SubscriptionPlans } from './collections/SubscriptionPlans'
+import { stripeWebhook } from './handler/stripeWebhook'
 import { PluginTypes } from './types'
 
 const createCustomer =
@@ -51,12 +52,16 @@ const createWalletCreditInStripe =
 export const stripeV3 =
   (PluginOptions: PluginTypes): Plugin =>
   (incomingConfig: Config): Config => {
+    // if secret is not given returning the incoming config
+    if (!PluginOptions) {
+      return incomingConfig
+    }
+
     const stripeSdk = new Stripe(PluginOptions.secretKey)
-
     const stripeWebhookSecret = PluginOptions.webhookSecretKey
+    const collections = incomingConfig.collections ?? []
 
-    // @ts-ignore
-    const updatedCollection = incomingConfig.collections.map(collection => {
+    const updatedCollection = collections.map(collection => {
       if (collection.slug === 'users') {
         return {
           ...collection,
@@ -139,21 +144,26 @@ export const stripeV3 =
 
       endpoints: [
         ...incomingConfig.endpoints!,
-        // {
-        //   path: '/v1/stripe/webhook',
-        //   method: 'post',
-        //   handler: async req => {
-        //     const data = await stripeWebhook(
-        //       //@ts-ignore
-        //       req,
-        //       stripeSdk,
-        //       stripeWebhookSecret,
-        //     )
-        //     return Response.json(data)
-        //   },
-        // },
+        {
+          path: '/v1/stripe/webhook',
+          method: 'post',
+          handler: async req => {
+            const data = await stripeWebhook(
+              req,
+              stripeSdk,
+              stripeWebhookSecret,
+            )
+
+            return Response.json(data)
+          },
+        },
       ],
-      collections: [...updatedCollection, Orders, Cards, SubscriptionPlans],
+      collections: [
+        ...updatedCollection,
+        Orders,
+        Cards(stripeSdk),
+        SubscriptionPlans(stripeSdk),
+      ],
     }
     return config
   }

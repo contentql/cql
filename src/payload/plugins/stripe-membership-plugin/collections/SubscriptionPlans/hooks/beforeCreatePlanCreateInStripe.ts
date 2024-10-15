@@ -1,26 +1,38 @@
-import { CollectionBeforeChangeHook } from 'payload'
+import {
+  PayloadRequest,
+  RequestContext,
+  SanitizedCollectionConfig,
+} from 'payload'
 import Stripe from 'stripe'
 
-//! Get stripe token
-const stripeSdk = new Stripe('STRIPE_SECRET_KEY')
+interface HookType {
+  stripe: Stripe
+  collection: SanitizedCollectionConfig
+  context: RequestContext
+  data: Partial<any>
+  operation: 'create' | 'update'
+  originalDoc?: any
+  req: PayloadRequest
+}
 
-export const handleStripeProductAndPrice: CollectionBeforeChangeHook = async ({
+export const handleStripeProductAndPrice = async ({
   operation,
   data,
   originalDoc,
-}) => {
+  stripe,
+}: HookType) => {
   if (operation === 'create') {
-    const product = await stripeSdk.products.create({
+    const product = await stripe.products.create({
       name: data.name,
     })
-    const price = await stripeSdk.prices.create({
+    const price = await stripe.prices.create({
       product: product.id,
       unit_amount: data.price * 100,
       currency: 'usd',
       recurring: { interval: 'month' },
     })
 
-    const paymentLink = await stripeSdk.paymentLinks.create({
+    const paymentLink = await stripe.paymentLinks.create({
       line_items: [{ price: price.id, quantity: 1 }],
     })
 
@@ -30,14 +42,14 @@ export const handleStripeProductAndPrice: CollectionBeforeChangeHook = async ({
   } else if (operation === 'update') {
     // Check if name has changed
     if (data.name !== originalDoc.name) {
-      await stripeSdk.products.update(data.stripeProductId, {
+      await stripe.products.update(data.stripeProductId, {
         name: data.name,
       })
     }
 
     // Check if price has changed
     if (data.price !== originalDoc.price) {
-      const newPrice = await stripeSdk.prices.create({
+      const newPrice = await stripe.prices.create({
         product: data.stripeProductId,
         unit_amount: data.price * 100,
         currency: 'usd',
@@ -45,7 +57,7 @@ export const handleStripeProductAndPrice: CollectionBeforeChangeHook = async ({
       })
 
       // Generate new payment link with the updated price
-      const newPaymentLink = await stripeSdk.paymentLinks.create({
+      const newPaymentLink = await stripe.paymentLinks.create({
         line_items: [{ price: newPrice.id, quantity: 1 }],
       })
 
