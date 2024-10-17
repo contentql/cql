@@ -1,0 +1,28 @@
+.field-type.select {
+  position: relative;
+}
+
+.react-select .rs__control {
+  padding: 0.8928571429rem 1.3392857143rem;
+  min-height: 3.9285714286rem;
+}
+
+html[data-theme='light'] {
+  .field-type.select {
+    &.error {
+      .rs__control {
+        @include lightInputError;
+      }
+    }
+  }
+}
+
+html[data-theme='dark'] {
+  .field-type.select {
+    &.error {
+      .rs__control {
+        @include darkInputError;
+      }
+    }
+  }
+}

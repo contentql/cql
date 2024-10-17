@@ -199,38 +199,38 @@ const cqlConfig = ({
         titleSuffix: '- ContentQL',
         ...(admin.meta || {}),
       },
-      livePreview: {
-        url: ({ data, collectionConfig, locale }) => {
-          return `${baseURL}/${data.path}${
-            locale ? `?locale=${locale.code}` : ''
-          }`
-        },
+      // livePreview: {
+      //   url: ({ data, collectionConfig, locale }) => {
+      //     return `${baseURL}/${data.path}${
+      //       locale ? `?locale=${locale.code}` : ''
+      //     }`
+      //   },
 
-        collections: [collectionSlug['blogs'], collectionSlug['pages']],
+      //   collections: [collectionSlug['blogs'], collectionSlug['pages']],
 
-        breakpoints: [
-          {
-            label: 'Mobile',
-            name: 'mobile',
-            width: 375,
-            height: 667,
-          },
-          {
-            label: 'Tablet',
-            name: 'tablet',
-            width: 768,
-            height: 1024,
-          },
-          {
-            label: 'Desktop',
-            name: 'desktop',
-            width: 1440,
-            height: 900,
-          },
-        ],
+      //   breakpoints: [
+      //     {
+      //       label: 'Mobile',
+      //       name: 'mobile',
+      //       width: 375,
+      //       height: 667,
+      //     },
+      //     {
+      //       label: 'Tablet',
+      //       name: 'tablet',
+      //       width: 768,
+      //       height: 1024,
+      //     },
+      //     {
+      //       label: 'Desktop',
+      //       name: 'desktop',
+      //       width: 1440,
+      //       height: 900,
+      //     },
+      //   ],
 
-        ...(admin.livePreview || {}),
-      },
+      //   ...(admin.livePreview || {}),
+      // },
     },
     collections: defaultCollections,
     globals: defaultGlobals,

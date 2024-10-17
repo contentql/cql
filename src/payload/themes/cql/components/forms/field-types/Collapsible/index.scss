@@ -1,0 +1,41 @@
+.collapsible-field {
+  &__row-label-wrap {
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: base(0.5);
+  }
+
+  &--has-error {
+    border: 1px solid var(--theme-error-500);
+  }
+}
+
+// .collapsible--style-default > .collapsible__toggle-wrap .collapsible__toggle {
+//   height: 40px;
+// }
+// .collapsible--collapsed {
+//   height: 40px;
+// }
+// .collapsible__toggle--open {
+//   z-index: 9999px;
+//   padding-bottom: 20px;
+// }
+
+.collapsible__toggle,
+.collapsible__header-wrap {
+  overflow: hidden;
+  height: 3.7285714286rem;
+}
+
+.collapsible--style-default {
+  min-height: 3.9285714286rem;
+}
+.collapsible__content {
+  @media screen and (max-width: 600px) {
+    margin-top: 40px;
+  }
+  @media screen and (min-width: 600px) {
+    margin-top: 20px;
+  }
+}
