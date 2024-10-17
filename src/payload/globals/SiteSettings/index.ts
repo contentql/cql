@@ -384,7 +384,7 @@ export const siteSettings: CustomGlobalConfig = {
             {
               name: 'blogLink',
               type: 'relationship',
-              relationTo: 'pages',
+              relationTo: ['pages'],
               label: 'Blog redirect link',
               maxDepth: 1,
               admin: {
@@ -394,7 +394,7 @@ export const siteSettings: CustomGlobalConfig = {
             {
               name: 'authorLink',
               type: 'relationship',
-              relationTo: 'pages',
+              relationTo: ['pages'],
               label: 'Author redirect link',
               maxDepth: 1,
               admin: {
@@ -404,7 +404,7 @@ export const siteSettings: CustomGlobalConfig = {
             {
               name: 'tagLink',
               type: 'relationship',
-              relationTo: 'pages',
+              relationTo: ['pages'],
               label: 'Tag redirect link',
               maxDepth: 1,
               admin: {

@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/contentql/cql"
   },
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -56,7 +56,8 @@
     "prettier": "^3.3.3",
     "slugify": "^1.6.6",
     "type-fest": "^4.26.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@payloadcms/plugin-form-builder": "3.0.0-beta.111"
   },
   "peerDependencies": {
     "next": "15.0.0-canary.173",

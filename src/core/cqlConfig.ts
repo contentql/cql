@@ -20,6 +20,7 @@ import {
 } from '../utils/seo.js'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { resendAdapter } from '@payloadcms/email-resend'
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import type { SearchPluginConfig } from '@payloadcms/plugin-search/dist/types.js'
@@ -260,6 +261,12 @@ const cqlConfig = ({
         generateTitle,
         generateDescription,
         generateImage,
+      }),
+      formBuilderPlugin({
+        fields: {
+          payment: false,
+          state: false,
+        },
       }),
       // this plugin is for global search across the defined collections
       searchPlugin({
