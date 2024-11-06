@@ -9,6 +9,7 @@ import { AUTH_GROUP } from '../constants.js'
 import { isAdminOrCurrentUser } from './access/isAdminOrCurrentUser.js'
 import { authorAccessAfterUpdate } from './hooks/authorAccessAfterUpdate.js'
 import { handleUserRoles } from './hooks/handleUserRoles.js'
+import { preventAdminRoleUpdate } from './hooks/preventAdminRoleUpdate.js'
 
 export const Users: CustomCollectionConfig = {
   slug: collectionSlug.users,
@@ -22,7 +23,11 @@ export const Users: CustomCollectionConfig = {
     },
   },
   hooks: {
-    beforeChange: [authorAccessAfterUpdate, handleUserRoles],
+    beforeChange: [
+      authorAccessAfterUpdate,
+      handleUserRoles,
+      preventAdminRoleUpdate,
+    ],
   },
   access: {
     admin: async ({ req }) => {
