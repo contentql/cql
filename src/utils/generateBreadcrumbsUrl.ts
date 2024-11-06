@@ -1,4 +1,4 @@
-import { singularize } from "./singularize.js";
+import { singularize } from './singularize.js'
 
 /**
  * Generates a breadcrumb URL for a document, based on its dynamic properties and collection.
@@ -29,8 +29,10 @@ export const generateBreadcrumbsUrl = (docs: any[], lastDoc: any): string => {
   // ) {
   // }
 
+  console.log({ lastDoc })
+  console.log({ docs })
   if (lastDoc?.isHome) {
-    return "/";
+    return '/'
   }
 
   // ! There no need of combining all parents path
@@ -42,17 +44,17 @@ export const generateBreadcrumbsUrl = (docs: any[], lastDoc: any): string => {
   //     )
   //   : ''
 
-  const parentDoc = docs.find((doc) => doc.id === lastDoc.parent);
+  const parentDoc = docs.find(doc => doc.id === lastDoc.parent)
 
   // ! Just find its parent path if it has a parent
   const parentPath =
-    lastDoc?.parent && parentDoc?.path !== "/" ? parentDoc.path : "";
+    lastDoc?.parent && parentDoc?.path !== '/' ? parentDoc.path : ''
 
-  const slug = lastDoc?.isDynamic ? `[${lastDoc?.slug}]` : `${lastDoc?.slug}`;
+  const slug = lastDoc?.isDynamic ? `[${lastDoc?.slug}]` : `${lastDoc?.slug}`
 
-  const singularizedParentPath = singularize(parentPath);
+  const singularizedParentPath = singularize(parentPath)
 
-  const path = `${singularizedParentPath}/${slug}`;
+  const path = `${singularizedParentPath}/${slug}`
 
-  return path;
-};
+  return path
+}

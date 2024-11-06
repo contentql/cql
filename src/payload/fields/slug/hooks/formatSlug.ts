@@ -1,5 +1,5 @@
-import { FieldHook } from 'payload'
 import { formatString } from '../utils/formatString'
+import { FieldHook } from 'payload'
 
 export const formatSlug =
   (
@@ -16,21 +16,19 @@ export const formatSlug =
       return formatString(correctValue)
     }
 
-    if (data?.isHome) return 'home-page'
+    if (data?.isHome) return '/'
 
     if (typeof value === 'string' && value.length > 0) {
       return formatString(correctValue, { trim: true })
     }
 
-    if (operation === 'create') {
-      const fallbackData =
-        (data && data[fallback]) || (originalDoc && originalDoc[fallback])
+    const fallbackData =
+      (data && data[fallback]) || (originalDoc && originalDoc[fallback])
 
-      const fallbackDataWithPrefixAndSuffix = `${prefix ? prefix : ''}${fallbackData}${suffix ? suffix : ''}`
+    const fallbackDataWithPrefixAndSuffix = `${prefix ? prefix : ''}${fallbackData}${suffix ? suffix : ''}`
 
-      if (fallbackData && typeof fallbackData === 'string') {
-        return formatString(fallbackDataWithPrefixAndSuffix, { trim: true })
-      }
+    if (fallbackData && typeof fallbackData === 'string') {
+      return formatString(fallbackDataWithPrefixAndSuffix, { trim: true })
     }
 
     return value

@@ -8,6 +8,8 @@ import { slugField, slugModeField } from '../../fields/slug/index.js'
 import { CONTENT_GROUP } from '../constants.js'
 import type { Block } from 'payload'
 
+import { deSelectIsHomePage } from './deSelectIsHomePage.js'
+
 type BlocksType = {
   blocks?: Block[]
 }
@@ -24,6 +26,28 @@ export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
       update: isAdmin,
       create: isAdmin,
       delete: isAdmin,
+    },
+    hooks: {
+      beforeOperation: [
+        async ({ collection, context, operation, req, args }) => {
+          if (
+            operation === 'create' ||
+            operation === 'autosave' ||
+            operation === 'update'
+          ) {
+            console.log('Start beforeOperation hook')
+            const { payload } = req
+            const data = args.data
+
+            console.log({ data })
+            if (Boolean(data.isHome)) {
+              await deSelectIsHomePage({ payload })
+            }
+          }
+
+          return args
+        },
+      ],
     },
     admin: {
       useAsTitle: 'title',

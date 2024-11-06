@@ -1,9 +1,8 @@
-import { getParents } from '@payloadcms/plugin-nested-docs'
-import { APIError, type FieldHook } from 'payload'
-import { willPathConflict } from '../utils/willPathConflict.js'
-
 import { collectionSlug } from '../../../../core/collectionSlug.js'
 import { generateBreadcrumbsUrl } from '../../../../utils/generateBreadcrumbsUrl.js'
+import { willPathConflict } from '../utils/willPathConflict.js'
+import { getParents } from '@payloadcms/plugin-nested-docs'
+import { APIError, type FieldHook } from 'payload'
 
 export const generateAndValidatePath: FieldHook = async ({
   collection,
@@ -50,11 +49,10 @@ export const generateAndValidatePath: FieldHook = async ({
     collectionsToCheck: [collectionSlug.pages], // Add more collections as needed
   })
 
-  if (isNewPathConflicting) {
+  console.log({ updatedPath })
+  if (isNewPathConflicting && updatedPath !== '/') {
     const error = new APIError(
-      updatedPath === '/'
-        ? 'A home page already exists.'
-        : 'This will create a conflict with an existing path.',
+      'This will create a conflict with an existing path.',
       400,
       [
         {

@@ -1,9 +1,9 @@
 'use client'
 
+import { formatString } from '../utils/formatString'
 import { TextField, useFormFields } from '@payloadcms/ui'
 import { TextFieldClientProps } from 'payload'
 import React, { useEffect } from 'react'
-import { formatString } from '../utils/formatString'
 
 interface CustomClientProps {
   fieldToUse: string
