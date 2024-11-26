@@ -14,6 +14,7 @@ Add this code in your `payload.config.ts` file to get a base configuration
 
 ```ts
 import { cqlConfig } from '@contentql/core'
+import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -30,7 +31,12 @@ const finalPath = path.resolve(dirname, 'payload-types.ts')
 export default cqlConfig({
   // baseURL is required for Live-Preview & SEO generation
   baseUrl: 'http://localhost:3000',
-  dbURL: process.env.DATABASE_URI,
+  db: sqliteAdapter({
+    client: {
+      url: env.DATABASE_URI,
+      authToken: env.DATABASE_SECRET,
+    },
+  }),
   s3: {
     bucket: process.env.S3_BUCKET,
     accessKeyId: process.env.S3_ACCESS_KEY_ID,

@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/contentql/cql"
   },
-  "version": "0.3.3",
+  "version": "0.3.4",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -41,7 +41,6 @@
     "styles": "sass ./src/payload/themes/cql/index.scss ./dist/payload/themes/cql/index.css"
   },
   "dependencies": {
-    "@payloadcms/db-mongodb": "3.0.0-beta.111",
     "@payloadcms/email-resend": "3.0.0-beta.111",
     "@payloadcms/next": "3.0.0-beta.111",
     "@payloadcms/plugin-form-builder": "3.0.0-beta.111",

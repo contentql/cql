@@ -18,7 +18,6 @@ import {
   generateTitle,
   generateURL,
 } from '../utils/seo.js'
-import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
@@ -28,6 +27,7 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { type Block, type Config as PayloadConfig, buildConfig } from 'payload'
+import { DatabaseAdapterResult } from 'payload/dist/database/types.js'
 // added sharp as peer dependencies because nextjs-image recommends to install it
 import sharp from 'sharp'
 
@@ -54,7 +54,6 @@ type ResendType = {
 // Updating the collections type to CustomCollectionConfig
 export interface CQLConfigType
   extends Partial<Omit<PayloadConfig, 'collections' | 'globals'>> {
-  dbURL: string
   baseURL: string
   s3?: S3Type
   resend?: ResendType
@@ -65,6 +64,7 @@ export interface CQLConfigType
   searchPluginOptions?: SearchPluginConfig
   collections?: CustomCollectionConfig[]
   globals?: CustomGlobalConfig[]
+  db: DatabaseAdapterResult
 }
 
 /**
@@ -96,7 +96,6 @@ export interface CQLConfigType
  */
 
 const cqlConfig = ({
-  dbURL = 'mongodb://localhost:27017/default-db',
   baseURL = 'http://localhost:3000',
   cors = ['http://localhost:3000'],
   csrf = ['http://localhost:3000'],
@@ -118,6 +117,7 @@ const cqlConfig = ({
   },
   searchPluginOptions = {},
   email,
+  db,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -234,9 +234,7 @@ const cqlConfig = ({
     },
     collections: defaultCollections,
     globals: defaultGlobals,
-    db: mongooseAdapter({
-      url: dbURL,
-    }),
+    db,
     secret,
     plugins: [
       ...plugins,
