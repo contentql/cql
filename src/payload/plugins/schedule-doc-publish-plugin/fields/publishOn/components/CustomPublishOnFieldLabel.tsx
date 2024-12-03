@@ -56,10 +56,10 @@ export const CustomPublishOnFieldLabel: React.FC<
 
   return (
     <div
-      className="flex flex-row"
+      className='flex flex-row'
       style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <FieldLabel field={{ ...props.field }} label={props.field.label} />
-      <FieldLabel field={{ label: '', name: '' }} label={timeRemaining || ''} />
+      <FieldLabel {...props} label={props.field.label} />
+      <FieldLabel {...props} label={timeRemaining || ''} />
     </div>
   )
 }

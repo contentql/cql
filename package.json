@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/contentql/cql"
   },
-  "version": "0.3.5",
+  "version": "0.3.6",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -41,15 +41,15 @@
     "styles": "sass ./src/payload/themes/cql/index.scss ./dist/payload/themes/cql/index.css"
   },
   "dependencies": {
-    "@payloadcms/email-resend": "3.0.0-beta.111",
-    "@payloadcms/next": "3.0.0-beta.111",
-    "@payloadcms/plugin-form-builder": "3.0.0-beta.111",
-    "@payloadcms/plugin-nested-docs": "3.0.0-beta.111",
-    "@payloadcms/plugin-search": "3.0.0-beta.111",
-    "@payloadcms/plugin-seo": "3.0.0-beta.111",
-    "@payloadcms/richtext-slate": "3.0.0-beta.111",
-    "@payloadcms/storage-s3": "3.0.0-beta.111",
-    "@payloadcms/ui": "3.0.0-beta.111",
+    "@payloadcms/email-resend": "^3.2.2",
+    "@payloadcms/next": "^3.2.2",
+    "@payloadcms/plugin-form-builder": "^3.2.2",
+    "@payloadcms/plugin-nested-docs": "^3.2.2",
+    "@payloadcms/plugin-search": "^3.2.2",
+    "@payloadcms/plugin-seo": "^3.2.2",
+    "@payloadcms/richtext-slate": "^3.2.2",
+    "@payloadcms/storage-s3": "^3.2.2",
+    "@payloadcms/ui": "^3.2.2",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "deepmerge": "^4.3.1",
     "disqus-react": "^1.1.5",
@@ -61,10 +61,10 @@
     "zod": "^3.23.8"
   },
   "peerDependencies": {
-    "next": "15.0.0-canary.173",
-    "payload": "3.0.0-beta.111",
-    "react": "19.0.0-rc-3edc000d-20240926",
-    "react-dom": "19.0.0-rc-3edc000d-20240926",
+    "next": "^15.0.2",
+    "payload": "^3.2.2",
+    "react": "19.0.0-rc-66855b96-20241106",
+    "react-dom": "19.0.0-rc-66855b96-20241106",
     "sharp": "^0.33.5"
   },
   "devDependencies": {
@@ -78,7 +78,7 @@
     "nodemon": "^3.1.7",
     "rimraf": "^6.0.1",
     "sass": "^1.80.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.7.2"
   },
   "engines": {
     "node": ">=20 <21"
