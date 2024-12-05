@@ -1,4 +1,5 @@
 import {
+  CollectionAfterDeleteHook,
   PayloadRequest,
   RequestContext,
   SanitizedCollectionConfig,
@@ -14,12 +15,14 @@ interface HookType {
   req: PayloadRequest
 }
 
-export const afterDeleteCard = async ({ doc, stripe }: HookType) => {
-  const { paymentMethodId } = doc
+export const afterDeleteCard =
+  (stripe: any): CollectionAfterDeleteHook =>
+  async ({ doc }) => {
+    const { paymentMethodId } = doc
 
-  try {
-    await stripe.paymentMethods.detach(paymentMethodId)
-  } catch (error) {
-    throw new Error('Error deleting payment method')
+    try {
+      await stripe.paymentMethods.detach(paymentMethodId)
+    } catch (error) {
+      throw new Error('Error deleting payment method')
+    }
   }
-}

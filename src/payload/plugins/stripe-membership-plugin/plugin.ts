@@ -1,3 +1,4 @@
+//@ts-nocheck
 import type { Config, Plugin } from 'payload'
 import { CollectionBeforeChangeHook } from 'payload'
 import Stripe from 'stripe'
@@ -59,7 +60,9 @@ export const stripeV3 =
 
     const stripeSdk = new Stripe(PluginOptions.secretKey)
     const stripeWebhookSecret = PluginOptions.webhookSecretKey
-    const collections = incomingConfig.collections ?? []
+    const stripeOauthClientId = PluginOptions.clientId
+
+    const collections = incomingConfig.collections || []
 
     const updatedCollection = collections.map(collection => {
       if (collection.slug === 'users') {
@@ -70,11 +73,11 @@ export const stripeV3 =
             beforeChange: [
               ...(collection.hooks?.beforeChange || []),
               createCustomer(stripeSdk),
-              createWalletCreditInStripe(stripeSdk),
             ],
           },
           fields: [
-            ...JSON.parse(JSON.stringify(collection.fields)),
+            // ...JSON.parse(JSON.stringify(collection.fields)),
+            ...collection.fields,
             {
               name: 'stripe_customer_code',
               type: 'text',
@@ -84,6 +87,11 @@ export const stripeV3 =
               },
             },
             {
+              name: 'stripe_user_id',
+              type: 'text',
+              label: 'Stripe user id',
+            },
+            {
               label: 'User Plan',
               name: 'user_plan',
               type: 'select',
@@ -91,16 +99,12 @@ export const stripeV3 =
               defaultValue: 'free',
               options: [
                 {
-                  label: 'Free Plan',
+                  label: 'Free',
                   value: 'free',
                 },
                 {
-                  label: 'Pro',
-                  value: 'pro',
-                },
-                {
-                  label: 'Enterprise',
-                  value: 'enterprise',
+                  label: 'Premium',
+                  value: 'premium',
                 },
               ],
             },
@@ -126,11 +130,6 @@ export const stripeV3 =
               name: 'subscription_status',
               label: 'Subscription Status',
               type: 'text',
-            },
-            {
-              name: 'wallet',
-              label: 'Wallet',
-              type: 'number',
             },
           ],
         }

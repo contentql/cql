@@ -26,7 +26,7 @@ export const Cards = (stripe: Stripe): CollectionConfig => {
       maxPerDoc: 10,
     },
     hooks: {
-      afterDelete: [properties => afterDeleteCard({ ...properties, stripe })],
+      afterDelete: [afterDeleteCard(stripe)],
     },
     fields: [
       {

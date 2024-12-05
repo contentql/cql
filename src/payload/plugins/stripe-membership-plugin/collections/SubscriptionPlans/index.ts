@@ -12,9 +12,7 @@ export const SubscriptionPlans = (stripe: Stripe): CollectionConfig => {
       group: ADMIN_STRIPE_GROUP,
     },
     hooks: {
-      beforeChange: [
-        properties => handleStripeProductAndPrice({ ...properties, stripe }),
-      ],
+      beforeChange: [handleStripeProductAndPrice(stripe)],
     },
     fields: [
       {

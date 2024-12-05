@@ -1,70 +1,41 @@
-import {
-  PayloadRequest,
-  RequestContext,
-  SanitizedCollectionConfig,
-} from 'payload'
-import Stripe from 'stripe'
+import { CollectionBeforeChangeHook } from 'payload'
 
-interface HookType {
-  stripe: Stripe
-  collection: SanitizedCollectionConfig
-  context: RequestContext
-  data: Partial<any>
-  operation: 'create' | 'update'
-  originalDoc?: any
-  req: PayloadRequest
-}
-
-export const handleStripeProductAndPrice = async ({
-  operation,
-  data,
-  originalDoc,
-  stripe,
-}: HookType) => {
-  if (operation === 'create') {
-    const product = await stripe.products.create({
-      name: data.name,
-    })
-    const price = await stripe.prices.create({
-      product: product.id,
-      unit_amount: data.price * 100,
-      currency: 'usd',
-      recurring: { interval: 'month' },
-    })
-
-    const paymentLink = await stripe.paymentLinks.create({
-      line_items: [{ price: price.id, quantity: 1 }],
-    })
-
-    data.stripeProductId = product.id
-    data.stripePriceId = price.id
-    data.stripePaymentLink = paymentLink.url
-  } else if (operation === 'update') {
-    // Check if name has changed
-    if (data.name !== originalDoc.name) {
-      await stripe.products.update(data.stripeProductId, {
+export const handleStripeProductAndPrice =
+  (stripeSdk: any): CollectionBeforeChangeHook =>
+  async ({ operation, data, originalDoc }) => {
+    //create product in stripe
+    if (operation === 'create') {
+      const product = await stripeSdk.products.create({
         name: data.name,
       })
-    }
-
-    // Check if price has changed
-    if (data.price !== originalDoc.price) {
-      const newPrice = await stripe.prices.create({
-        product: data.stripeProductId,
+      const price = await stripeSdk.prices.create({
+        product: product.id,
         unit_amount: data.price * 100,
         currency: 'usd',
         recurring: { interval: 'month' },
       })
+      data.stripeProductId = product.id
+      data.stripePriceId = price.id
 
-      // Generate new payment link with the updated price
-      const newPaymentLink = await stripe.paymentLinks.create({
-        line_items: [{ price: newPrice.id, quantity: 1 }],
-      })
+      //update product in stripe
+    } else if (operation === 'update') {
+      // Check if name has changed
+      if (data.name !== originalDoc.name) {
+        await stripeSdk.products.update(data.stripeProductId, {
+          name: data.name,
+        })
+      }
 
-      // Update data with the new price ID and payment link
-      data.stripePriceId = newPrice.id
-      data.stripePaymentLink = newPaymentLink.url
+      // Check if price has changed
+      if (data.price !== originalDoc.price) {
+        const newPrice = await stripeSdk.prices.create({
+          product: data.stripeProductId,
+          unit_amount: data.price * 100,
+          currency: 'usd',
+          recurring: { interval: 'month' },
+        })
+        data.stripePriceId = newPrice.id
+      }
     }
+    return data
   }
-  return data
-}
