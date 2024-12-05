@@ -6,6 +6,10 @@ import Stripe from 'stripe'
 import { Cards } from './collections/Cards'
 import { Orders } from './collections/Orders'
 import { SubscriptionPlans } from './collections/SubscriptionPlans'
+import { stripeAccountCreateAndLink } from './handler/stripeAccountCreate'
+import { stripeConnect } from './handler/stripeConnectLink'
+import { stripeOauthCallback } from './handler/stripeOauthCallback'
+import { stripeSuccess } from './handler/stripeSuccess'
 import { stripeWebhook } from './handler/stripeWebhook'
 import { PluginTypes } from './types'
 
@@ -61,6 +65,7 @@ export const stripeV3 =
     const stripeSdk = new Stripe(PluginOptions.secretKey)
     const stripeWebhookSecret = PluginOptions.webhookSecretKey
     const stripeOauthClientId = PluginOptions.clientId
+    const publicURI = PluginOptions.publicURI
 
     const collections = incomingConfig.collections || []
 
@@ -84,12 +89,24 @@ export const stripeV3 =
               label: 'Stripe Customer Code',
               admin: {
                 readOnly: true,
+                position: 'sidebar',
               },
             },
             {
               name: 'stripe_user_id',
               type: 'text',
               label: 'Stripe user id',
+              admin: {
+                position: 'sidebar',
+              },
+            },
+            {
+              name: 'stripe_express_dashboard_url',
+              type: 'text',
+              label: 'Stripe express dashboard url',
+              admin: {
+                position: 'sidebar',
+              },
             },
             {
               label: 'User Plan',
@@ -112,24 +129,37 @@ export const stripeV3 =
               name: 'stripe_subscription_id',
               label: 'Stripe Subscription ID',
               type: 'text',
-              // admin: {
-              //   readOnly: true,
-              // },
+              admin: {
+                readOnly: true,
+                position: 'sidebar',
+              },
             },
             {
               name: 'last_billed_date',
               label: 'Last Billed Date',
               type: 'date',
+              admin: {
+                readOnly: true,
+                position: 'sidebar',
+              },
             },
             {
               name: 'plan_end_date',
               label: 'Plan end date',
               type: 'date',
+              admin: {
+                readOnly: true,
+                position: 'sidebar',
+              },
             },
             {
               name: 'subscription_status',
               label: 'Subscription Status',
               type: 'text',
+              admin: {
+                readOnly: true,
+                position: 'sidebar',
+              },
             },
           ],
         }
@@ -153,6 +183,53 @@ export const stripeV3 =
               stripeWebhookSecret,
             )
 
+            return Response.json(data)
+          },
+        },
+        {
+          path: '/v1/stripe/connect',
+          method: 'post',
+          handler: async req => {
+            const data = await stripeConnect(
+              req,
+              stripeSdk,
+              stripeOauthClientId,
+              publicURI,
+            )
+            return Response.json(data)
+          },
+        },
+        {
+          path: '/v1/stripe/oauth',
+          method: 'get',
+          handler: async req => {
+            const data = await stripeOauthCallback(
+              req,
+              stripeSdk,
+              stripeOauthClientId,
+              publicURI,
+            )
+            return Response.json(data)
+          },
+        },
+        {
+          path: '/v1/stripe/account_create_and_link',
+          method: 'post',
+          handler: async req => {
+            const data = await stripeAccountCreateAndLink(
+              req,
+              stripeSdk,
+              publicURI,
+            )
+
+            return Response.json(data)
+          },
+        },
+        {
+          path: '/v1/stripe/success',
+          method: 'get',
+          handler: async req => {
+            const data = await stripeSuccess(req, stripeSdk, publicURI)
             return Response.json(data)
           },
         },
