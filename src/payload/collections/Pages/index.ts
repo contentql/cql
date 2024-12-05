@@ -8,6 +8,8 @@ import { slugField, slugModeField } from '../../fields/slug/index.js'
 import { CONTENT_GROUP } from '../constants.js'
 import type { Block } from 'payload'
 
+import { revalidatePost } from './hooks/revalidatePath.js'
+
 type BlocksType = {
   blocks?: Block[]
 }
@@ -29,6 +31,9 @@ export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
       useAsTitle: 'title',
       defaultColumns: ['title', 'path', 'updatedAt', 'createdAt'],
       group: CONTENT_GROUP,
+    },
+    hooks: {
+      afterChange: [revalidatePost],
     },
     versions: {
       drafts: {
