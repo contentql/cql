@@ -6,6 +6,7 @@ import Stripe from 'stripe'
 import { Cards } from './collections/Cards'
 import { Orders } from './collections/Orders'
 import { SubscriptionPlans } from './collections/SubscriptionPlans'
+import { createSubscription } from './handler/createSubscription'
 import { stripeAccountCreateAndLink } from './handler/stripeAccountCreate'
 import { stripeConnect } from './handler/stripeConnectLink'
 import { stripeOauthCallback } from './handler/stripeOauthCallback'
@@ -15,15 +16,47 @@ import { PluginTypes } from './types'
 
 const createCustomer =
   (stripeSdk: Stripe): CollectionBeforeChangeHook =>
-  async ({ operation, data }) => {
+  async ({ operation, data, req }) => {
+    const payload = req.payload
     if (operation === 'create') {
       try {
-        const customer = await stripeSdk.customers.create({ email: data.email })
+        // Find the user with stripe_user_id
+        const userWithStripeAccount = await payload.find({
+          collection: 'users',
+          where: {
+            stripe_user_id: {
+              exists: true, // Ensure we only get the user with stripe_user_id
+            },
+          },
+        })
+
+        if (!userWithStripeAccount.docs.length) {
+          throw new Error('No user with stripe_user_id found')
+        }
+
+        // Assuming only one user with stripe_user_id exists
+        const stripeUserId = userWithStripeAccount.docs[0].stripe_user_id
+
+        if (!stripeUserId) {
+          throw new Error('stripe_user_id not found for the user')
+        }
+
+        // Create the customer in Stripe
+        const customer = await stripeSdk.customers.create(
+          { email: data.email },
+          // {
+          //   stripeAccount: stripeUserId, // Use the retrieved stripe_user_id
+          // },
+        )
+
+        // Attach the Stripe customer ID to the data
         data.stripe_customer_code = customer.id
       } catch (error) {
         console.error('Error creating customer:', error)
+        throw new Error('Failed to create Stripe customer')
       }
     }
+
     return data
   }
 
@@ -230,6 +263,14 @@ export const stripeV3 =
           method: 'get',
           handler: async req => {
             const data = await stripeSuccess(req, stripeSdk, publicURI)
+            return Response.json(data)
+          },
+        },
+        {
+          path: '/v1/stripe/createSubscription',
+          method: 'post',
+          handler: async req => {
+            const data = await createSubscription(stripeSdk)
             return Response.json(data)
           },
         },
