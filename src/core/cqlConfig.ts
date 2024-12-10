@@ -65,6 +65,7 @@ export interface CQLConfigType
   collections?: CustomCollectionConfig[]
   globals?: CustomGlobalConfig[]
   db: DatabaseAdapterResult
+  disabledEcommerce?: Boolean
 }
 
 /**
@@ -118,6 +119,7 @@ const cqlConfig = ({
   searchPluginOptions = {},
   email,
   db,
+  disabledEcommerce = false,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -143,7 +145,13 @@ const cqlConfig = ({
     )
   }
 
-  const defaultCollections = [Pages({ blocks }), Blogs, Tags, Media, Users]
+  const currentCollections = [Pages({ blocks }), Blogs, Tags, Media, Users]
+
+  const ecommerceDisbaledCollection = [Pages({ blocks }), Tags, Media, Users]
+
+  const defaultCollections = disabledEcommerce
+    ? ecommerceDisbaledCollection
+    : currentCollections
 
   if (collections.length) {
     // mapping through user collections
