@@ -14,12 +14,12 @@ export const SubscriptionPlans = (stripe: Stripe): CollectionConfig => {
     hooks: {
       beforeChange: [handleStripeProductAndPrice(stripe)],
     },
-    access: {
-      create: () => false,
-      delete: () => false,
-      read: () => true,
-      update: () => true,
-    },
+    // access: {
+    //   create: () => false,
+    //   delete: () => false,
+    //   read: () => true,
+    //   update: () => true,
+    // },
     fields: [
       {
         name: 'name',
@@ -27,7 +27,7 @@ export const SubscriptionPlans = (stripe: Stripe): CollectionConfig => {
         required: true,
         admin: {
           description: 'Enter the name of the subscription plan',
-          readOnly: true,
+          // readOnly: true,
         },
       },
       {

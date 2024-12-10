@@ -20,19 +20,26 @@ export const stripeAccountCreateAndLink = async (
 
   try {
     const connectedAccount = await stripeSdk.accounts.create({
-      email: email,
-      type: 'express',
-      //   controller: {
-      //     fees: {
-      //       payer: 'application',
-      //     },
-      //     losses: {
-      //       payments: 'application',
-      //     },
-      //     stripe_dashboard: {
-      //       type: 'express',
-      //     },
-      //   },
+      controller: {
+        stripe_dashboard: {
+          type: 'none',
+        },
+        fees: {
+          payer: 'application',
+        },
+        losses: {
+          payments: 'application',
+        },
+        requirement_collection: 'application',
+      },
+      capabilities: {
+        transfers: {
+          requested: true,
+        },
+      },
+      // tos_acceptance: {
+      //   service_agreement: 'recipient',
+      // },
       metadata: {
         userId: userId,
         email: email,

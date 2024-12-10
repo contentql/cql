@@ -21,31 +21,31 @@ const createCustomer =
     if (operation === 'create') {
       try {
         // Find the user with stripe_user_id
-        const userWithStripeAccount = await payload.find({
-          collection: 'users',
-          where: {
-            stripe_user_id: {
-              exists: true, // Ensure we only get the user with stripe_user_id
-            },
-          },
-        })
+        // const userWithStripeAccount = await payload.find({
+        //   collection: 'users',
+        //   where: {
+        //     stripe_user_id: {
+        //       exists: true, // Ensure we only get the user with stripe_user_id
+        //     },
+        //   },
+        // })
 
-        if (!userWithStripeAccount.docs.length) {
-          throw new Error('No user with stripe_user_id found')
-        }
+        // if (!userWithStripeAccount.docs.length) {
+        //   throw new Error('No user with stripe_user_id found')
+        // }
 
-        // Assuming only one user with stripe_user_id exists
-        const stripeUserId = userWithStripeAccount.docs[0].stripe_user_id
+        // // Assuming only one user with stripe_user_id exists
+        // const stripeUserId = userWithStripeAccount.docs[0].stripe_user_id
 
-        if (!stripeUserId) {
-          throw new Error('stripe_user_id not found for the user')
-        }
+        // if (!stripeUserId) {
+        //   throw new Error('stripe_user_id not found for the user')
+        // }
 
         // Create the customer in Stripe
         const customer = await stripeSdk.customers.create(
           { email: data.email },
           // {
-          //   stripeAccount: stripeUserId, // Use the retrieved stripe_user_id
+          //   stripeAccount: 'acct_1QUBu3P7riMLNotV', // Use the retrieved stripe_user_id
           // },
         )
 

@@ -215,6 +215,17 @@ export const stripeWebhook = async (
     }
   }
 
+  async function transferAmountToSeller() {
+    const transfer = await stripeSdk.transfers.create({
+      amount: 2000,
+      currency: 'usd',
+      destination: 'acct_1QUQL307U0Nm7tDl',
+      transfer_group: 'ORDER100',
+    })
+
+    console.log({ transfer })
+  }
+
   let event
 
   try {
@@ -226,27 +237,29 @@ export const stripeWebhook = async (
   switch (event.type) {
     case 'invoice.payment_failed':
       const failedPaymentIntent = event.data.object
-      await updateOrderStatus(failedPaymentIntent.id, failedPaymentIntent.paid)
+      // await updateOrderStatus(failedPaymentIntent.id, failedPaymentIntent.paid)
       break
     case 'invoice.payment_succeeded':
       const paymentIntent = event.data.object
-      await updateOrderStatus(paymentIntent.id, paymentIntent.paid)
+      // await updateOrderStatus(paymentIntent.id, paymentIntent.paid)
       break
     case 'invoice.finalized':
       const finalizeInvoice = event.data.object
-      await createNewOrder(finalizeInvoice)
+      // await createNewOrder(finalizeInvoice)
       break
-    case 'customer.updated':
-      const updatedCustomer = event.data.object
-      console.log({ updatedCustomer })
-      await updateUserWalletAmount(updatedCustomer)
-      break
+    case 'checkout.session.async_payment_succeeded':
+      const sessionPayment = event.data.object
+      console.log({ sessionPayment })
+      await transferAmountToSeller()
+    case 'checkout.session.completed':
+      const session = event.data.object
+      console.log({ session })
     case 'customer.subscription.created':
     case 'customer.subscription.updated':
     case 'customer.subscription.deleted':
       const subscription = event.data.object
-      const sub = event
-      await handleSubscriptionChange(subscription)
+      console.log({ subscription })
+      // await handleSubscriptionChange(subscription)
       break
     default:
       console.log(`Unhandled event type ${event.type}`)
