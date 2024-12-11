@@ -1,12 +1,12 @@
 {
   "name": "@contentql/core",
   "description": "CQL package extends your base payload configuration with predefined configuration",
-  "homepage:": "https://contentql.io",
+  "homepage": "https://contentql.io",
   "repository": {
     "type": "git",
-    "url": "https://github.com/contentql/cql"
+    "url": "git+https://github.com/contentql/cql.git"
   },
-  "version": "0.3.8",
+  "version": "0.4.0",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -92,22 +92,5 @@
   "overrides": {
     "@types/react": "19.0.1",
     "@types/react-dom": "19.0.1"
-  },
-  "publishConfig": {
-    "exports": {
-      ".": {
-        "import": "./dist/index.js",
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "./client": {
-        "import": "./dist/exports/client.js",
-        "types": "./dist/exports/client.js",
-        "default": "./dist/exports/client.js"
-      }
-    },
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
-    "registry": "https://registry.npmjs.org/"
   }
 }
