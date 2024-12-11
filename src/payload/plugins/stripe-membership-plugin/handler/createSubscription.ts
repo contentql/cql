@@ -51,21 +51,56 @@ export const createSubscription = async (stripeSdk: Stripe) => {
   try {
     const session = await stripeSdk.checkout.sessions.create({
       mode: 'payment',
+      // For subscriptions only(Works except for india)
+
+      // subscription_data: {
+      //   application_fee_percent: 0.5 * 100,
+      //   transfer_data: {
+      //     destination: 'acct_1QUSyPSF1karazjW',
+      //   },
+      // },
       line_items: [
         {
-          price: 'price_1QUQN4P2ZUGTn5p0iN51DjNM', // Your price ID
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'HelloManoj',
+            },
+            unit_amount: 10000,
+            // recurring: {
+            //   interval: 'month',
+            // },
+          },
           quantity: 1,
         },
       ],
       customer: 'cus_RNAkZcSWCe1RQL', // Optional: existing customer
       payment_intent_data: {
-        transfer_group: 'ORDER100',
+        // transfer_group: 'ORDER600',
+        application_fee_amount: 0.5 * 100,
+        transfer_data: {
+          destination: 'acct_1QUSyPSF1karazjW',
+        },
       },
+
       success_url: 'http://localhost:3000/',
       cancel_url: 'http://localhost:3000', //Required cancel and success pages
       // Optional: additional configuration
       payment_method_types: ['card'], // Limit payment methods if needed
     })
+
+    const transfer = await stripeSdk.transfers.create({
+      amount: 20,
+      currency: 'usd',
+      destination: 'acct_1QUSyPSF1karazjW',
+      transfer_group: 'ORDER600',
+    })
+
+    return {
+      success: true,
+      transferId: transfer.id,
+      transferAmount: transfer.amount,
+    }
 
     return {
       success: true,

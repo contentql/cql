@@ -20,34 +20,8 @@ const createCustomer =
     const payload = req.payload
     if (operation === 'create') {
       try {
-        // Find the user with stripe_user_id
-        // const userWithStripeAccount = await payload.find({
-        //   collection: 'users',
-        //   where: {
-        //     stripe_user_id: {
-        //       exists: true, // Ensure we only get the user with stripe_user_id
-        //     },
-        //   },
-        // })
-
-        // if (!userWithStripeAccount.docs.length) {
-        //   throw new Error('No user with stripe_user_id found')
-        // }
-
-        // // Assuming only one user with stripe_user_id exists
-        // const stripeUserId = userWithStripeAccount.docs[0].stripe_user_id
-
-        // if (!stripeUserId) {
-        //   throw new Error('stripe_user_id not found for the user')
-        // }
-
         // Create the customer in Stripe
-        const customer = await stripeSdk.customers.create(
-          { email: data.email },
-          // {
-          //   stripeAccount: 'acct_1QUBu3P7riMLNotV', // Use the retrieved stripe_user_id
-          // },
-        )
+        const customer = await stripeSdk.customers.create({ email: data.email })
 
         // Attach the Stripe customer ID to the data
         data.stripe_customer_code = customer.id
@@ -58,33 +32,6 @@ const createCustomer =
     }
 
     return data
-  }
-
-const createWalletCreditInStripe =
-  (stripeSdk: Stripe): CollectionBeforeChangeHook =>
-  async ({ operation, data, originalDoc, req }) => {
-    if (operation === 'update') {
-      const newAmount = data.wallet
-      const oldAmount = originalDoc.wallet
-      const user = req.user
-
-      console.log({ req })
-      console.log({ user })
-
-      if (newAmount !== oldAmount && user?.role?.includes('admin')) {
-        try {
-          const customer = await stripeSdk.customers.createBalanceTransaction(
-            data.stripe_customer_code,
-            {
-              amount: -data.wallet * 100,
-              currency: 'usd',
-            },
-          )
-        } catch (error) {
-          console.error('Error creating customer credit:', error)
-        }
-      }
-    }
   }
 
 export const stripeV3 =

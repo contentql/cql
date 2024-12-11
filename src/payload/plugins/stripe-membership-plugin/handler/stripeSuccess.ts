@@ -17,14 +17,14 @@ export const stripeSuccess = async (
     const account = await stripeSdk.accounts.retrieve(accountId)
 
     if (account.details_submitted) {
-      // const expressLink = await stripeSdk.accounts.createLoginLink(account.id)
+      const dashboardLink = await stripeSdk.accounts.createLoginLink(account.id)
 
       const updatedUser = await request.payload.update({
         collection: 'users',
         id: userId,
         data: {
           stripe_user_id: accountId,
-          // stripe_express_dashboard_url: expressLink.url,
+          stripe_express_dashboard_url: dashboardLink.url,
         },
       })
 
