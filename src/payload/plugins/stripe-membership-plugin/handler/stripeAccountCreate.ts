@@ -1,16 +1,14 @@
-import { type NextRequest } from 'next/server'
+import { PayloadRequest } from 'payload'
 import Stripe from 'stripe'
 
 export const preferredRegion = 'auto'
 
 export const stripeAccountCreateAndLink = async (
-  request: NextRequest,
+  request: PayloadRequest,
   stripeSdk: Stripe,
   publicURI: string,
 ) => {
   const body = await request.json!()
-
-  console.log({ body })
 
   const { userId, email, country } = body
 
@@ -18,41 +16,54 @@ export const stripeAccountCreateAndLink = async (
     return ''
   }
 
+  let accountId
+
   try {
-    const connectedAccount = await stripeSdk.accounts.create({
-      email: email,
-      country: country,
-      // controller: {
-      //   stripe_dashboard: {
-      //     type: 'none',
-      //   },
-      //   fees: {
-      //     payer: 'application',
-      //   },
-      //   losses: {
-      //     payments: 'application',
-      //   },
-      //   requirement_collection: 'application',
-      // },
-      type: 'standard',
-      capabilities: {
-        transfers: {
-          requested: true,
-        },
-      },
-      tos_acceptance: {
-        service_agreement: 'recipient',
-      },
-      metadata: {
-        userId: userId,
+    if (country === 'IN') {
+      const connectedAccount = await stripeSdk.accounts.create({
         email: email,
-      },
-    })
+        country: country,
+        type: 'express',
+        capabilities: {
+          transfers: {
+            requested: true,
+          },
+        },
+        tos_acceptance: {
+          service_agreement: 'recipient',
+        },
+        metadata: {
+          userId: userId,
+          email: email,
+          country: country,
+        },
+      })
+
+      accountId = connectedAccount.id
+    } else {
+      const connectedAccount = await stripeSdk.accounts.create({
+        email: email,
+        country: country,
+        type: 'express',
+        capabilities: {
+          transfers: {
+            requested: true,
+          },
+        },
+        metadata: {
+          userId: userId,
+          email: email,
+          country: country,
+        },
+      })
+
+      accountId = connectedAccount.id
+    }
 
     const accountLink = await stripeSdk.accountLinks.create({
-      account: connectedAccount.id,
+      account: accountId,
       refresh_url: `${publicURI}/admin`,
-      return_url: `${publicURI}/api/v1/stripe/success?accountId=${connectedAccount.id}&userId=${userId}`,
+      return_url: `${publicURI}/api/v1/stripe/success?accountId=${accountId}&userId=${userId}`,
       type: 'account_onboarding',
     })
 

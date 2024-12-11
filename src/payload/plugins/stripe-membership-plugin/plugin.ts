@@ -3,9 +3,10 @@ import type { Config, Plugin } from 'payload'
 import { CollectionBeforeChangeHook } from 'payload'
 import Stripe from 'stripe'
 
-import { Cards } from './collections/Cards'
 import { Orders } from './collections/Orders'
+import { Products } from './collections/Products'
 import { SubscriptionPlans } from './collections/SubscriptionPlans'
+import { createProductSession } from './handler/createProductSession'
 import { createSubscription } from './handler/createSubscription'
 import { stripeAccountCreateAndLink } from './handler/stripeAccountCreate'
 import { stripeConnect } from './handler/stripeConnectLink'
@@ -44,7 +45,7 @@ export const stripeV3 =
 
     const stripeSdk = new Stripe(PluginOptions.secretKey)
     const stripeWebhookSecret = PluginOptions.webhookSecretKey
-    const stripeOauthClientId = PluginOptions.clientId
+    const stripeOauthClientId = 'ca_RKBJU93mZO1wKQxK8tEFIXyZpSslYc47'
     const publicURI = PluginOptions.publicURI
 
     const collections = incomingConfig.collections || []
@@ -217,7 +218,15 @@ export const stripeV3 =
           path: '/v1/stripe/createSubscription',
           method: 'post',
           handler: async req => {
-            const data = await createSubscription(stripeSdk)
+            const data = await createSubscription(req, stripeSdk, publicURI)
+            return Response.json(data)
+          },
+        },
+        {
+          path: '/v1/stripe/purchaseProducts',
+          method: 'post',
+          handler: async req => {
+            const data = await createProductSession(req, stripeSdk, publicURI)
             return Response.json(data)
           },
         },
@@ -225,7 +234,7 @@ export const stripeV3 =
       collections: [
         ...updatedCollection,
         Orders,
-        Cards(stripeSdk),
+        Products,
         SubscriptionPlans(stripeSdk),
       ],
     }
