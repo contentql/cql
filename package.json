@@ -6,7 +6,7 @@
     "type": "git",
     "url": "https://github.com/contentql/cql"
   },
-  "version": "0.3.7",
+  "version": "0.3.8",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -41,15 +41,15 @@
     "styles": "sass ./src/payload/themes/cql/index.scss ./dist/payload/themes/cql/index.css"
   },
   "dependencies": {
-    "@payloadcms/email-resend": "^3.2.2",
-    "@payloadcms/next": "^3.2.2",
-    "@payloadcms/plugin-form-builder": "^3.2.2",
-    "@payloadcms/plugin-nested-docs": "^3.2.2",
-    "@payloadcms/plugin-search": "^3.2.2",
-    "@payloadcms/plugin-seo": "^3.2.2",
-    "@payloadcms/richtext-slate": "^3.2.2",
-    "@payloadcms/storage-s3": "^3.2.2",
-    "@payloadcms/ui": "^3.2.2",
+    "@payloadcms/email-resend": "^3.5.0",
+    "@payloadcms/next": "^3.5.0",
+    "@payloadcms/plugin-form-builder": "^3.5.0",
+    "@payloadcms/plugin-nested-docs": "^3.5.0",
+    "@payloadcms/plugin-search": "^3.5.0",
+    "@payloadcms/plugin-seo": "^3.5.0",
+    "@payloadcms/richtext-slate": "^3.5.0",
+    "@payloadcms/storage-s3": "^3.5.0",
+    "@payloadcms/ui": "^3.5.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "deepmerge": "^4.3.1",
     "disqus-react": "^1.1.5",
@@ -61,10 +61,10 @@
     "zod": "^3.23.8"
   },
   "peerDependencies": {
-    "next": "^15.0.2",
-    "payload": "^3.2.2",
-    "react": "19.0.0-rc-66855b96-20241106",
-    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "next": "^15.0.4",
+    "payload": "^3.5.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "sharp": "^0.33.5"
   },
   "devDependencies": {
@@ -73,8 +73,8 @@
     "@types/lodash.uniq": "^4.5.9",
     "@types/node": "^22.5.4",
     "@types/node-schedule": "^2.1.7",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.1",
     "nodemon": "^3.1.7",
     "rimraf": "^6.0.1",
     "sass": "^1.80.1",
@@ -85,13 +85,13 @@
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "npm:types-react@19.0.0-rc.1",
-      "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+      "@types/react": "19.0.1",
+      "@types/react-dom": "19.0.1"
     }
   },
   "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
+    "@types/react": "19.0.1",
+    "@types/react-dom": "19.0.1"
   },
   "publishConfig": {
     "exports": {
