@@ -392,6 +392,16 @@ export const siteSettings: CustomGlobalConfig = {
               },
             },
             {
+              name: 'productLink',
+              type: 'relationship',
+              relationTo: ['pages'],
+              label: 'Product redirect link',
+              maxDepth: 1,
+              admin: {
+                description: 'This redirect to a product details page',
+              },
+            },
+            {
               name: 'authorLink',
               type: 'relationship',
               relationTo: ['pages'],

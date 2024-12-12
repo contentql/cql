@@ -37,12 +37,15 @@ export const stripeSuccess = async (
       })
 
       return {
-        stripeExpressUrl: account.id,
+        success: true,
+        url: dashboardLink.url,
+        message: 'Account details not submitted',
       }
     }
 
     return {
       success: false,
+      url: `${publicURI}/admin`,
       message: 'Account details not submitted',
     }
   } catch (error) {

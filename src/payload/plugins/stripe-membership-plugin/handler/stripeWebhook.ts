@@ -12,9 +12,8 @@ export const stripeWebhook = async (
   const body = await request.text!()
   const sig = request.headers.get('stripe-signature')!
 
-  async function createNewOrder(finalizeInvoice: any) {
-    console.log({ finalizeInvoice })
-    const data = finalizeInvoice.lines.data
+  async function createNewOrder(invoice: any) {
+    const data = invoice.lines.data
     console.log({ data })
     const productsJSON = data.map((item: any) => {
       // const [quantity, rest] = item.description.split(' × ')
@@ -24,7 +23,7 @@ export const stripeWebhook = async (
       return {
         name: item.description,
         amount: Math.round(item.amount / 100),
-        quantity: 1,
+        quantity: item.quantity,
       }
     })
     console.log({ productsJSON })
@@ -33,7 +32,7 @@ export const stripeWebhook = async (
         collection: 'users',
         where: {
           stripe_customer_code: {
-            equals: finalizeInvoice.customer,
+            equals: invoice.customer,
           },
         },
       })
@@ -42,12 +41,12 @@ export const stripeWebhook = async (
         collection: 'orders',
         data: {
           user: user.docs[0].id,
-          amount: finalizeInvoice.total / 100,
-          currency: finalizeInvoice.currency,
-          status: finalizeInvoice.status,
-          invoiceId: finalizeInvoice.id,
-          invoiceUrl: finalizeInvoice.hosted_invoice_url,
-          invoicePdf: finalizeInvoice.invoice_pdf,
+          amount: invoice.total / 100,
+          currency: invoice.currency,
+          status: invoice.status,
+          invoiceId: invoice.id,
+          invoiceUrl: invoice.hosted_invoice_url,
+          invoicePdf: invoice.invoice_pdf,
           products: productsJSON,
           userEmail: user.docs[0].email,
           paymentError: '',
@@ -55,31 +54,6 @@ export const stripeWebhook = async (
       })
     } catch (error) {
       console.log('Error creating order', error)
-    }
-  }
-
-  async function updateOrderStatus(id: string, status: boolean) {
-    try {
-      const order = await payload.find({
-        collection: 'orders',
-        where: {
-          invoiceId: {
-            equals: id,
-          },
-        },
-      })
-
-      if (order.docs.length > 0) {
-        await payload.update({
-          collection: 'orders',
-          id: order.docs[0].id,
-          data: {
-            status: status ? 'paid' : 'failed',
-          },
-        })
-      }
-    } catch (error) {
-      console.error('Error updating order status:', error)
     }
   }
 
@@ -156,35 +130,6 @@ export const stripeWebhook = async (
     }
   }
 
-  async function updateUserWalletAmount(updatedCustomer: any) {
-    let user: any | undefined = undefined
-
-    try {
-      const { docs: users, totalDocs: totalUsers } = await payload.find({
-        collection: 'users',
-        where: {
-          stripe_customer_code: {
-            equals: updatedCustomer.id,
-          },
-        },
-      })
-
-      user = users?.at(0)
-
-      if (user) {
-        await payload.update({
-          collection: 'users',
-          id: user.id,
-          data: {
-            wallet: -updatedCustomer.balance / 100,
-          },
-        })
-      }
-    } catch (error) {
-      console.log('error updating wallet amount', error)
-    }
-  }
-
   async function handleSubscriptionChange(subscription: any) {
     const customerId = subscription.customer
     const subscriptionId = subscription.id
@@ -215,12 +160,14 @@ export const stripeWebhook = async (
     }
   }
 
-  async function transferAmountToSeller() {
+  async function transferAmountToSeller(session: any) {
+    const fee = Math.round(session.metadata.totalAmount * 0.04)
+    const remainingAmount = session.metadata.totalAmount - fee
     const transfer = await stripeSdk.transfers.create({
-      amount: 2000,
+      amount: remainingAmount * 100,
       currency: 'usd',
-      destination: 'acct_1QUQL307U0Nm7tDl',
-      transfer_group: 'ORDER100',
+      destination: session.metadata.accountId,
+      transfer_group: session.metadata.transferId,
     })
 
     console.log({ transfer })
@@ -237,22 +184,22 @@ export const stripeWebhook = async (
   switch (event.type) {
     case 'invoice.payment_failed':
       const failedPaymentIntent = event.data.object
-      // await updateOrderStatus(failedPaymentIntent.id, failedPaymentIntent.paid)
+      await createNewOrder(failedPaymentIntent)
       break
     case 'invoice.payment_succeeded':
       const paymentIntent = event.data.object
-      // await updateOrderStatus(paymentIntent.id, paymentIntent.paid)
+      console.log({ paymentIntent })
       break
-    case 'invoice.finalized':
-      const finalizeInvoice = event.data.object
-      // await createNewOrder(finalizeInvoice)
-      break
-    case 'checkout.session.async_payment_succeeded':
-      const sessionPayment = event.data.object
-      console.log({ sessionPayment })
-      await transferAmountToSeller()
     case 'checkout.session.completed':
       const session = event.data.object
+      const invoice = await stripeSdk.invoices.retrieve(
+        session.invoice as string,
+      )
+      await createNewOrder(invoice)
+
+      if (session?.metadata?.transferId) {
+        await transferAmountToSeller(session)
+      }
       console.log({ session })
     case 'customer.subscription.created':
     case 'customer.subscription.updated':

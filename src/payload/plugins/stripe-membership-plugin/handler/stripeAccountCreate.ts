@@ -9,19 +9,23 @@ export const stripeAccountCreateAndLink = async (
   publicURI: string,
 ) => {
   const body = await request.json!()
+  const { user } = request
+  const { country } = body
 
-  const { userId, email, country } = body
-
-  if (!userId) {
-    return ''
+  if (!user) {
+    throw Error('User not found')
   }
 
+  // Add type guard to ensure email is a string
+  if (!user.email) {
+    throw Error('User email is required')
+  }
   let accountId
 
   try {
     if (country === 'IN') {
       const connectedAccount = await stripeSdk.accounts.create({
-        email: email,
+        email: user.email,
         country: country,
         type: 'express',
         capabilities: {
@@ -33,8 +37,8 @@ export const stripeAccountCreateAndLink = async (
           service_agreement: 'recipient',
         },
         metadata: {
-          userId: userId,
-          email: email,
+          userId: user.id,
+          email: user.email,
           country: country,
         },
       })
@@ -42,7 +46,7 @@ export const stripeAccountCreateAndLink = async (
       accountId = connectedAccount.id
     } else {
       const connectedAccount = await stripeSdk.accounts.create({
-        email: email,
+        email: user.email,
         country: country,
         type: 'express',
         capabilities: {
@@ -51,8 +55,8 @@ export const stripeAccountCreateAndLink = async (
           },
         },
         metadata: {
-          userId: userId,
-          email: email,
+          userId: user.id,
+          email: user.email,
           country: country,
         },
       })
@@ -63,7 +67,7 @@ export const stripeAccountCreateAndLink = async (
     const accountLink = await stripeSdk.accountLinks.create({
       account: accountId,
       refresh_url: `${publicURI}/admin`,
-      return_url: `${publicURI}/api/v1/stripe/success?accountId=${accountId}&userId=${userId}`,
+      return_url: `${publicURI}/api/v1/stripe/success?accountId=${accountId}&userId=${user.id}`,
       type: 'account_onboarding',
     })
 

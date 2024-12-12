@@ -1,5 +1,5 @@
+import { generateRandomString } from '../../../../utils/generateRandomString'
 import { PayloadRequest } from 'payload'
-import { generateRandomString } from 'src/utils/generateRandomString'
 import Stripe from 'stripe'
 
 export const createProductSession = async (
@@ -24,7 +24,8 @@ export const createProductSession = async (
   }))
 
   const totalAmount = products.reduce(
-    (total: number, product: { price: number }) => total + product.price,
+    (total: number, product: { price: number; quantity: number }) =>
+      total + product.price * product.quantity,
     0,
   )
 
@@ -35,7 +36,7 @@ export const createProductSession = async (
     })
 
     const stripeConnectedAccount = await request.payload.find({
-      collection: 'users', // Replace with your actual users collection slug
+      collection: 'users',
       where: {
         and: [
           { role: { equals: 'admin' } }, // Match role as 'admin'
@@ -62,6 +63,7 @@ export const createProductSession = async (
         customer: user.stripe_customer_code,
         mode: 'payment',
         success_url: publicURI,
+        invoice_creation: { enabled: true },
       })
 
       session = returnSession
@@ -69,7 +71,7 @@ export const createProductSession = async (
       const returnSession = await stripeSdk.checkout.sessions.create({
         line_items: lineItems,
         payment_intent_data: {
-          application_fee_amount: Math.round(totalAmount * 0.02 * 100), // 2% fee
+          application_fee_amount: Math.round(totalAmount * 0.04 * 100), // 4% fee
           transfer_data: {
             destination: stripeConnectedAccount.docs[0].stripe_user_id,
           },
@@ -81,6 +83,7 @@ export const createProductSession = async (
           accountId: stripeConnectedAccount.docs[0].stripe_user_id,
           userId: user.stripe_customer_code,
         },
+        invoice_creation: { enabled: true },
       })
       session = returnSession
     }

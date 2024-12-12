@@ -1,9 +1,15 @@
+import { collectionSlug } from '../../../../../core/collectionSlug'
+import { slugField } from '../../../../../payload/fields/slug'
 import { isAdmin } from '../../../../access/isAdmin'
 import { ADMIN_STRIPE_GROUP } from '../constants'
 import type { CollectionConfig } from 'payload'
 
 export const Products: CollectionConfig = {
-  slug: 'products',
+  slug: collectionSlug.products,
+  labels: {
+    singular: 'Product',
+    plural: 'Products',
+  },
   admin: {
     useAsTitle: 'name',
     group: ADMIN_STRIPE_GROUP,
@@ -32,6 +38,16 @@ export const Products: CollectionConfig = {
       },
     },
     {
+      name: 'productImage',
+      label: 'Product Image',
+      type: 'upload',
+      relationTo: 'media',
+      required: true,
+      admin: {
+        description: 'Upload product image',
+      },
+    },
+    {
       name: 'description',
       label: 'Plan Description',
       type: 'text',
@@ -51,5 +67,6 @@ export const Products: CollectionConfig = {
         },
       ],
     },
+    slugField({ fieldToUse: 'name' }),
   ],
 }

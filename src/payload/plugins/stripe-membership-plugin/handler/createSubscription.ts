@@ -7,6 +7,8 @@ export const createSubscription = async (
   publicURI: string,
 ) => {
   const body = await request.json!()
+  const { user } = request
+  console.log({ user })
   const { userId, product } = body
 
   if (!userId) {
@@ -33,7 +35,7 @@ export const createSubscription = async (
       mode: 'subscription',
       // For subscriptions only(Currently not working for indian customers)
       subscription_data: {
-        application_fee_percent: 0.2 * 100,
+        application_fee_percent: Math.round(0.04 * 100),
         transfer_data: {
           destination: stripeConnectedAccounts.docs[0].stripe_user_id,
         },
@@ -53,6 +55,7 @@ export const createSubscription = async (
           quantity: 1,
         },
       ],
+      invoice_creation: { enabled: true },
       customer: user.stripe_customer_code, // Optional: existing customer
       success_url: publicURI,
       cancel_url: publicURI, //Required cancel and success pages
