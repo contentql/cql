@@ -27,11 +27,11 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { type Block, type Config as PayloadConfig, buildConfig } from 'payload'
-import { DatabaseAdapterResult } from 'payload/dist/database/types.js'
 // added sharp as peer dependencies because nextjs-image recommends to install it
 import sharp from 'sharp'
 
 import { collectionSlug } from './collectionSlug.js'
+import { db } from './databaseAdapter.js'
 import {
   CustomCollectionConfig,
   CustomGlobalConfig,
@@ -64,7 +64,9 @@ export interface CQLConfigType
   searchPluginOptions?: SearchPluginConfig
   collections?: CustomCollectionConfig[]
   globals?: CustomGlobalConfig[]
-  db: DatabaseAdapterResult
+  dbURI?: string
+  dbSecret?: string
+  useVercelPostgresAdapter?: boolean
 }
 
 /**
@@ -117,7 +119,10 @@ const cqlConfig = ({
   },
   searchPluginOptions = {},
   email,
-  db,
+  dbURI,
+  dbSecret,
+  db: userDB,
+  useVercelPostgresAdapter,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -234,7 +239,13 @@ const cqlConfig = ({
     },
     collections: defaultCollections,
     globals: defaultGlobals,
-    db,
+    db:
+      userDB ||
+      db({
+        databaseURI: dbURI,
+        databaseSecret: dbSecret,
+        useVercelPostgresAdapter: false,
+      }),
     secret,
     plugins: [
       ...plugins,

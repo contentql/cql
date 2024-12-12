@@ -41,6 +41,10 @@
     "styles": "sass ./src/payload/themes/cql/index.scss ./dist/payload/themes/cql/index.css"
   },
   "dependencies": {
+    "@payloadcms/db-mongodb": "^3.5.0",
+    "@payloadcms/db-postgres": "^3.5.0",
+    "@payloadcms/db-sqlite": "^3.5.0",
+    "@payloadcms/db-vercel-postgres": "^3.5.0",
     "@payloadcms/email-resend": "^3.5.0",
     "@payloadcms/next": "^3.5.0",
     "@payloadcms/plugin-form-builder": "^3.5.0",
