@@ -19,12 +19,14 @@ export const stripeSuccess = async (
     if (account.details_submitted) {
       const dashboardLink = await stripeSdk.accounts.createLoginLink(account.id)
 
-      const updatedUser = await request.payload.update({
-        collection: 'users',
-        id: userId,
+      const updateSiteSettings = await request.payload.updateGlobal({
+        slug: 'site-settings',
+        depth: 2,
         data: {
-          stripe_user_id: accountId,
-          stripe_express_dashboard_url: dashboardLink.url,
+          stripeConnect: {
+            stripeUserId: accountId,
+            stripeAdminDashboard: dashboardLink.url,
+          },
         },
       })
 

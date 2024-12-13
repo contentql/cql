@@ -198,9 +198,6 @@ const cqlConfig = ({
     admin: {
       ...admin,
       user: Users.slug,
-      components: {
-        beforeDashboard: ['@contentql/core/client#BeforeDashboard'],
-      },
       meta: {
         titleSuffix: '- ContentQL',
         ...(admin.meta || {}),

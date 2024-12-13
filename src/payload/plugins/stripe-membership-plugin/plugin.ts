@@ -74,22 +74,6 @@ export const stripeV3 =
               },
             },
             {
-              name: 'stripe_user_id',
-              type: 'text',
-              label: 'Stripe user id',
-              admin: {
-                position: 'sidebar',
-              },
-            },
-            {
-              name: 'stripe_express_dashboard_url',
-              type: 'text',
-              label: 'Stripe express dashboard url',
-              admin: {
-                position: 'sidebar',
-              },
-            },
-            {
               label: 'User Plan',
               name: 'user_plan',
               type: 'select',

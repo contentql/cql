@@ -9,19 +9,9 @@ export const createProductSession = async (
 ) => {
   const body = await request.json!()
 
-  const { userId, country, products } = body
+  const { userId, products } = body
 
   // Transform products into Stripe line items with individual quantities
-  const lineItems = products.map((product: any) => ({
-    price_data: {
-      currency: 'usd',
-      product_data: {
-        name: product.name,
-      },
-      unit_amount: Math.round(product.price * 100), // Convert to cents
-    },
-    quantity: product.quantity,
-  }))
 
   const totalAmount = products.reduce(
     (total: number, product: { price: number; quantity: number }) =>
@@ -35,15 +25,27 @@ export const createProductSession = async (
       id: userId,
     })
 
-    const stripeConnectedAccount = await request.payload.find({
-      collection: 'users',
-      where: {
-        and: [
-          { role: { equals: 'admin' } }, // Match role as 'admin'
-          { stripe_user_id: { exists: true } }, // Ensure stripe_user_id exists
-        ],
-      },
+    const data = await request.payload.findGlobal({
+      slug: 'site-settings',
+      depth: 2,
     })
+
+    const stripeConnectedAccount = data.stripeConnect.stripeUserId
+    const country = data.stripeConnect.country
+    const currency = data.stripeConnect.currency
+
+    console.log({ stripeConnectedAccount, country, currency })
+
+    const lineItems = products.map((product: any) => ({
+      price_data: {
+        currency: currency,
+        product_data: {
+          name: product.name,
+        },
+        unit_amount: Math.round(product.price * 100), // Convert to cents
+      },
+      quantity: product.quantity,
+    }))
 
     let session
 
@@ -52,7 +54,7 @@ export const createProductSession = async (
       const returnSession = await stripeSdk.checkout.sessions.create({
         line_items: lineItems,
         metadata: {
-          accountId: stripeConnectedAccount.docs[0].stripe_user_id,
+          accountId: stripeConnectedAccount,
           userId: user.stripe_customer_code,
           transferId: transferId,
           totalAmount: totalAmount,
@@ -73,7 +75,7 @@ export const createProductSession = async (
         payment_intent_data: {
           application_fee_amount: Math.round(totalAmount * 0.04 * 100), // 4% fee
           transfer_data: {
-            destination: stripeConnectedAccount.docs[0].stripe_user_id,
+            destination: stripeConnectedAccount,
           },
         },
         customer: user.stripe_customer_code,
