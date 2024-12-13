@@ -9,6 +9,8 @@ import { DisqusCommentsPlugin } from '../payload/plugins/disqus-comments'
 import type { PluginTypes as DisqusCommentsPluginTypes } from '../payload/plugins/disqus-comments/types.js'
 import { scheduleDocPublishPlugin } from '../payload/plugins/schedule-doc-publish-plugin/index.js'
 import type { PluginTypes as ScheduleDocPublishPluginTypes } from '../payload/plugins/schedule-doc-publish-plugin/types.js'
+import { stripeV3 } from '../payload/plugins/stripe-membership-plugin/plugin.js'
+import type { PluginTypes as MembershipPluginTypes } from '../payload/plugins/stripe-membership-plugin/types.js'
 import { BeforeSyncConfig } from '../utils/beforeSync.js'
 import { deepMerge } from '../utils/deepMerge.js'
 import { generateBreadcrumbsUrl } from '../utils/generateBreadcrumbsUrl.js'
@@ -60,7 +62,7 @@ export interface CQLConfigType
   blocks?: Block[]
   schedulePluginOptions?: ScheduleDocPublishPluginTypes
   disqusCommentsOptions?: DisqusCommentsPluginTypes
-
+  membershipPluginOptions?: MembershipPluginTypes
   searchPluginOptions?: SearchPluginConfig
   collections?: CustomCollectionConfig[]
   globals?: CustomGlobalConfig[]
@@ -119,10 +121,11 @@ const cqlConfig = ({
   },
   searchPluginOptions = {},
   email,
+  membershipPluginOptions,
   dbURI,
   dbSecret,
   db: userDB,
-  useVercelPostgresAdapter,
+  useVercelPostgresAdapter = false,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -244,7 +247,7 @@ const cqlConfig = ({
       db({
         databaseURI: dbURI,
         databaseSecret: dbSecret,
-        useVercelPostgresAdapter: false,
+        useVercelPostgresAdapter,
       }),
     secret,
     plugins: [
@@ -297,6 +300,7 @@ const cqlConfig = ({
         },
         ...searchPluginOptions,
       }),
+      stripeV3(membershipPluginOptions),
     ],
     cors,
     csrf,

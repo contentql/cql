@@ -4,3 +4,4 @@ export { CustomSlugModeField } from '../payload/fields/slug/components/CustomSlu
 export { DisqusComments } from '../payload/plugins/disqus-comments/blocks/Disqus/component.js'
 export { CustomPublishOnField } from '../payload/plugins/schedule-doc-publish-plugin/fields/publishOn/components/CustomPublishOnField.js'
 export { CustomPublishOnFieldLabel } from '../payload/plugins/schedule-doc-publish-plugin/fields/publishOn/components/CustomPublishOnFieldLabel.js'
+export { default as BeforeDashboard } from '../payload/plugins/stripe-membership-plugin/payload-components/BeforeDashboard.js'
