@@ -60,6 +60,56 @@ export default cqlConfig({
 })
 ```
 
+## 🔋️Database Adapter
+
+- By default `SQLlite` database is used, if no db parameter is passed data will
+  be stored in `/data/payload.db` directory
+- `@contentql/core` package by default comes with all offical payload
+  database-adapters
+  - @payloadcms/db-mongodb
+  - @payloadcms/db-postgres
+  - @payloadcms/db-sqlite
+  - @payloadcms/db-vercel-postgres
+- based on the `dbURI` adapter will be automatically picked, example👇
+
+```typescript
+// @payloadcms/db-mongodb adapter will be used
+export default cqlConfig({
+  dbURI: 'mongodb://127.0.0.1/bolt-theme',
+})
+
+// @payloadcms/db-postgres adapter will be used
+export default cqlConfig({
+  dbURI: 'postgres://username:password@host:port/database',
+})
+
+// @payloadcms/db-vercel-postgres adapter will be used
+export default cqlConfig({
+  dbURI: 'postgres://username:password@host:port/database',
+  useVercelPostgresAdapter: true, // pass true to use @payloadcms/db-vercel-postgres adapter
+})
+
+// @payloadcms/db-sqlite adapter will be used
+export default cqlConfig({
+  dbURI: 'libsql://bolt-random.turso.io',
+  dbSecret: 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9',
+})
+```
+
+- You can pass your own adapter with custom-configuration, thats still supported
+
+```typescript
+export default cqlConfig({
+  // attach your own database adapter
+  db: sqliteAdapter({
+    client: {
+      url: env.DATABASE_URI,
+      authToken: env.DATABASE_SECRET,
+    },
+  }),
+})
+```
+
 **Slug Access**
 
 You can access the slugs of collections by using this import
