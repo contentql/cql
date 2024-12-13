@@ -125,7 +125,7 @@ const cqlConfig = ({
   dbURI,
   dbSecret,
   db: userDB,
-  useVercelPostgresAdapter,
+  useVercelPostgresAdapter = false,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -247,7 +247,7 @@ const cqlConfig = ({
       db({
         databaseURI: dbURI,
         databaseSecret: dbSecret,
-        useVercelPostgresAdapter: false,
+        useVercelPostgresAdapter,
       }),
     secret,
     plugins: [
