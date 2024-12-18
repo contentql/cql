@@ -3,8 +3,8 @@ import type {
   GenerateImage,
   GenerateTitle,
   PartialDocumentInfoContext,
-} from "@payloadcms/plugin-seo/dist/types";
-import { PayloadRequest } from "payload";
+} from '@payloadcms/plugin-seo/dist/types'
+import { PayloadRequest } from 'payload'
 
 /**
  * Generates the title for SEO purposes based on the provided data.
@@ -20,14 +20,14 @@ import { PayloadRequest } from "payload";
  */
 export const generateTitle: GenerateTitle = (data: any): string => {
   const title =
-    typeof data?.doc?.title?.value === "string"
+    typeof data?.doc?.title?.value === 'string'
       ? data?.doc?.title?.value
-      : typeof data?.title === "string"
-      ? data.title
-      : "";
+      : typeof data?.title === 'string'
+        ? data.title
+        : ''
 
-  return title;
-};
+  return title
+}
 
 /**
  * Generates a prompt for creating an SEO title based on the provided data.
@@ -43,14 +43,14 @@ export const generateTitle: GenerateTitle = (data: any): string => {
  */
 export const generateTitlePrompt: GenerateTitle = (data: any): string => {
   const title =
-    typeof data?.doc?.title?.value === "string"
+    typeof data?.doc?.title?.value === 'string'
       ? data?.doc?.title?.value
-      : typeof data?.title === "string"
-      ? data.title
-      : "";
+      : typeof data?.title === 'string'
+        ? data.title
+        : ''
 
-  return `Generate a SEO title for a blog post for ${title} in 50-60 chars`;
-};
+  return `Generate a SEO title for a blog post for ${title} in 50-60 chars`
+}
 
 /**
  * Generates the description for SEO purposes based on the provided data.
@@ -66,12 +66,10 @@ export const generateTitlePrompt: GenerateTitle = (data: any): string => {
  */
 export const generateDescription: GenerateDescription = (data: any): string => {
   const description =
-    typeof data?.doc?.description?.value === "string"
-      ? data?.doc?.description?.value
-      : "";
+    typeof data?.doc?.description === 'string' ? data?.doc?.description : ''
 
-  return description;
-};
+  return description
+}
 
 /**
  * Generates a prompt for creating an SEO description based on the provided data.
@@ -86,15 +84,15 @@ export const generateDescription: GenerateDescription = (data: any): string => {
  * ```
  */
 export const generateDescriptionPrompt: GenerateDescription = (
-  data: any
+  data: any,
 ): string => {
   const description =
-    typeof data?.doc?.description?.value === "string"
+    typeof data?.doc?.description?.value === 'string'
       ? data?.doc?.description?.value
-      : "";
+      : ''
 
-  return `Generate a summarized description for a blog post with description ${description} in 100-150 chars`;
-};
+  return `Generate a summarized description for a blog post with description ${description} in 100-150 chars`
+}
 
 /**
  * Generates the image URL for SEO purposes based on the provided data.
@@ -109,25 +107,25 @@ export const generateDescriptionPrompt: GenerateDescription = (
  * ```
  */
 export const generateImage: GenerateImage = (data: any): string => {
-  const image = typeof data?.doc?.blog_image;
+  const image = typeof data?.doc?.blog_image
 
-  return image;
-};
+  return image
+}
 
 export const generateURL = ({
   data,
   baseURL,
 }: {
-  baseURL: string;
+  baseURL: string
   data: {
-    doc: any;
-    locale?: string | undefined;
-    req: PayloadRequest;
-  } & PartialDocumentInfoContext;
+    doc: any
+    locale?: string | undefined
+    req: PayloadRequest
+  } & PartialDocumentInfoContext
 }) => {
-  const url = `${baseURL}/${data?.doc?.locale ? data?.doc?.locale + "/" : ""}${
-    data?.doc?.collectionSlug || data?.doc?.docConfig?.slug || ""
-  }/${data?.id || ""}`;
+  const url = `${baseURL}/${data?.doc?.locale ? data?.doc?.locale + '/' : ''}${
+    data?.doc?.collectionSlug || data?.doc?.docConfig?.slug || ''
+  }/${data?.id || ''}`
 
-  return url || "";
-};
+  return url || ''
+}

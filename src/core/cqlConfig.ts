@@ -26,6 +26,7 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import type { SearchPluginConfig } from '@payloadcms/plugin-search/dist/types.js'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import type { SEOPluginConfig } from '@payloadcms/plugin-seo/dist/types.js'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { type Block, type Config as PayloadConfig, buildConfig } from 'payload'
@@ -63,12 +64,13 @@ export interface CQLConfigType
   schedulePluginOptions?: ScheduleDocPublishPluginTypes
   disqusCommentsOptions?: DisqusCommentsPluginTypes
   membershipPluginOptions?: MembershipPluginTypes
-  searchPluginOptions?: SearchPluginConfig
   collections?: CustomCollectionConfig[]
   globals?: CustomGlobalConfig[]
   dbURI?: string
   dbSecret?: string
   useVercelPostgresAdapter?: boolean
+  searchPluginOptions?: SearchPluginConfig | undefined
+  seoPluginConfig?: SEOPluginConfig | undefined
 }
 
 /**
@@ -126,6 +128,7 @@ const cqlConfig = ({
   dbSecret,
   db: userDB,
   useVercelPostgresAdapter = false,
+  seoPluginConfig,
   ...config
 }: CQLConfigType) => {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -262,10 +265,12 @@ const cqlConfig = ({
       DisqusCommentsPlugin(disqusCommentsOptions),
       // this plugin generates metadata field for every page created
       seoPlugin({
+        ...(seoPluginConfig ? seoPluginConfig : {}),
         collections: [
           collectionSlug['pages'],
           collectionSlug['blogs'],
           collectionSlug['tags'],
+          ...(seoPluginConfig?.collections ?? []),
         ],
         uploadsCollection: 'media',
         tabbedUI: true,

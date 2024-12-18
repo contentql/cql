@@ -1,25 +1,25 @@
-import cqlConfig from "./core/cqlConfig.js";
-import type { CQLConfigType } from "./core/cqlConfig.js";
-import { collectionSlug } from "./core/collectionSlug.js";
-import type { CollectionSlugType, SlugType } from "./core/collectionSlug.js";
-import type { SearchPluginConfig } from "@payloadcms/plugin-search/dist/types.js";
+import type { CollectionSlugType, SlugType } from './core/collectionSlug.js'
+import { collectionSlug } from './core/collectionSlug.js'
+import type { CQLConfigType } from './core/cqlConfig.js'
+import cqlConfig from './core/cqlConfig.js'
 import type {
   CustomCollectionConfig,
   CustomField,
   CustomGlobalConfig,
+  CustomMultiSelectField,
   CustomRadioField,
   CustomSelectField,
-} from "./core/payload-overrides.js";
+} from './core/payload-overrides.js'
 
-export { cqlConfig, collectionSlug };
+export { collectionSlug, cqlConfig }
 export type {
-  CQLConfigType,
   CollectionSlugType,
-  SlugType,
-  SearchPluginConfig,
+  CQLConfigType,
   CustomCollectionConfig,
   CustomField,
   CustomGlobalConfig,
+  CustomMultiSelectField,
   CustomRadioField,
   CustomSelectField,
-};
+  SlugType,
+}

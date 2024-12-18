@@ -5,7 +5,6 @@ import {
 } from '../../../core/payload-overrides.js'
 import { isAdmin } from '../../access/isAdmin.js'
 import { SETTINGS_GROUP } from '../../collections/constants.js'
-import { revalidateTag } from 'next/cache.js'
 import { z } from 'zod'
 
 const validateURL = z
@@ -57,6 +56,15 @@ const menuItem: CustomField[] = [
     ],
   },
   {
+    name: 'icon',
+    type: 'upload',
+    label: 'Icon',
+    relationTo: 'media',
+    admin: {
+      description: 'Upload an svg or logo to be displayed with link',
+    },
+  },
+  {
     type: 'row',
     fields: [
       {
@@ -90,7 +98,7 @@ const menuItem: CustomField[] = [
   },
 ]
 
-const menuGroupItem: CustomField = {
+const menuGroupItem = (isNavbar = false): CustomField => ({
   type: 'group',
   name: 'menuLinkGroup',
   label: 'Link Group',
@@ -106,34 +114,37 @@ const menuGroupItem: CustomField = {
       name: 'groupLinks',
       label: 'Links',
       fields: menuItem,
+      dbName: isNavbar ? 'navbarLinks' : 'footerLinks',
     },
   ],
   admin: {
     condition: (_data, siblingData) => siblingData.group,
   },
-}
+})
 
-const menuField: CustomField[] = [
-  {
-    type: 'checkbox',
-    name: 'group',
-    label: 'Group',
-    defaultValue: false,
-    admin: {
-      description: 'Check to create group of links',
+const menuField = (isNavbar = false): CustomField[] => {
+  return [
+    {
+      type: 'checkbox',
+      name: 'group',
+      label: 'Group',
+      defaultValue: false,
+      admin: {
+        description: 'Check to create group of links',
+      },
     },
-  },
-  {
-    name: 'menuLink',
-    type: 'group',
-    label: 'Link',
-    fields: menuItem,
-    admin: {
-      condition: (_data, siblingData) => !siblingData.group,
+    {
+      name: 'menuLink',
+      type: 'group',
+      label: 'Link',
+      fields: menuItem,
+      admin: {
+        condition: (_data, siblingData) => !siblingData.group,
+      },
     },
-  },
-  menuGroupItem,
-]
+    menuGroupItem(isNavbar),
+  ]
+}
 
 const logoField: CustomField[] = [
   {
@@ -266,17 +277,6 @@ export const siteSettings: CustomGlobalConfig = {
     read: () => true,
     update: isAdmin,
   },
-  hooks: {
-    afterChange: [
-      async () => {
-        try {
-          revalidateTag('site-settings')
-        } catch (error) {
-          console.log('Failed to revalidate tag', error)
-        }
-      },
-    ],
-  },
   admin: {
     group: SETTINGS_GROUP,
   },
@@ -337,7 +337,8 @@ export const siteSettings: CustomGlobalConfig = {
               name: 'menuLinks',
               label: 'Menu Links',
               type: 'array',
-              fields: menuField,
+              fields: menuField(true),
+              dbName: 'navbarMenu',
             },
           ],
         },
@@ -366,7 +367,8 @@ export const siteSettings: CustomGlobalConfig = {
               name: 'footerLinks',
               type: 'array',
               label: 'Footer Links',
-              fields: menuField,
+              fields: menuField(),
+              dbName: 'FooterMenu',
             },
             {
               type: 'array',
