@@ -36,16 +36,17 @@ const createCustomer =
   }
 
 export const stripeV3 =
-  (PluginOptions: PluginTypes): Plugin =>
+  (PluginOptions?: PluginTypes): Plugin =>
   (incomingConfig: Config): Config => {
     // if secret is not given returning the incoming config
+
     if (!PluginOptions) {
       return incomingConfig
     }
 
     const stripeSdk = new Stripe(PluginOptions.secretKey)
     const stripeWebhookSecret = PluginOptions.webhookSecretKey
-    const stripeOauthClientId = 'ca_RKBJU93mZO1wKQxK8tEFIXyZpSslYc47'
+    const stripeOauthClientId = PluginOptions.stripeOauthClientId
     const publicURI = PluginOptions.publicURI
 
     const collections = incomingConfig.collections || []

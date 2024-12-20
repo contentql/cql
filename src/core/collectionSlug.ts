@@ -8,6 +8,17 @@ export type SlugType =
   | 'products'
   | 'search'
 
+export type CollectionSlugListType =
+  | 'users'
+  | 'tags'
+  | 'blogs'
+  | 'media'
+  | 'pages'
+  | 'products'
+  | 'search'
+
+export type GlobalSlugListType = 'site-settings'
+
 export type CollectionSlugType = {
   [key in SlugType]: key
 }

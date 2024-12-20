@@ -55,8 +55,6 @@ export default cqlConfig({
     defaultFromAddress: process.env.RESEND_SENDER_EMAIL,
     defaultFromName: process.env.RESEND_SENDER_NAME,
   },
-  // pass the configuration to blocks field these will appear in pages collection in admin panel
-  blocks: [HomeConfig, DetailsConfig, ListConfig],
 })
 ```
 
@@ -124,6 +122,21 @@ const { docs } = await payload.find({
   draft: false,
 })
 ```
+
+**Removing Collections**
+
+You can remove the collections which are not required for you
+
+```ts
+export default cqlConfig({
+  // whatever collection-slug passed in removeCollections or removeGlobals will be removed
+  removeCollections: ['blogs'],
+  removeGlobals: ['site-settings'],
+})
+```
+
+Note: You can't remove the `users` collection, you can only extend users
+collection with custom-fields
 
 ## 📦Out of box contents
 

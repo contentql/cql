@@ -1,40 +1,19 @@
-import { isAdmin } from '../payload/access/isAdmin.js'
 import { Blogs } from '../payload/collections/Blogs/index.js'
 import { Media } from '../payload/collections/Media/index.js'
 import { Pages } from '../payload/collections/Pages/index.js'
 import { Tags } from '../payload/collections/Tags/index.js'
 import { Users } from '../payload/collections/Users/index.js'
 import { siteSettings } from '../payload/globals/SiteSettings/index.js'
-import { DisqusCommentsPlugin } from '../payload/plugins/disqus-comments'
 import type { PluginTypes as DisqusCommentsPluginTypes } from '../payload/plugins/disqus-comments/types.js'
-import { scheduleDocPublishPlugin } from '../payload/plugins/schedule-doc-publish-plugin/index.js'
 import type { PluginTypes as ScheduleDocPublishPluginTypes } from '../payload/plugins/schedule-doc-publish-plugin/types.js'
-import { stripeV3 } from '../payload/plugins/stripe-membership-plugin/plugin.js'
 import type { PluginTypes as MembershipPluginTypes } from '../payload/plugins/stripe-membership-plugin/types.js'
-import { BeforeSyncConfig } from '../utils/beforeSync.js'
-import { deepMerge } from '../utils/deepMerge.js'
-import { generateBreadcrumbsUrl } from '../utils/generateBreadcrumbsUrl.js'
-import {
-  generateDescription,
-  generateImage,
-  generateTitle,
-  generateURL,
-} from '../utils/seo.js'
-import { resendAdapter } from '@payloadcms/email-resend'
-import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
-import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
-import { searchPlugin } from '@payloadcms/plugin-search'
 import type { SearchPluginConfig } from '@payloadcms/plugin-search/dist/types.js'
-import { seoPlugin } from '@payloadcms/plugin-seo'
 import type { SEOPluginConfig } from '@payloadcms/plugin-seo/dist/types.js'
-import { slateEditor } from '@payloadcms/richtext-slate'
-import { s3Storage } from '@payloadcms/storage-s3'
-import { type Block, type Config as PayloadConfig, buildConfig } from 'payload'
-// added sharp as peer dependencies because nextjs-image recommends to install it
-import sharp from 'sharp'
+import { type Block, type Config as PayloadConfig } from 'payload'
 
-import { collectionSlug } from './collectionSlug.js'
-import { db } from './databaseAdapter.js'
+// added sharp as peer dependencies because nextjs-image recommends to install it
+import baseConfig from './baseConfig.js'
+import { CollectionSlugListType, GlobalSlugListType } from './collectionSlug.js'
 import {
   CustomCollectionConfig,
   CustomGlobalConfig,
@@ -71,6 +50,8 @@ export interface CQLConfigType
   useVercelPostgresAdapter?: boolean
   searchPluginOptions?: SearchPluginConfig | undefined
   seoPluginConfig?: SEOPluginConfig | undefined
+  removeCollections?: CollectionSlugListType[]
+  removeGlobals?: GlobalSlugListType[]
 }
 
 /**
@@ -98,227 +79,23 @@ export interface CQLConfigType
  *   }
  * // baseURL is required for Live-Preview & SEO generation
  *   baseUrl: "http://localhost:3000"
+ *   removeCollections: ["blogs"]
+ *   removeGlobals: ["site-settings"]
  * });
  */
 
-const cqlConfig = ({
-  baseURL = 'http://localhost:3000',
-  cors = ['http://localhost:3000'],
-  csrf = ['http://localhost:3000'],
-  s3,
-  admin = {},
-  secret = 'TESTING',
-  editor = slateEditor({}),
-  collections = [],
-  globals = [],
-  resend,
-  blocks,
-  disqusCommentsOptions = {
-    enabled: true,
-  },
-  schedulePluginOptions = {
-    enabled: true,
-    collections: [collectionSlug['blogs']],
-    position: 'sidebar',
-  },
-  searchPluginOptions = {},
-  email,
-  membershipPluginOptions,
-  dbURI,
-  dbSecret,
-  db: userDB,
-  useVercelPostgresAdapter = false,
-  seoPluginConfig,
-  ...config
-}: CQLConfigType) => {
-  const plugins: CQLConfigType['plugins'] = config.plugins || []
-
-  if (s3) {
-    const { bucket, accessKeyId, endpoint, region, secretAccessKey } = s3
-
-    plugins.push(
-      s3Storage({
-        collections: {
-          ['media']: true,
-        },
-        bucket,
-        config: {
-          endpoint,
-          credentials: {
-            accessKeyId,
-            secretAccessKey,
-          },
-          region,
-        },
-      }),
-    )
-  }
-
+const cqlConfig = (config: CQLConfigType) => {
+  const blocks = config.blocks || []
   const defaultCollections = [Pages({ blocks }), Blogs, Tags, Media, Users]
-
-  if (collections.length) {
-    // mapping through user collections
-    collections.forEach(collection => {
-      // checking if the user collection overlaps with default collection
-      const index = defaultCollections.findIndex(
-        collectionValue => collectionValue.slug === collection.slug,
-      )
-
-      // if collection overlaps with default collection then doing deepMerge
-      if (index !== -1) {
-        defaultCollections[index] = deepMerge(
-          defaultCollections[index],
-          collection,
-        )
-      }
-      // else pushing the user collection to default collection
-      else {
-        defaultCollections.push(collection)
-      }
-    })
-  }
-
   const defaultGlobals = [siteSettings]
 
-  if (globals.length) {
-    globals.forEach(globalCollection => {
-      // checking if the user globals overlaps with default globals
-      const index = defaultGlobals.findIndex(
-        collectionValue => collectionValue.slug === globalCollection.slug,
-      )
-
-      // if globals overlaps with default globals then doing deepMerge
-      if (index !== -1) {
-        defaultGlobals[index] = deepMerge(
-          defaultGlobals[index],
-          globalCollection,
-        )
-      }
-      // else pushing the user globals to default globals
-      else {
-        defaultGlobals.push(globalCollection)
-      }
-    })
-  }
-
-  return buildConfig({
+  const buildConfig = baseConfig({
     ...config,
-    admin: {
-      ...admin,
-      user: Users.slug,
-      meta: {
-        titleSuffix: '- ContentQL',
-        ...(admin.meta || {}),
-      },
-      // livePreview: {
-      //   url: ({ data, collectionConfig, locale }) => {
-      //     return `${baseURL}/${data.path}${
-      //       locale ? `?locale=${locale.code}` : ''
-      //     }`
-      //   },
-
-      //   collections: [collectionSlug['blogs'], collectionSlug['pages']],
-
-      //   breakpoints: [
-      //     {
-      //       label: 'Mobile',
-      //       name: 'mobile',
-      //       width: 375,
-      //       height: 667,
-      //     },
-      //     {
-      //       label: 'Tablet',
-      //       name: 'tablet',
-      //       width: 768,
-      //       height: 1024,
-      //     },
-      //     {
-      //       label: 'Desktop',
-      //       name: 'desktop',
-      //       width: 1440,
-      //       height: 900,
-      //     },
-      //   ],
-
-      //   ...(admin.livePreview || {}),
-      // },
-    },
-    collections: defaultCollections,
-    globals: defaultGlobals,
-    db:
-      userDB ||
-      db({
-        databaseURI: dbURI,
-        databaseSecret: dbSecret,
-        useVercelPostgresAdapter,
-      }),
-    secret,
-    plugins: [
-      ...plugins,
-      nestedDocsPlugin({
-        collections: [collectionSlug['pages']],
-        generateURL: generateBreadcrumbsUrl,
-      }),
-      // this is for scheduling document publish
-      scheduleDocPublishPlugin(schedulePluginOptions),
-      // disqus comments plugin
-      DisqusCommentsPlugin(disqusCommentsOptions),
-      // this plugin generates metadata field for every page created
-      seoPlugin({
-        ...(seoPluginConfig ? seoPluginConfig : {}),
-        collections: [
-          collectionSlug['pages'],
-          collectionSlug['blogs'],
-          collectionSlug['tags'],
-          ...(seoPluginConfig?.collections ?? []),
-        ],
-        uploadsCollection: 'media',
-        tabbedUI: true,
-        generateURL: data => generateURL({ data, baseURL }),
-        generateTitle,
-        generateDescription,
-        generateImage,
-      }),
-      formBuilderPlugin({
-        fields: {
-          payment: false,
-          state: false,
-        },
-      }),
-      // this plugin is for global search across the defined collections
-      searchPlugin({
-        collections: [
-          collectionSlug['blogs'],
-          collectionSlug['tags'],
-          collectionSlug['users'],
-        ],
-        defaultPriorities: {
-          [collectionSlug['blogs']]: 10,
-          [collectionSlug['tags']]: 20,
-          [collectionSlug['users']]: 30,
-        },
-        beforeSync: BeforeSyncConfig,
-        searchOverrides: {
-          access: {
-            read: isAdmin,
-          },
-        },
-        ...searchPluginOptions,
-      }),
-      stripeV3(membershipPluginOptions),
-    ],
-    cors,
-    csrf,
-    editor,
-    sharp,
-    email: resend
-      ? resendAdapter({
-          apiKey: resend.apiKey,
-          defaultFromAddress: resend.defaultFromAddress,
-          defaultFromName: resend.defaultFromName,
-        })
-      : email,
+    defaultCollections,
+    defaultGlobals,
   })
+
+  return buildConfig
 }
 
 export default cqlConfig
