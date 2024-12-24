@@ -48,7 +48,8 @@ export interface CQLConfigType
   dbURI?: string
   dbSecret?: string
   useVercelPostgresAdapter?: boolean
-  searchPluginOptions?: SearchPluginConfig | undefined
+  syncDB?: boolean
+  searchPluginOptions?: SearchPluginConfig | false
   seoPluginConfig?: SEOPluginConfig | undefined
   removeCollections?: CollectionSlugListType[]
   removeGlobals?: GlobalSlugListType[]

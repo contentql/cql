@@ -6,3 +6,5 @@ export { DisqusComments } from '../payload/plugins/disqus-comments/blocks/Disqus
 export { CustomPublishOnField } from '../payload/plugins/schedule-doc-publish-plugin/fields/publishOn/components/CustomPublishOnField.js'
 export { CustomPublishOnFieldLabel } from '../payload/plugins/schedule-doc-publish-plugin/fields/publishOn/components/CustomPublishOnFieldLabel.js'
 export { default as BeforeDashboard } from '../payload/plugins/stripe-membership-plugin/payload-components/BeforeDashboard.js'
+export { default as ColorField } from '../themes/restaurant/fields/ColorField.js'
+export { default as RadiusField } from '../themes/restaurant/fields/RadiusField.js'

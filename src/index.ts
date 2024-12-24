@@ -10,8 +10,32 @@ import type {
   CustomRadioField,
   CustomSelectField,
 } from './core/payload-overrides.js'
+import { borderRadius } from './utils/borderRadius.js'
+import type {
+  ExtractedListType,
+  FontPreloadAttributes,
+} from './utils/googleFont.js'
+import {
+  fetchGoogleFonts,
+  fontType,
+  getCSSAndLinkGoogleFonts,
+  getFontMimeType,
+  mimeTypes,
+} from './utils/googleFont.js'
+import { hexToHsl } from './utils/hexToHsl.js'
 
-export { collectionSlug, cqlConfig }
+export {
+  borderRadius,
+  collectionSlug,
+  cqlConfig,
+  fetchGoogleFonts,
+  fontType,
+  getCSSAndLinkGoogleFonts,
+  getFontMimeType,
+  hexToHsl,
+  mimeTypes,
+}
+
 export type {
   CollectionSlugType,
   CQLConfigType,
@@ -21,5 +45,7 @@ export type {
   CustomMultiSelectField,
   CustomRadioField,
   CustomSelectField,
+  ExtractedListType,
+  FontPreloadAttributes,
   SlugType,
 }

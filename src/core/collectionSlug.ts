@@ -7,6 +7,7 @@ export type SlugType =
   | 'site-settings'
   | 'products'
   | 'search'
+  | 'categories'
 
 export type CollectionSlugListType =
   | 'users'
@@ -16,6 +17,7 @@ export type CollectionSlugListType =
   | 'pages'
   | 'products'
   | 'search'
+  | 'categories'
 
 export type GlobalSlugListType = 'site-settings'
 
@@ -35,4 +37,5 @@ export const collectionSlug: CollectionSlugType = {
   search: 'search',
   products: 'products',
   'site-settings': 'site-settings',
+  categories: 'categories',
 }

@@ -66,6 +66,7 @@ export default function baseConfig({
   dbSecret,
   db: userDB,
   useVercelPostgresAdapter = false,
+  syncDB = false,
   seoPluginConfig,
   removeCollections = [],
   removeGlobals = [],
@@ -178,6 +179,7 @@ export default function baseConfig({
         databaseURI: dbURI,
         databaseSecret: dbSecret,
         useVercelPostgresAdapter,
+        syncDB,
       }),
     secret,
     plugins: [
@@ -197,6 +199,7 @@ export default function baseConfig({
           collectionSlug['pages'],
           collectionSlug['blogs'],
           collectionSlug['tags'],
+          collectionSlug['categories'],
           ...(seoPluginConfig?.collections ?? []),
         ],
         uploadsCollection: 'media',
@@ -213,25 +216,29 @@ export default function baseConfig({
         },
       }),
       // this plugin is for global search across the defined collections
-      searchPlugin({
-        collections: [
-          collectionSlug['blogs'],
-          collectionSlug['tags'],
-          collectionSlug['users'],
-        ],
-        defaultPriorities: {
-          [collectionSlug['blogs']]: 10,
-          [collectionSlug['tags']]: 20,
-          [collectionSlug['users']]: 30,
-        },
-        beforeSync: BeforeSyncConfig,
-        searchOverrides: {
-          access: {
-            read: isAdmin,
-          },
-        },
-        ...searchPluginOptions,
-      }),
+      ...(searchPluginOptions !== false
+        ? [
+            searchPlugin({
+              collections: [
+                collectionSlug['blogs'],
+                collectionSlug['tags'],
+                collectionSlug['users'],
+              ],
+              defaultPriorities: {
+                [collectionSlug['blogs']]: 10,
+                [collectionSlug['tags']]: 20,
+                [collectionSlug['users']]: 30,
+              },
+              beforeSync: BeforeSyncConfig,
+              searchOverrides: {
+                access: {
+                  read: isAdmin,
+                },
+              },
+              ...searchPluginOptions,
+            }),
+          ]
+        : []),
       stripeV3(membershipPluginOptions),
     ],
     cors,

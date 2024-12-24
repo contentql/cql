@@ -7,15 +7,16 @@ export const db = ({
   databaseURI,
   databaseSecret,
   useVercelPostgresAdapter = false,
+  syncDB = false,
 }: {
   databaseURI?: string
   databaseSecret?: string
   useVercelPostgresAdapter?: boolean
+  syncDB?: boolean
 }) => {
   const isMongo = databaseURI && databaseURI.startsWith('mongodb')
   const isPostgresql = databaseURI && databaseURI.startsWith('postgresql')
-  const isVercel = process.env.VERCEL ?? false
-  const isRailway = process.env.RAILWAY_PROJECT_ID ?? false
+  const isVercel = process.env.VERCEL
 
   // if database is postgresql & user specified to use useVercelPostgresAdapter using vercelPostgresAdapter
   if (useVercelPostgresAdapter && isPostgresql) {
@@ -48,11 +49,15 @@ export const db = ({
   return sqliteAdapter({
     client: {
       // in railway we're will use turso as sync database
-      url: !isRailway && databaseURI ? databaseURI : 'file:data/payload.db',
+      url: databaseURI || 'file:data/payload.db',
       authToken: databaseSecret,
       // if deployment environment is not vercel & databaseURL provided making that URL as syncURL
-      syncUrl: !isVercel && databaseURI ? databaseURI : undefined,
-      syncInterval: 60,
+      ...(syncDB && !isVercel
+        ? {
+            syncUrl: databaseURI,
+            syncInterval: 60,
+          }
+        : {}),
     },
   })
 }
