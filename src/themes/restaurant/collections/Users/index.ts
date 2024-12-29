@@ -1,6 +1,7 @@
 import { collectionSlug } from '../../../../core/collectionSlug.js'
 import type { CustomCollectionConfig } from '../../../../core/payload-overrides.js'
 import { adminOrCurrentUserFieldAccess } from '../../../../payload/access/adminOrCurrentUserFieldAccess.js'
+import { isAdmin } from '../../../../payload/access/isAdmin.js'
 import { isAdminFieldAccess } from '../../../../payload/access/isAdminFieldAccess.js'
 import { isAdminOrCurrentUser } from '../../../../payload/collections/Users/access/isAdminOrCurrentUser.js'
 import { handleUserRoles } from '../../../../payload/collections/Users/hooks/handleUserRoles.js'
@@ -28,9 +29,7 @@ export const Users: CustomCollectionConfig = {
       if (req.user) {
         const userRole: string[] = req?.user?.role || []
 
-        const hasAccess = userRole.some(role =>
-          ['admin', 'author'].includes(role),
-        )
+        const hasAccess = userRole.some(role => ['admin'].includes(role))
 
         return hasAccess
       }
@@ -38,7 +37,7 @@ export const Users: CustomCollectionConfig = {
       return false
     },
     read: () => true,
-    create: () => true,
+    create: isAdmin,
     update: isAdminOrCurrentUser,
     delete: isAdminOrCurrentUser,
   },
@@ -64,6 +63,7 @@ export const Users: CustomCollectionConfig = {
         admin: {
           readOnly: false,
           position: undefined,
+          disableBulkEdit: false,
         },
       },
     }),

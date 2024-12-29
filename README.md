@@ -88,6 +88,9 @@ export default cqlConfig({
 })
 
 // @payloadcms/db-sqlite adapter will be used
+// Note for sqlLite adapater by-default we use databaseURL ase file:./data/payload.db
+// dbURI will be used as sync-url
+// if you want to opt-out of this behaviour pass syncDB as false
 export default cqlConfig({
   dbURI: 'libsql://bolt-random.turso.io',
   dbSecret: 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9',

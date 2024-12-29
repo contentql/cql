@@ -1,6 +1,7 @@
 import { collectionSlug } from '../../../core/collectionSlug.js'
 import type { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { adminOrCurrentUserFieldAccess } from '../../access/adminOrCurrentUserFieldAccess.js'
+import { isAdmin } from '../../access/isAdmin.js'
 import { isAdminFieldAccess } from '../../access/isAdminFieldAccess.js'
 import { slugField } from '../../fields/slug/index.js'
 import { socialLinksField } from '../../globals/SiteSettings/index.js'
@@ -45,7 +46,7 @@ export const Users: CustomCollectionConfig = {
       return false
     },
     read: () => true,
-    create: () => true,
+    create: isAdmin,
     update: isAdminOrCurrentUser,
     delete: isAdminOrCurrentUser,
   },
@@ -71,6 +72,7 @@ export const Users: CustomCollectionConfig = {
         admin: {
           readOnly: false,
           position: undefined,
+          disableBulkEdit: false,
         },
       },
     }),

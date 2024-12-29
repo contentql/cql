@@ -66,7 +66,8 @@ export default function baseConfig({
   dbSecret,
   db: userDB,
   useVercelPostgresAdapter = false,
-  syncDB = false,
+  syncDB,
+  syncInterval,
   seoPluginConfig,
   removeCollections = [],
   removeGlobals = [],
@@ -180,6 +181,7 @@ export default function baseConfig({
         databaseSecret: dbSecret,
         useVercelPostgresAdapter,
         syncDB,
+        syncInterval,
       }),
     secret,
     plugins: [

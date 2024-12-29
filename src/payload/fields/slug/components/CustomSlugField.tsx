@@ -1,9 +1,9 @@
 'use client'
 
+import { formatString } from '../utils/formatString'
 import { TextField, useFormFields } from '@payloadcms/ui'
 import { TextFieldClientProps } from 'payload'
 import React, { useEffect } from 'react'
-import { formatString } from '../utils/formatString'
 
 interface CustomClientProps {
   fieldToUse: string
@@ -17,7 +17,7 @@ export const CustomSlugField: React.FC<
     dispatch,
   }))
 
-  const fieldName = props.field.name as string
+  const fieldName = props?.field?.name as string
   const fieldValue = fields[fieldName]?.value as string
   const title = fields[fieldToUse]?.value
   const isHome = fields?.isHome?.value

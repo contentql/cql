@@ -7,12 +7,14 @@ export const db = ({
   databaseURI,
   databaseSecret,
   useVercelPostgresAdapter = false,
-  syncDB = false,
+  syncDB = true,
+  syncInterval = 60,
 }: {
   databaseURI?: string
   databaseSecret?: string
   useVercelPostgresAdapter?: boolean
   syncDB?: boolean
+  syncInterval?: number
 }) => {
   const isMongo = databaseURI && databaseURI.startsWith('mongodb')
   const isPostgresql = databaseURI && databaseURI.startsWith('postgresql')
@@ -46,16 +48,26 @@ export const db = ({
     throw new Error('Please provide database connection string')
   }
 
+  // if deployment is done in vercel or syncDB = false then directly connect to DB
+  if (isVercel || (databaseURI && !syncDB)) {
+    return sqliteAdapter({
+      client: {
+        url: databaseURI!,
+        authToken: databaseSecret,
+      },
+    })
+  }
+
+  // default case always connects to file:./data/payload.db
+  // if databaseURI is given, it'll be used for sync
   return sqliteAdapter({
     client: {
-      // in railway we're will use turso as sync database
-      url: databaseURI || 'file:data/payload.db',
+      url: 'file:data/payload.db',
       authToken: databaseSecret,
-      // if deployment environment is not vercel & databaseURL provided making that URL as syncURL
-      ...(syncDB && !isVercel
+      ...(databaseURI
         ? {
             syncUrl: databaseURI,
-            syncInterval: 60,
+            syncInterval,
           }
         : {}),
     },

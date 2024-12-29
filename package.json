@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/contentql/cql.git"
   },
-  "version": "0.4.5",
+  "version": "0.4.6",
   "type": "module",
   "license": "MIT",
   "keywords": [

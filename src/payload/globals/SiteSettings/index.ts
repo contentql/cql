@@ -5,6 +5,7 @@ import {
 } from '../../../core/payload-overrides.js'
 import { isAdmin } from '../../access/isAdmin.js'
 import { SETTINGS_GROUP } from '../../collections/constants.js'
+import { themeSettingsTab } from '../../fields/common/theme/index.js'
 import { z } from 'zod'
 
 const validateURL = z
@@ -451,6 +452,7 @@ export const siteSettings: CustomGlobalConfig = {
             hidden: true,
           },
         },
+        themeSettingsTab,
         // {
         //   name: 'stripeConnect',
         //   label: 'Stripe Connect',

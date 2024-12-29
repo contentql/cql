@@ -43,8 +43,8 @@ export const Media: CustomCollectionConfig = {
         position: 'centre',
       },
     ],
-    focalPoint: false,
-    crop: false,
+    focalPoint: true,
+    crop: true,
   },
   fields: [
     {

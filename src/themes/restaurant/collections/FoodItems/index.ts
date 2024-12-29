@@ -49,6 +49,10 @@ export const FoodItems: CustomCollectionConfig = {
       name: 'special',
       required: true,
       defaultValue: false,
+      admin: {
+        description:
+          'Check to mark food-item as special, food-item will be shown with special badge',
+      },
     },
     {
       type: 'upload',

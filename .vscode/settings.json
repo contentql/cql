@@ -6,6 +6,7 @@
     "Disqus",
     "payloadcms",
     "swcrc",
+    "turso",
     "yalc"
   ],
   "npm.packageManager": "pnpm",
