@@ -5,6 +5,7 @@ import {
 } from '../../../core/payload-overrides.js'
 import { isAdmin } from '../../access/isAdmin.js'
 import { SETTINGS_GROUP } from '../../collections/constants.js'
+import { currencyField } from '../../fields/common/currency/index.js'
 import { themeSettingsTab } from '../../fields/common/theme/index.js'
 import { z } from 'zod'
 
@@ -321,6 +322,7 @@ export const siteSettings: CustomGlobalConfig = {
               type: 'text',
               hasMany: true,
             },
+            currencyField,
           ],
         },
         {
