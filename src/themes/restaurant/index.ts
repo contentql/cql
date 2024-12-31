@@ -22,6 +22,7 @@ export const cqlConfig = (config: CQLConfigType) => {
     ],
     defaultGlobals: [siteSettings],
     schedulePluginOptions: {
+      enabled: true,
       collections: ['foodItems', 'categories'],
       ...config.schedulePluginOptions,
     },

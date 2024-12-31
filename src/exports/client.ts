@@ -1,3 +1,7 @@
+export {
+  currencies,
+  formatCurrency,
+} from '../payload/fields/common/currency/index.js'
 export { CustomPathField } from '../payload/fields/path/components/CustomPathField.js'
 export { CustomSlugField } from '../payload/fields/slug/components/CustomSlugField.js'
 export { CustomSlugModeField } from '../payload/fields/slug/components/CustomSlugModeField.js'

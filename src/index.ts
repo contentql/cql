@@ -10,10 +10,6 @@ import type {
   CustomRadioField,
   CustomSelectField,
 } from './core/payload-overrides.js'
-import {
-  currencies,
-  formatCurrency,
-} from './payload/fields/common/currency/index.js'
 import { borderRadius } from './utils/borderRadius.js'
 import type {
   ExtractedListType,
@@ -32,10 +28,8 @@ export {
   borderRadius,
   collectionSlug,
   cqlConfig,
-  currencies,
   fetchGoogleFonts,
   fontType,
-  formatCurrency,
   getCSSAndLinkGoogleFonts,
   getFontMimeType,
   hexToHsl,

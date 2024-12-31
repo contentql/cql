@@ -12,6 +12,9 @@ export const Categories: CustomCollectionConfig = {
     delete: isAdmin,
     create: isAdmin,
   },
+  versions: {
+    drafts: true,
+  },
   admin: {
     useAsTitle: 'name',
     group: CONTENT_GROUP,
