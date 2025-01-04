@@ -39,6 +39,23 @@ interface BaseConfigType extends CQLConfigType {
   defaultGlobals: CustomGlobalConfig[]
 }
 
+const getWhitelistDomains = (domains: string[]) => {
+  const railwayDomain = '.up.railway.app'
+  const contentqlDomain = '.contentql.io'
+
+  return domains
+    .map(domain => {
+      let clonedDomain = domain
+
+      if (clonedDomain.includes(railwayDomain)) {
+        return [domain, clonedDomain.replace(railwayDomain, contentqlDomain)]
+      }
+
+      return [domain]
+    })
+    .flat()
+}
+
 export default function baseConfig({
   baseURL = 'http://localhost:3000',
   cors = ['http://localhost:3000'],
@@ -243,8 +260,8 @@ export default function baseConfig({
         : []),
       stripeV3(membershipPluginOptions),
     ],
-    cors,
-    csrf,
+    cors: Array.isArray(cors) ? getWhitelistDomains(cors) : cors,
+    csrf: csrf ? getWhitelistDomains(csrf) : csrf,
     editor,
     sharp,
     email: resend
