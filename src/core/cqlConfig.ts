@@ -54,6 +54,11 @@ export interface CQLConfigType
   seoPluginConfig?: SEOPluginConfig | undefined
   removeCollections?: CollectionSlugListType[]
   removeGlobals?: GlobalSlugListType[]
+  prodMigrations?: {
+    down: (args: any) => Promise<void>
+    name: string
+    up: (args: any) => Promise<void>
+  }[]
 }
 
 /**

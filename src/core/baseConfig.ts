@@ -90,6 +90,7 @@ export default function baseConfig({
   removeGlobals = [],
   defaultCollections,
   defaultGlobals,
+  prodMigrations,
   ...config
 }: BaseConfigType) {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -199,6 +200,7 @@ export default function baseConfig({
         useVercelPostgresAdapter,
         syncDB,
         syncInterval,
+        prodMigrations,
       }),
     secret,
     plugins: [

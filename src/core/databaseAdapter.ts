@@ -9,12 +9,18 @@ export const db = ({
   useVercelPostgresAdapter = false,
   syncDB = true,
   syncInterval = 60,
+  prodMigrations,
 }: {
   databaseURI?: string
   databaseSecret?: string
   useVercelPostgresAdapter?: boolean
   syncDB?: boolean
   syncInterval?: number
+  prodMigrations?: {
+    down: (args: any) => Promise<void>
+    name: string
+    up: (args: any) => Promise<void>
+  }[]
 }) => {
   const isMongo = databaseURI && databaseURI.startsWith('mongodb')
   const isPostgresql = databaseURI && databaseURI.startsWith('postgresql')
@@ -26,6 +32,7 @@ export const db = ({
       pool: {
         connectionString: databaseURI,
       },
+      prodMigrations,
     })
   }
   // if normal postgres means using postgresAdapter
@@ -34,12 +41,14 @@ export const db = ({
       pool: {
         connectionString: databaseURI,
       },
+      prodMigrations,
     })
   }
   // if mongodb means using mongooseAdapter
   else if (isMongo) {
     return mongooseAdapter({
       url: databaseURI,
+      prodMigrations,
     })
   }
 
@@ -55,6 +64,7 @@ export const db = ({
         url: databaseURI!,
         authToken: databaseSecret,
       },
+      prodMigrations,
     })
   }
 
@@ -71,5 +81,6 @@ export const db = ({
           }
         : {}),
     },
+    prodMigrations,
   })
 }
