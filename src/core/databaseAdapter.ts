@@ -48,7 +48,6 @@ export const db = ({
   else if (isMongo) {
     return mongooseAdapter({
       url: databaseURI,
-      prodMigrations,
     })
   }
 
