@@ -1,5 +1,5 @@
 import { isAdmin } from '../payload/access/isAdmin.js'
-import { DisqusCommentsPlugin } from '../payload/plugins/disqus-comments'
+import { DisqusCommentsPlugin } from '../payload/plugins/disqus-comments/index.js'
 import { scheduleDocPublishPlugin } from '../payload/plugins/schedule-doc-publish-plugin/index.js'
 import { stripeV3 } from '../payload/plugins/stripe-membership-plugin/plugin.js'
 import { BeforeSyncConfig } from '../utils/beforeSync.js'
@@ -132,6 +132,8 @@ export default function baseConfig({
             secretAccessKey,
           },
           region,
+          requestChecksumCalculation: 'WHEN_REQUIRED',
+          responseChecksumValidation: 'WHEN_REQUIRED',
         },
       }),
     )
@@ -234,6 +236,18 @@ export default function baseConfig({
         fields: {
           payment: false,
           state: false,
+        },
+        formOverrides: {
+          fields: ({ defaultFields }) => {
+            return [
+              ...defaultFields,
+              {
+                name: 'upload',
+                type: 'upload',
+                relationTo: 'media',
+              },
+            ]
+          },
         },
       }),
       // this plugin is for global search across the defined collections
