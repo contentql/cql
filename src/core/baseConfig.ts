@@ -237,18 +237,6 @@ export default function baseConfig({
           payment: false,
           state: false,
         },
-        formOverrides: {
-          fields: ({ defaultFields }) => {
-            return [
-              ...defaultFields,
-              {
-                name: 'upload',
-                type: 'upload',
-                relationTo: 'media',
-              },
-            ]
-          },
-        },
       }),
       // this plugin is for global search across the defined collections
       ...(searchPluginOptions !== false
