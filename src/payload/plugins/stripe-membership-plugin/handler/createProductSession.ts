@@ -1,4 +1,4 @@
-import { generateRandomString } from '../../../../utils/generateRandomString'
+import { generateRandomString } from '../../../../utils/generateRandomString.js'
 import { PayloadRequest } from 'payload'
 import Stripe from 'stripe'
 

@@ -7,8 +7,8 @@ import { siteSettings } from '../payload/globals/SiteSettings/index.js'
 import type { PluginTypes as DisqusCommentsPluginTypes } from '../payload/plugins/disqus-comments/types.js'
 import type { PluginTypes as ScheduleDocPublishPluginTypes } from '../payload/plugins/schedule-doc-publish-plugin/types.js'
 import type { PluginTypes as MembershipPluginTypes } from '../payload/plugins/stripe-membership-plugin/types.js'
-import type { SearchPluginConfig } from '@payloadcms/plugin-search/dist/types.js'
-import type { SEOPluginConfig } from '@payloadcms/plugin-seo/dist/types.js'
+import type { SearchPluginConfig } from '@payloadcms/plugin-search/types'
+import type { SEOPluginConfig } from '@payloadcms/plugin-seo/types'
 import { type Block, type Config as PayloadConfig } from 'payload'
 
 // added sharp as peer dependencies because nextjs-image recommends to install it

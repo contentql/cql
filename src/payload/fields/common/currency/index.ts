@@ -1,4 +1,4 @@
-import { CustomField } from '../../../../core/payload-overrides'
+import { CustomField } from '../../../../core/payload-overrides.js'
 
 export const currencies = [
   { label: 'US Dollar ($)', value: 'usd' },

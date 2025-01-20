@@ -2,8 +2,7 @@ import type {
   GenerateDescription,
   GenerateImage,
   GenerateTitle,
-  PartialDocumentInfoContext,
-} from '@payloadcms/plugin-seo/dist/types'
+} from '@payloadcms/plugin-seo/types'
 import { PayloadRequest } from 'payload'
 
 /**
@@ -121,11 +120,11 @@ export const generateURL = ({
     doc: any
     locale?: string | undefined
     req: PayloadRequest
-  } & PartialDocumentInfoContext
+  }
 }) => {
   const url = `${baseURL}/${data?.doc?.locale ? data?.doc?.locale + '/' : ''}${
     data?.doc?.collectionSlug || data?.doc?.docConfig?.slug || ''
-  }/${data?.id || ''}`
+  }`
 
   return url || ''
 }

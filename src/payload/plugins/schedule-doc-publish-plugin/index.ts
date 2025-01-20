@@ -1,1 +1,1 @@
-export { default as scheduleDocPublishPlugin } from './plugin'
+export { default as scheduleDocPublishPlugin } from './plugin.js'

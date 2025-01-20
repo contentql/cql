@@ -1,8 +1,8 @@
-import { CustomField } from '../../../core/payload-overrides'
+import { CustomField } from '../../../core/payload-overrides.js'
 import deepMerge from 'deepmerge'
 
-import { formatSlug } from './hooks/formatSlug'
-import { SlugField } from './types'
+import { formatSlug } from './hooks/formatSlug.js'
+import { SlugField } from './types.js'
 
 /**
  * Generates a configuration object for a "slug" field in Payload CMS with optional overrides.
