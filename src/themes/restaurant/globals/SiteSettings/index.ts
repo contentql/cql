@@ -323,6 +323,28 @@ export const siteSettings: CustomGlobalConfig = {
               hasMany: true,
             },
             currencyField,
+            {
+              type: 'array',
+              name: 'taxes',
+              fields: [
+                {
+                  type: 'text',
+                  name: 'name',
+                  required: true,
+                },
+                {
+                  type: 'number',
+                  name: 'percentage',
+                  required: true,
+                  defaultValue: 0,
+                },
+              ],
+            },
+            {
+              type: 'number',
+              name: 'discount',
+              defaultValue: 0,
+            },
           ],
         },
         {

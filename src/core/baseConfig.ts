@@ -19,9 +19,9 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { buildConfig } from 'payload'
+// added sharp as peer dependencies because nextjs-image recommends to install it
 import sharp from 'sharp'
 
-// added sharp as peer dependencies because nextjs-image recommends to install it
 import {
   CollectionSlugListType,
   GlobalSlugListType,
@@ -77,6 +77,7 @@ export default function baseConfig({
     position: 'sidebar',
   },
   searchPluginOptions = {},
+  formBuilderPluginOptions = {},
   email,
   membershipPluginOptions,
   dbURI,
@@ -237,6 +238,118 @@ export default function baseConfig({
           payment: false,
           state: false,
         },
+        formOverrides: {
+          fields: ({ defaultFields }) => {
+            return defaultFields.map(field => {
+              if (field.type === 'blocks' && field.name === 'fields') {
+                return {
+                  ...field,
+                  blocks: [
+                    ...field.blocks,
+                    {
+                      slug: 'upload',
+                      fields: [
+                        {
+                          type: 'row',
+                          fields: [
+                            {
+                              name: 'name',
+                              type: 'text',
+                              label: 'Name (lowercase, no special characters)',
+                              required: true,
+                              admin: {
+                                width: '50%',
+                              },
+                            },
+                            {
+                              name: 'label',
+                              type: 'text',
+                              label: 'Label',
+                              localized: true,
+                              admin: {
+                                width: '50%',
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          type: 'row',
+                          fields: [
+                            {
+                              name: 'size',
+                              label: 'Size',
+                              type: 'number',
+                              required: true,
+                              defaultValue: 5,
+                              admin: {
+                                description:
+                                  'Enter the maximum size of each file in MB',
+                                width: '50%',
+                              },
+                            },
+                            {
+                              name: 'width',
+                              type: 'number',
+                              label: 'Field Width (percentage)',
+                              admin: {
+                                width: '50%',
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          type: 'row',
+                          fields: [
+                            {
+                              name: 'multiple',
+                              label: 'Multiple Attachments',
+                              type: 'checkbox',
+                              required: true,
+                              defaultValue: false,
+                              admin: {
+                                description:
+                                  'Check this box if you want to allow multiple attachments',
+                              },
+                            },
+                            {
+                              name: 'required',
+                              type: 'checkbox',
+                              label: 'Required',
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                }
+              }
+
+              return field
+            })
+          },
+        },
+        formSubmissionOverrides: {
+          fields: ({ defaultFields }) => {
+            return defaultFields.map(field => {
+              if (field.type === 'array' && field.name === 'submissionData') {
+                return {
+                  ...field,
+                  fields: [
+                    ...field.fields,
+                    {
+                      name: 'file',
+                      type: 'upload',
+                      relationTo: 'media',
+                      hasMany: true,
+                    },
+                  ],
+                }
+              }
+              return field
+            })
+          },
+        },
+        ...formBuilderPluginOptions,
       }),
       // this plugin is for global search across the defined collections
       ...(searchPluginOptions !== false
