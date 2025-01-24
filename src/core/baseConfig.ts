@@ -19,8 +19,6 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { buildConfig } from 'payload'
-// added sharp as peer dependencies because nextjs-image recommends to install it
-import sharp from 'sharp'
 
 import {
   CollectionSlugListType,
@@ -92,6 +90,7 @@ export default function baseConfig({
   defaultCollections,
   defaultGlobals,
   prodMigrations,
+  sharp,
   ...config
 }: BaseConfigType) {
   const plugins: CQLConfigType['plugins'] = config.plugins || []
@@ -234,9 +233,11 @@ export default function baseConfig({
         generateImage,
       }),
       formBuilderPlugin({
+        ...formBuilderPluginOptions,
         fields: {
           payment: false,
           state: false,
+          ...(formBuilderPluginOptions?.fields || {}),
         },
         formOverrides: {
           fields: ({ defaultFields }) => {
@@ -327,6 +328,7 @@ export default function baseConfig({
               return field
             })
           },
+          ...(formBuilderPluginOptions.formOverrides || {}),
         },
         formSubmissionOverrides: {
           fields: ({ defaultFields }) => {
@@ -348,8 +350,8 @@ export default function baseConfig({
               return field
             })
           },
+          ...(formBuilderPluginOptions.formSubmissionOverrides || {}),
         },
-        ...formBuilderPluginOptions,
       }),
       // this plugin is for global search across the defined collections
       ...(searchPluginOptions !== false
