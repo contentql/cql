@@ -1,7 +1,7 @@
-import { collectionSlug } from '../../../../../core/collectionSlug'
-import { slugField } from '../../../../../payload/fields/slug'
-import { isAdmin } from '../../../../access/isAdmin'
-import { ADMIN_STRIPE_GROUP } from '../constants'
+import { collectionSlug } from '../../../../../core/collectionSlug.js'
+import { slugField } from '../../../../../payload/fields/slug/index.js'
+import { isAdmin } from '../../../../access/isAdmin.js'
+import { ADMIN_STRIPE_GROUP } from '../constants.js'
 import type { CollectionConfig } from 'payload'
 
 export const Products: CollectionConfig = {

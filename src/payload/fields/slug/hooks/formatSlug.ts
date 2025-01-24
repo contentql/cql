@@ -1,5 +1,5 @@
+import { formatString } from '../utils/formatString.js'
 import { FieldHook } from 'payload'
-import { formatString } from '../utils/formatString'
 
 export const formatSlug =
   (

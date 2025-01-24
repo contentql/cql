@@ -1,8 +1,8 @@
 import type { CollectionSlug, Config, Plugin } from 'payload'
 
-import { publishOnField } from './fields/publishOn'
-import { triggerScheduleAfterChange } from './hooks/triggerScheduleAfterChange'
-import { PluginTypes } from './types'
+import { publishOnField } from './fields/publishOn/index.js'
+import { triggerScheduleAfterChange } from './hooks/triggerScheduleAfterChange.js'
+import { PluginTypes } from './types.js'
 
 /**
  * Creates a Payload CMS plugin to add a "Publish On" field to specified collections and handle scheduling jobs.

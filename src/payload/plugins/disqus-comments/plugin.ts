@@ -1,7 +1,7 @@
 import type { Config, Plugin } from 'payload'
 
-import DisqusCommentsConfig from './blocks/Disqus/config'
-import { PluginTypes } from './types'
+import DisqusCommentsConfig from './blocks/Disqus/config.js'
+import { PluginTypes } from './types.js'
 
 const plugin =
   (options: PluginTypes): Plugin =>

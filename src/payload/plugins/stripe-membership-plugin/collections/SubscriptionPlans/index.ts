@@ -1,4 +1,4 @@
-import { ADMIN_STRIPE_GROUP } from '../constants'
+import { ADMIN_STRIPE_GROUP } from '../constants.js'
 import type { CollectionConfig } from 'payload'
 import Stripe from 'stripe'
 

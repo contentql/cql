@@ -1,5 +1,5 @@
-import { collectionSlug } from '../core/collectionSlug'
-import type { BeforeSync } from '@payloadcms/plugin-search/dist/types.js'
+import { collectionSlug } from '../core/collectionSlug.js'
+import type { BeforeSync } from '@payloadcms/plugin-search/types'
 
 // Before creating or updating a search record, the beforeSync function runs.
 // While saving we're saving the fields like title, path, description are saved & they can be parsed during the retrieval process

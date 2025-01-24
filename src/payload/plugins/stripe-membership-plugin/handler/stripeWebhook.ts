@@ -1,4 +1,4 @@
-import { sendMessageToClient } from '../../../../utils/client'
+import { sendMessageToClient } from '../../../../utils/client.js'
 import { PayloadRequest } from 'payload'
 import Stripe from 'stripe'
 
