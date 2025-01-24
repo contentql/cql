@@ -4,7 +4,7 @@ export const formatString = (
   value: string,
   options: { trim: boolean } = { trim: false },
 ): string => {
-  const formattedString = slugify(value, {
+  const formattedString = slugify.default(value, {
     remove: /[*+~.()'"!:@]/g,
     lower: true,
     strict: true,
