@@ -17,7 +17,7 @@ export const Media: CustomCollectionConfig = {
     read: () => true,
     update: isAdminOrAuthor,
     delete: isAdminOrAuthor,
-    create: isAdminOrAuthor,
+    create: () => true,
   },
   admin: {
     group: UPLOADS_GROUP,

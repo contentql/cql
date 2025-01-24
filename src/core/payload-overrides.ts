@@ -1,4 +1,6 @@
+import type { PluginConfig as FormBuilderPluginConfig } from '@payloadcms/plugin-form-builder/types'
 import type {
+  Block,
   GlobalConfig,
   OptionObject,
   CollectionConfig as PayloadCollectionConfig,
@@ -48,4 +50,18 @@ export type CustomCollectionConfig = Omit<PayloadCollectionConfig, 'fields'> & {
 
 export type CustomGlobalConfig = Omit<GlobalConfig, 'fields'> & {
   fields: CustomField[]
+}
+
+export type FieldsOverride = (args: {
+  defaultFields: PayloadField[]
+}) => PayloadField[]
+
+export interface CustomFormOverrides
+  extends Partial<Omit<PayloadCollectionConfig, 'fields'>> {
+  fields?: FieldsOverride
+  blocks?: Block[]
+}
+
+export interface CustomFormBuilderPluginConfig extends FormBuilderPluginConfig {
+  formOverrides?: CustomFormOverrides
 }

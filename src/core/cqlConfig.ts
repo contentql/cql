@@ -7,7 +7,6 @@ import { siteSettings } from '../payload/globals/SiteSettings/index.js'
 import type { PluginTypes as DisqusCommentsPluginTypes } from '../payload/plugins/disqus-comments/types.js'
 import type { PluginTypes as ScheduleDocPublishPluginTypes } from '../payload/plugins/schedule-doc-publish-plugin/types.js'
 import type { PluginTypes as MembershipPluginTypes } from '../payload/plugins/stripe-membership-plugin/types.js'
-import type { PluginConfig as FormBuilderPluginConfig } from '@payloadcms/plugin-form-builder/types'
 import type { SearchPluginConfig } from '@payloadcms/plugin-search/types'
 import type { SEOPluginConfig } from '@payloadcms/plugin-seo/types'
 import { type Block, type Config as PayloadConfig } from 'payload'
@@ -16,6 +15,7 @@ import baseConfig from './baseConfig.js'
 import { CollectionSlugListType, GlobalSlugListType } from './collectionSlug.js'
 import {
   CustomCollectionConfig,
+  CustomFormBuilderPluginConfig,
   CustomGlobalConfig,
 } from './payload-overrides.js'
 
@@ -52,7 +52,7 @@ export interface CQLConfigType
   syncInterval?: number
   searchPluginOptions?: SearchPluginConfig | false
   seoPluginConfig?: SEOPluginConfig | undefined
-  formBuilderPluginOptions?: FormBuilderPluginConfig
+  formBuilderPluginOptions?: CustomFormBuilderPluginConfig
   removeCollections?: CollectionSlugListType[]
   removeGlobals?: GlobalSlugListType[]
   prodMigrations?: {

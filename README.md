@@ -1,8 +1,8 @@
 # ContentQL Core
 
 `@contentql/core` gives configuration which is ready to build a
-**content-oriented, blog website** you can add this to your payload existing
-project.
+**content-oriented, blog website, restaurant website** you can add this to your
+payload existing project.
 
 <a href="https://www.npmjs.com/package/@contentql/core"><img alt="npm" src="https://img.shields.io/npm/v/@contentql/core?style=flat-square" /></a>
 
@@ -31,12 +31,7 @@ const finalPath = path.resolve(dirname, 'payload-types.ts')
 export default cqlConfig({
   // baseURL is required for Live-Preview & SEO generation
   baseUrl: 'http://localhost:3000',
-  db: sqliteAdapter({
-    client: {
-      url: env.DATABASE_URI,
-      authToken: env.DATABASE_SECRET,
-    },
-  }),
+  db: process.env.DATABASE_URI,
   s3: {
     bucket: process.env.S3_BUCKET,
     accessKeyId: process.env.S3_ACCESS_KEY_ID,
@@ -57,6 +52,36 @@ export default cqlConfig({
   },
 })
 ```
+
+## Theme Configuration
+
+By default `@contentql/core` supports Blog, Restaurant website configuration
+
+**Blog Configuration**
+
+- To use blog-configuration do this👇
+
+```ts
+// payload.config.ts file
+// You'll get blog-configuration
+import { cqlConfig } from '@contentql/core'
+```
+
+- These collections are defaultly added <mark>users, pages, blogs, tags, media,
+  site-settings</mark> for blog-configuration
+
+**Restaurant Configuration**
+
+- To use restaurant-configuration do this👇
+
+```ts
+// payload.config.ts file
+// You'll get restaurant-configuration
+import { cqlConfig } from '@contentql/core/restaurant'
+```
+
+- These collections are defaultly added <mark>users, pages, media,
+  site-settings, categories, foodItems</mark> for restaurant-configuration
 
 ## 🔋️Database Adapter
 
@@ -143,23 +168,11 @@ collection with custom-fields
 
 ## 📦Out of box contents
 
-**Collections**
-
-These collections will be automatically added
-
-- users
-- pages
-- blogs
-- tags
-- media
-- site-settings
-
 **Plugins**
 
 These plugins will be automatically added
 
-- `@payloadcms/plugin-nested-docs`, `@payloadcms/plugin-seo`,
-  `@payloadcms/plugin-form-builder`
+- `@payloadcms/plugin-nested-docs`, `@payloadcms/plugin-seo`
   - These plugins are enabled for `pages` collection
 - `scheduleDocPlugin`
   - This is our custom plugin which will provide an option to schedule the
@@ -170,6 +183,10 @@ These plugins will be automatically added
   - Search plugin is by-default enabled for blogs, tags, users collections
   - you can extend it by passing your own options in `searchPluginOptions`
     parameter in `cqlConfig`
+- `@payloadcms/plugin-form-builder`
+  - Form builder is enabled default, It's supports `upload field`
+  - you can extend it by passing your own options in `formBuilderPluginOptions`
+    parameter in cqlConfig
 
 ## 📔Note
 
@@ -203,7 +220,7 @@ These plugins will be automatically added
     },
 ```
 
-## 💅Admin Panel styles
+## 💅Admin Panel styling
 
 ```ts
 // Add this import in the layout.tsx or page.tsx of payload admin panel

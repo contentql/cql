@@ -321,6 +321,7 @@ export default function baseConfig({
                         },
                       ],
                     },
+                    ...(formBuilderPluginOptions.formOverrides?.blocks || []),
                   ],
                 }
               }
