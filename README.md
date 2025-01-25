@@ -226,3 +226,14 @@ These plugins will be automatically added
 // Add this import in the layout.tsx or page.tsx of payload admin panel
 import '@contentql/core/styles'
 ```
+
+## Local Development
+
+- No need of any env variables
+- Install yalc -> `pnpm i -g yalc`
+- Once your done with your changes, follow the steps below
+  - run `pnpm run build` & `yalc publish`, this will publish package locally
+  - for automatic package publishing in local run `pnpm watch`
+  - now in your payload project run
+    `yalc add @contentql/core && yalc link @contentql/core`
+  - do `pnpm i`, and check your changes
