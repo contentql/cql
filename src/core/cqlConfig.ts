@@ -94,16 +94,12 @@ export interface CQLConfigType
 
 const cqlConfig = (config: CQLConfigType) => {
   const blocks = config.blocks || []
-  const defaultCollections = [Pages({ blocks }), Blogs, Tags, Media, Users]
-  const defaultGlobals = [siteSettings]
 
-  const buildConfig = baseConfig({
+  return baseConfig({
     ...config,
-    defaultCollections,
-    defaultGlobals,
+    defaultCollections: [Pages({ blocks }), Blogs, Tags, Media, Users],
+    defaultGlobals: [siteSettings],
   })
-
-  return buildConfig
 }
 
 export default cqlConfig

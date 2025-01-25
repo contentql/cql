@@ -450,9 +450,6 @@ export const siteSettings: CustomGlobalConfig = {
               },
             },
           ],
-          admin: {
-            hidden: true,
-          },
         },
         themeSettingsTab,
         // {
