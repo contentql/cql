@@ -9,6 +9,7 @@ import {
   generateTitle,
   generateURL,
 } from '../utils/seo.js'
+import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { seoPlugin } from '@payloadcms/plugin-seo'
@@ -28,8 +29,132 @@ export const defaultPlugins = ({
   searchPluginOptions,
   plugins = [],
   s3,
+  formBuilderPluginOptions,
 }: CQLConfigType) => {
   const defaultPlugins = [...plugins]
+
+  const formPlugin = formBuilderPlugin({
+    ...formBuilderPluginOptions,
+    fields: {
+      payment: false,
+      state: false,
+      ...(formBuilderPluginOptions?.fields || {}),
+    },
+    formOverrides: {
+      fields: ({ defaultFields }) => {
+        return defaultFields.map(field => {
+          if (field.type === 'blocks' && field.name === 'fields') {
+            return {
+              ...field,
+              blocks: [
+                ...field.blocks,
+                {
+                  slug: 'upload',
+                  fields: [
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'name',
+                          type: 'text',
+                          label: 'Name (lowercase, no special characters)',
+                          required: true,
+                          admin: {
+                            width: '50%',
+                          },
+                        },
+                        {
+                          name: 'label',
+                          type: 'text',
+                          label: 'Label',
+                          localized: true,
+                          admin: {
+                            width: '50%',
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'size',
+                          label: 'Size',
+                          type: 'number',
+                          required: true,
+                          defaultValue: 5,
+                          admin: {
+                            description:
+                              'Enter the maximum size of each file in MB',
+                            width: '50%',
+                          },
+                        },
+                        {
+                          name: 'width',
+                          type: 'number',
+                          label: 'Field Width (percentage)',
+                          admin: {
+                            width: '50%',
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'multiple',
+                          label: 'Multiple Attachments',
+                          type: 'checkbox',
+                          required: true,
+                          defaultValue: false,
+                          admin: {
+                            description:
+                              'Check this box if you want to allow multiple attachments',
+                          },
+                        },
+                        {
+                          name: 'required',
+                          type: 'checkbox',
+                          label: 'Required',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                ...(formBuilderPluginOptions?.formOverrides?.blocks || []),
+              ],
+            }
+          }
+
+          return field
+        })
+      },
+      ...(formBuilderPluginOptions?.formOverrides || {}),
+    },
+    formSubmissionOverrides: {
+      fields: ({ defaultFields }) => {
+        return defaultFields.map(field => {
+          if (field.type === 'array' && field.name === 'submissionData') {
+            return {
+              ...field,
+              fields: [
+                ...field.fields,
+                {
+                  name: 'file',
+                  type: 'upload',
+                  relationTo: 'media',
+                  hasMany: true,
+                },
+              ],
+            }
+          }
+          return field
+        })
+      },
+      ...(formBuilderPluginOptions?.formSubmissionOverrides || {}),
+    },
+  })
 
   // Adding S3 plugin if configuration is defined
   if (s3) {
@@ -55,6 +180,7 @@ export const defaultPlugins = ({
     case 'blog':
       return [
         ...defaultPlugins,
+        formPlugin,
         scheduleDocPublishPlugin({
           enabled: true,
           collections: [collectionSlug['blogs']],
@@ -103,6 +229,7 @@ export const defaultPlugins = ({
       ]
     case 'restaurant':
       return [
+        formPlugin,
         scheduleDocPublishPlugin({
           enabled: true,
           collections: ['foodItems', 'categories'],

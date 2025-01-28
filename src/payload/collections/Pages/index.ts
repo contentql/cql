@@ -63,21 +63,37 @@ export const Pages = ({ blocks = [] }: BlocksType): CollectionConfig => {
             label: 'Home Page',
             type: 'checkbox',
             defaultValue: false,
+            admin: {
+              description: 'Check to covert page as Home Page',
+            },
           },
           {
             name: 'isDynamic',
             label: 'Dynamic Page',
             type: 'checkbox',
             defaultValue: false,
+            admin: {
+              description: 'Check to covert page as Dynamic',
+            },
           },
         ],
         admin: {
           position: 'sidebar',
         },
       },
-      slugModeField(),
+      slugModeField({
+        admin: {
+          description:
+            'Choose Generate to create a slug automatically or Custom to set your own slug',
+        },
+      }),
       slugField({ fieldToUse: 'title' }),
-      pathModeField(),
+      pathModeField({
+        admin: {
+          description:
+            'Choose Generate to create a page-path automatically or Custom to set your own page-path',
+        },
+      }),
       pathField(),
     ],
   }
