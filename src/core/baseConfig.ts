@@ -1,41 +1,11 @@
-import { isAdmin } from '../payload/access/isAdmin.js'
-import { DisqusCommentsPlugin } from '../payload/plugins/disqus-comments/index.js'
-import { scheduleDocPublishPlugin } from '../payload/plugins/schedule-doc-publish-plugin/index.js'
-import { stripeV3 } from '../payload/plugins/stripe-membership-plugin/plugin.js'
-import { BeforeSyncConfig } from '../utils/beforeSync.js'
-import { deepMerge } from '../utils/deepMerge.js'
-import { generateBreadcrumbsUrl } from '../utils/generateBreadcrumbsUrl.js'
-import {
-  generateDescription,
-  generateImage,
-  generateTitle,
-  generateURL,
-} from '../utils/seo.js'
 import { resendAdapter } from '@payloadcms/email-resend'
-import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
-import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
-import { searchPlugin } from '@payloadcms/plugin-search'
-import { seoPlugin } from '@payloadcms/plugin-seo'
 import { slateEditor } from '@payloadcms/richtext-slate'
-import { s3Storage } from '@payloadcms/storage-s3'
 import { buildConfig } from 'payload'
 
-import {
-  CollectionSlugListType,
-  GlobalSlugListType,
-  collectionSlug,
-} from './collectionSlug.js'
+import { collectionSlug } from './collectionSlug.js'
 import { CQLConfigType } from './cqlConfig.js'
 import { db } from './databaseAdapter.js'
-import {
-  CustomCollectionConfig,
-  CustomGlobalConfig,
-} from './payload-overrides.js'
-
-interface BaseConfigType extends CQLConfigType {
-  defaultCollections: CustomCollectionConfig[]
-  defaultGlobals: CustomGlobalConfig[]
-}
+import { defaultPlugins } from './defaultPlugins.js'
 
 const getWhitelistDomains = (domains: string[]) => {
   const railwayDomain = '.up.railway.app'
@@ -58,26 +28,13 @@ export default function baseConfig({
   baseURL = 'http://localhost:3000',
   cors = ['http://localhost:3000'],
   csrf = ['http://localhost:3000'],
-  s3,
   admin = {},
   secret = 'TESTING',
   editor = slateEditor({}),
   collections = [],
   globals = [],
   resend,
-  blocks,
-  disqusCommentsOptions = {
-    enabled: true,
-  },
-  schedulePluginOptions = {
-    enabled: true,
-    collections: [collectionSlug['blogs']],
-    position: 'sidebar',
-  },
-  searchPluginOptions = {},
-  formBuilderPluginOptions = {},
   email,
-  membershipPluginOptions,
   dbURI,
   dbSecret,
   db: userDB,
@@ -85,102 +42,13 @@ export default function baseConfig({
   syncDB,
   syncInterval,
   seoPluginConfig,
-  removeCollections = [],
-  removeGlobals = [],
-  defaultCollections,
-  defaultGlobals,
   prodMigrations,
   sharp,
   ...config
-}: BaseConfigType) {
-  const plugins: CQLConfigType['plugins'] = config.plugins || []
-  const collectionsList = defaultCollections
-  const globalsList = defaultGlobals
-
-  // Collections specified in pickCollections will be selected other collections are ignored
-  // Not removing the users collection that should be can only be extended but can't be removed
-  const filteredCollections = removeCollections.length
-    ? collectionsList.filter(
-        collection =>
-          !removeCollections.includes(
-            collection.slug as CollectionSlugListType,
-          ) || collection.slug === 'users',
-      )
-    : collectionsList
-
-  // Collections specified in pickCollections will be selected other collections are ignored
-  const filteredGlobals = removeGlobals.length
-    ? globalsList.filter(
-        collection =>
-          !removeGlobals.includes(collection.slug as GlobalSlugListType),
-      )
-    : globalsList
-
-  if (s3) {
-    const { bucket, accessKeyId, endpoint, region, secretAccessKey } = s3
-
-    plugins.push(
-      s3Storage({
-        collections: {
-          ['media']: true,
-        },
-        bucket,
-        config: {
-          endpoint,
-          credentials: {
-            accessKeyId,
-            secretAccessKey,
-          },
-          region,
-          requestChecksumCalculation: 'WHEN_REQUIRED',
-          responseChecksumValidation: 'WHEN_REQUIRED',
-        },
-      }),
-    )
-  }
-
-  if (collections.length) {
-    // mapping through user collections
-    collections.forEach(collection => {
-      // checking if the user collection overlaps with default collection
-      const index = filteredCollections.findIndex(
-        collectionValue => collectionValue.slug === collection.slug,
-      )
-
-      // if collection overlaps with default collection then doing deepMerge
-      if (index !== -1) {
-        filteredCollections[index] = deepMerge(
-          filteredCollections[index],
-          collection,
-        )
-      }
-      // else pushing the user collection to default collection
-      else {
-        filteredCollections.push(collection)
-      }
-    })
-  }
-
-  if (globals.length) {
-    globals.forEach(globalCollection => {
-      // checking if the user globals overlaps with default globals
-      const index = filteredGlobals.findIndex(
-        collectionValue => collectionValue.slug === globalCollection.slug,
-      )
-
-      // if globals overlaps with default globals then doing deepMerge
-      if (index !== -1) {
-        filteredGlobals[index] = deepMerge(
-          filteredGlobals[index],
-          globalCollection,
-        )
-      }
-      // else pushing the user globals to default globals
-      else {
-        filteredGlobals.push(globalCollection)
-      }
-    })
-  }
+}: CQLConfigType) {
+  const plugins: CQLConfigType['plugins'] = [
+    ...defaultPlugins({ ...config, baseURL }),
+  ]
 
   return buildConfig({
     ...config,
@@ -192,8 +60,8 @@ export default function baseConfig({
         ...(admin.meta || {}),
       },
     },
-    collections: [...filteredCollections],
-    globals: filteredGlobals,
+    collections: [...collections],
+    globals: [...globals],
     db:
       userDB ||
       db({
@@ -205,181 +73,7 @@ export default function baseConfig({
         prodMigrations,
       }),
     secret,
-    plugins: [
-      ...plugins,
-      nestedDocsPlugin({
-        collections: [collectionSlug['pages']],
-        generateURL: generateBreadcrumbsUrl,
-      }),
-      // this is for scheduling document publish
-      scheduleDocPublishPlugin(schedulePluginOptions),
-      // disqus comments plugin
-      DisqusCommentsPlugin(disqusCommentsOptions),
-      // this plugin generates metadata field for every page created
-      seoPlugin({
-        ...(seoPluginConfig ? seoPluginConfig : {}),
-        collections: [
-          collectionSlug['pages'],
-          collectionSlug['blogs'],
-          collectionSlug['tags'],
-          collectionSlug['categories'],
-          ...(seoPluginConfig?.collections ?? []),
-        ],
-        uploadsCollection: 'media',
-        tabbedUI: true,
-        generateURL: data => generateURL({ data, baseURL }),
-        generateTitle,
-        generateDescription,
-        generateImage,
-      }),
-      formBuilderPlugin({
-        ...formBuilderPluginOptions,
-        fields: {
-          payment: false,
-          state: false,
-          ...(formBuilderPluginOptions?.fields || {}),
-        },
-        formOverrides: {
-          fields: ({ defaultFields }) => {
-            return defaultFields.map(field => {
-              if (field.type === 'blocks' && field.name === 'fields') {
-                return {
-                  ...field,
-                  blocks: [
-                    ...field.blocks,
-                    {
-                      slug: 'upload',
-                      fields: [
-                        {
-                          type: 'row',
-                          fields: [
-                            {
-                              name: 'name',
-                              type: 'text',
-                              label: 'Name (lowercase, no special characters)',
-                              required: true,
-                              admin: {
-                                width: '50%',
-                              },
-                            },
-                            {
-                              name: 'label',
-                              type: 'text',
-                              label: 'Label',
-                              localized: true,
-                              admin: {
-                                width: '50%',
-                              },
-                            },
-                          ],
-                        },
-                        {
-                          type: 'row',
-                          fields: [
-                            {
-                              name: 'size',
-                              label: 'Size',
-                              type: 'number',
-                              required: true,
-                              defaultValue: 5,
-                              admin: {
-                                description:
-                                  'Enter the maximum size of each file in MB',
-                                width: '50%',
-                              },
-                            },
-                            {
-                              name: 'width',
-                              type: 'number',
-                              label: 'Field Width (percentage)',
-                              admin: {
-                                width: '50%',
-                              },
-                            },
-                          ],
-                        },
-                        {
-                          type: 'row',
-                          fields: [
-                            {
-                              name: 'multiple',
-                              label: 'Multiple Attachments',
-                              type: 'checkbox',
-                              required: true,
-                              defaultValue: false,
-                              admin: {
-                                description:
-                                  'Check this box if you want to allow multiple attachments',
-                              },
-                            },
-                            {
-                              name: 'required',
-                              type: 'checkbox',
-                              label: 'Required',
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    ...(formBuilderPluginOptions.formOverrides?.blocks || []),
-                  ],
-                }
-              }
-
-              return field
-            })
-          },
-          ...(formBuilderPluginOptions.formOverrides || {}),
-        },
-        formSubmissionOverrides: {
-          fields: ({ defaultFields }) => {
-            return defaultFields.map(field => {
-              if (field.type === 'array' && field.name === 'submissionData') {
-                return {
-                  ...field,
-                  fields: [
-                    ...field.fields,
-                    {
-                      name: 'file',
-                      type: 'upload',
-                      relationTo: 'media',
-                      hasMany: true,
-                    },
-                  ],
-                }
-              }
-              return field
-            })
-          },
-          ...(formBuilderPluginOptions.formSubmissionOverrides || {}),
-        },
-      }),
-      // this plugin is for global search across the defined collections
-      ...(searchPluginOptions !== false
-        ? [
-            searchPlugin({
-              collections: [
-                collectionSlug['blogs'],
-                collectionSlug['tags'],
-                collectionSlug['users'],
-              ],
-              defaultPriorities: {
-                [collectionSlug['blogs']]: 10,
-                [collectionSlug['tags']]: 20,
-                [collectionSlug['users']]: 30,
-              },
-              beforeSync: BeforeSyncConfig,
-              searchOverrides: {
-                access: {
-                  read: isAdmin,
-                },
-              },
-              ...searchPluginOptions,
-            }),
-          ]
-        : []),
-      stripeV3(membershipPluginOptions),
-    ],
+    plugins,
     cors: Array.isArray(cors) ? getWhitelistDomains(cors) : cors,
     csrf: csrf ? getWhitelistDomains(csrf) : csrf,
     editor,

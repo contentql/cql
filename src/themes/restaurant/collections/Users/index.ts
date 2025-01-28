@@ -1,5 +1,4 @@
 import { collectionSlug } from '../../../../core/collectionSlug.js'
-import type { CustomCollectionConfig } from '../../../../core/payload-overrides.js'
 import { adminOrCurrentUserFieldAccess } from '../../../../payload/access/adminOrCurrentUserFieldAccess.js'
 import { isAdmin } from '../../../../payload/access/isAdmin.js'
 import { isAdminFieldAccess } from '../../../../payload/access/isAdminFieldAccess.js'
@@ -8,8 +7,9 @@ import { handleUserRoles } from '../../../../payload/collections/Users/hooks/han
 import { preventAdminRoleUpdate } from '../../../../payload/collections/Users/hooks/preventAdminRoleUpdate.js'
 import { AUTH_GROUP } from '../../../../payload/collections/constants.js'
 import { slugField } from '../../../../payload/fields/slug/index.js'
+import { CollectionConfig } from 'payload'
 
-export const Users: CustomCollectionConfig = {
+export const Users: CollectionConfig = {
   slug: collectionSlug.users,
   admin: {
     group: AUTH_GROUP,

@@ -1,18 +1,17 @@
 import { collectionSlug } from '../../../core/collectionSlug.js'
-import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { isAdmin } from '../../access/isAdmin.js'
 import homeBlockConfig from '../../blocks/homeBlockConfig.js'
 import { layoutField } from '../../fields/layout/index.js'
 import { pathField, pathModeField } from '../../fields/path/index.js'
 import { slugField, slugModeField } from '../../fields/slug/index.js'
 import { CONTENT_GROUP } from '../constants.js'
-import type { Block } from 'payload'
+import type { Block, CollectionConfig } from 'payload'
 
 type BlocksType = {
   blocks?: Block[]
 }
 
-export const Pages = ({ blocks = [] }: BlocksType): CustomCollectionConfig => {
+export const Pages = ({ blocks = [] }: BlocksType): CollectionConfig => {
   return {
     slug: collectionSlug.pages,
     labels: {

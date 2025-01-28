@@ -6,7 +6,7 @@
     "type": "git",
     "url": "git+https://github.com/contentql/cql.git"
   },
-  "version": "0.5.6",
+  "version": "0.5.7",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -19,15 +19,20 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./blog": {
+      "import": "./dist/exports/blogCollections.js",
+      "types": "./dist/exports/blogCollections.d.ts",
+      "default": "./dist/exports/blogCollections.js"
+    },
+    "./restaurant": {
+      "import": "./dist/exports/restaurantCollections.js",
+      "types": "./dist/exports/restaurantCollections.d.ts",
+      "default": "./dist/exports/restaurantCollections.js"
+    },
     "./client": {
       "import": "./dist/exports/client.js",
       "types": "./dist/exports/client.d.ts",
       "default": "./dist/exports/client.js"
-    },
-    "./restaurant": {
-      "import": "./dist/exports/restaurant.js",
-      "types": "./dist/exports/restaurant.d.ts",
-      "default": "./dist/exports/restaurant.js"
     },
     "./styles": "./dist/payload/themes/cql/index.css"
   },

@@ -1,7 +1,7 @@
-import deepmerge from "deepmerge";
+import deepmerge from 'deepmerge'
+import { Field } from 'payload'
 
-import { PathModeField } from "./types.js";
-import { CustomField } from "../../../core/payload-overrides.js";
+import { PathModeField } from './types.js'
 
 /**
  * Creates a configuration object for a "pathMode" field in Payload CMS with optional overrides.
@@ -15,8 +15,8 @@ import { CustomField } from "../../../core/payload-overrides.js";
  *
  * **Note:** Avoid changing the name or options of this field, as it may affect path generation and customization logic.
  *
- * @param {Partial<CustomField>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
- * @returns {CustomField} - The complete field configuration object, including default settings and any provided overrides.
+ * @param {Partial<Field>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
+ * @returns {Field} - The complete field configuration object, including default settings and any provided overrides.
  *
  * @example
  * // Example with custom field settings and overrides
@@ -33,28 +33,28 @@ import { CustomField } from "../../../core/payload-overrides.js";
  * // including a custom label, default value, and admin layout.
  */
 const pathModeField: PathModeField = (overrides = {}) =>
-  deepmerge<CustomField, Partial<CustomField>>(
+  deepmerge<Field, Partial<Field>>(
     {
-      name: "pathMode",
-      label: "Path Mode",
-      type: "radio",
+      name: 'pathMode',
+      label: 'Path Mode',
+      type: 'radio',
       options: [
         {
-          label: "Generate",
-          value: "generate",
+          label: 'Generate',
+          value: 'generate',
         },
         {
-          label: "Custom",
-          value: "custom",
+          label: 'Custom',
+          value: 'custom',
         },
       ],
-      defaultValue: "generate",
+      defaultValue: 'generate',
       admin: {
-        position: "sidebar",
-        layout: "horizontal",
+        position: 'sidebar',
+        layout: 'horizontal',
       },
     },
-    overrides
-  );
+    overrides,
+  )
 
-export default pathModeField;
+export default pathModeField

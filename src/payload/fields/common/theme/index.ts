@@ -1,5 +1,4 @@
-import { CustomField } from '../../../../core/payload-overrides.js'
-import { Tab } from 'payload'
+import { Field, Tab } from 'payload'
 import { z } from 'zod'
 
 const validateURL = z
@@ -27,7 +26,7 @@ const fontConfig = ({
 }: {
   remoteFont: string
   fontName: string
-}): CustomField[] => [
+}): Field[] => [
   {
     name: 'customFont',
     label: 'Custom Font',

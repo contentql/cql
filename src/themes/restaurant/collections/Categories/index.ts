@@ -1,10 +1,10 @@
 import { collectionSlug } from '../../../../core/collectionSlug.js'
-import { CustomCollectionConfig } from '../../../../core/payload-overrides.js'
 import { isAdmin } from '../../../../payload/access/isAdmin.js'
 import { CONTENT_GROUP } from '../../../../payload/collections/constants.js'
 import { slugField } from '../../../../payload/fields/slug/index.js'
+import { CollectionConfig } from 'payload'
 
-export const Categories: CustomCollectionConfig = {
+export const Categories: CollectionConfig = {
   slug: collectionSlug.categories,
   access: {
     read: () => true,

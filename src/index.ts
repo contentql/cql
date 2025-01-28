@@ -3,14 +3,8 @@ import { collectionSlug } from './core/collectionSlug.js'
 import type { CQLConfigType } from './core/cqlConfig.js'
 import cqlConfig from './core/cqlConfig.js'
 import type {
-  CustomCollectionConfig,
-  CustomField,
   CustomFormBuilderPluginConfig,
   CustomFormOverrides,
-  CustomGlobalConfig,
-  CustomMultiSelectField,
-  CustomRadioField,
-  CustomSelectField,
 } from './core/payload-overrides.js'
 import { borderRadius } from './utils/borderRadius.js'
 import type {
@@ -41,14 +35,8 @@ export {
 export type {
   CollectionSlugType,
   CQLConfigType,
-  CustomCollectionConfig,
-  CustomField,
   CustomFormBuilderPluginConfig,
   CustomFormOverrides,
-  CustomGlobalConfig,
-  CustomMultiSelectField,
-  CustomRadioField,
-  CustomSelectField,
   ExtractedListType,
   FontPreloadAttributes,
   SlugType,

@@ -1,9 +1,9 @@
 import { collectionSlug } from '../../../../core/collectionSlug.js'
-import { CustomCollectionConfig } from '../../../../core/payload-overrides.js'
 import { isAdmin } from '../../../../payload/access/isAdmin.js'
 import { CONTENT_GROUP } from '../../../../payload/collections/constants.js'
+import { CollectionConfig } from 'payload'
 
-export const FoodItems: CustomCollectionConfig = {
+export const FoodItems: CollectionConfig = {
   slug: 'foodItems',
   access: {
     read: () => true,

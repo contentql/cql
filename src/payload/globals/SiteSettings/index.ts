@@ -1,12 +1,9 @@
 import { collectionSlug } from '../../../core/collectionSlug.js'
-import {
-  CustomField,
-  CustomGlobalConfig,
-} from '../../../core/payload-overrides.js'
 import { isAdmin } from '../../access/isAdmin.js'
 import { SETTINGS_GROUP } from '../../collections/constants.js'
 import { currencyField } from '../../fields/common/currency/index.js'
 import { themeSettingsTab } from '../../fields/common/theme/index.js'
+import type { Field, GlobalConfig } from 'payload'
 import { z } from 'zod'
 
 const validateURL = z
@@ -16,7 +13,7 @@ const validateURL = z
   })
   .url()
 
-const menuItem: CustomField[] = [
+const menuItem: Field[] = [
   {
     type: 'row',
     fields: [
@@ -100,7 +97,7 @@ const menuItem: CustomField[] = [
   },
 ]
 
-const menuGroupItem = (isNavbar = false): CustomField => ({
+const menuGroupItem = (isNavbar = false): Field => ({
   type: 'group',
   name: 'menuLinkGroup',
   label: 'Link Group',
@@ -124,7 +121,7 @@ const menuGroupItem = (isNavbar = false): CustomField => ({
   },
 })
 
-const menuField = (isNavbar = false): CustomField[] => {
+const menuField = (isNavbar = false): Field[] => {
   return [
     {
       type: 'checkbox',
@@ -148,7 +145,7 @@ const menuField = (isNavbar = false): CustomField[] => {
   ]
 }
 
-const logoField: CustomField[] = [
+const logoField: Field[] = [
   {
     name: 'imageUrl',
     type: 'upload',
@@ -179,7 +176,7 @@ const logoField: CustomField[] = [
   },
 ]
 
-export const socialLinksField: CustomField = {
+export const socialLinksField: Field = {
   type: 'row',
   fields: [
     {
@@ -272,7 +269,7 @@ export const socialLinksField: CustomField = {
   ],
 }
 
-export const siteSettings: CustomGlobalConfig = {
+export const siteSettings: GlobalConfig = {
   slug: collectionSlug['site-settings'],
   label: 'Site Settings',
   access: {

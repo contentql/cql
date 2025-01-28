@@ -1,4 +1,4 @@
-import { CustomField } from '../../../../core/payload-overrides.js'
+import { Field } from 'payload'
 
 export const currencies = [
   { label: 'US Dollar ($)', value: 'usd' },
@@ -43,7 +43,7 @@ export const formatCurrency = ({
   return formatter.format(amount)
 }
 
-export const currencyField: CustomField = {
+export const currencyField: Field = {
   name: 'currency',
   type: 'select',
   options: currencies.map(currency => currency),

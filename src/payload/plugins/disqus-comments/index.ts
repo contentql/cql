@@ -1,1 +1,1 @@
-export { default as DisqusCommentsPlugin } from './plugin.js'
+export { default as disqusCommentsPlugin } from './plugin.js'

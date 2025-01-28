@@ -1,13 +1,13 @@
 import { collectionSlug } from '../../../core/collectionSlug.js'
-import { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { isAdminOrAuthor } from '../../access/isAdminOrAuthor.js'
 import { slugField } from '../../fields/slug/index.js'
 import { CONTENT_GROUP } from '../constants.js'
+import { CollectionConfig } from 'payload'
 
 import { isAdminOrSelf } from './access/isAdminOrSelf.js'
 import { assignUserId } from './field-level-hooks/assignUserId.js'
 
-export const Blogs: CustomCollectionConfig = {
+export const Blogs: CollectionConfig = {
   slug: collectionSlug.blogs,
   labels: {
     singular: 'Blog',

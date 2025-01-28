@@ -1,18 +1,18 @@
 import { collectionSlug } from '../../../core/collectionSlug.js'
-import type { CustomCollectionConfig } from '../../../core/payload-overrides.js'
 import { adminOrCurrentUserFieldAccess } from '../../access/adminOrCurrentUserFieldAccess.js'
 import { isAdmin } from '../../access/isAdmin.js'
 import { isAdminFieldAccess } from '../../access/isAdminFieldAccess.js'
 import { slugField } from '../../fields/slug/index.js'
 import { socialLinksField } from '../../globals/SiteSettings/index.js'
 import { AUTH_GROUP } from '../constants.js'
+import { CollectionConfig } from 'payload'
 
 import { isAdminOrCurrentUser } from './access/isAdminOrCurrentUser.js'
 import { authorAccessAfterUpdate } from './hooks/authorAccessAfterUpdate.js'
 import { handleUserRoles } from './hooks/handleUserRoles.js'
 import { preventAdminRoleUpdate } from './hooks/preventAdminRoleUpdate.js'
 
-export const Users: CustomCollectionConfig = {
+export const Users: CollectionConfig = {
   slug: collectionSlug.users,
   admin: {
     group: AUTH_GROUP,

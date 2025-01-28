@@ -1,50 +1,30 @@
-import { Blogs } from '../payload/collections/Blogs/index.js'
-import { Media } from '../payload/collections/Media/index.js'
-import { Pages } from '../payload/collections/Pages/index.js'
-import { Tags } from '../payload/collections/Tags/index.js'
-import { Users } from '../payload/collections/Users/index.js'
-import { siteSettings } from '../payload/globals/SiteSettings/index.js'
 import type { PluginTypes as DisqusCommentsPluginTypes } from '../payload/plugins/disqus-comments/types.js'
 import type { PluginTypes as ScheduleDocPublishPluginTypes } from '../payload/plugins/schedule-doc-publish-plugin/types.js'
 import type { PluginTypes as MembershipPluginTypes } from '../payload/plugins/stripe-membership-plugin/types.js'
 import type { SearchPluginConfig } from '@payloadcms/plugin-search/types'
 import type { SEOPluginConfig } from '@payloadcms/plugin-seo/types'
-import { type Block, type Config as PayloadConfig } from 'payload'
+import { S3StorageOptions } from '@payloadcms/storage-s3'
+import {
+  CollectionConfig,
+  GlobalConfig,
+  type Config as PayloadConfig,
+} from 'payload'
 
 import baseConfig from './baseConfig.js'
-import { CollectionSlugListType, GlobalSlugListType } from './collectionSlug.js'
-import {
-  CustomCollectionConfig,
-  CustomFormBuilderPluginConfig,
-  CustomGlobalConfig,
-} from './payload-overrides.js'
+import { CustomFormBuilderPluginConfig } from './payload-overrides.js'
+import { ResendType, ThemeType } from './types.js'
 
-type S3Type = {
-  bucket: string
-  endpoint: string
-  accessKeyId: string
-  secretAccessKey: string
-  region: string
-}
-
-type ResendType = {
-  defaultFromAddress: string
-  defaultFromName: string
-  apiKey: string
-}
-
-// Updating the collections type to CustomCollectionConfig
 export interface CQLConfigType
   extends Partial<Omit<PayloadConfig, 'collections' | 'globals'>> {
+  theme?: ThemeType
   baseURL: string
-  s3?: S3Type
+  s3?: S3StorageOptions
   resend?: ResendType
-  blocks?: Block[]
   schedulePluginOptions?: ScheduleDocPublishPluginTypes
   disqusCommentsOptions?: DisqusCommentsPluginTypes
   membershipPluginOptions?: MembershipPluginTypes
-  collections?: CustomCollectionConfig[]
-  globals?: CustomGlobalConfig[]
+  collections?: CollectionConfig[]
+  globals?: GlobalConfig[]
   dbURI?: string
   dbSecret?: string
   useVercelPostgresAdapter?: boolean
@@ -53,8 +33,6 @@ export interface CQLConfigType
   searchPluginOptions?: SearchPluginConfig | false
   seoPluginConfig?: SEOPluginConfig | undefined
   formBuilderPluginOptions?: CustomFormBuilderPluginConfig
-  removeCollections?: CollectionSlugListType[]
-  removeGlobals?: GlobalSlugListType[]
   prodMigrations?: {
     down: (args: any) => Promise<void>
     name: string
@@ -87,19 +65,11 @@ export interface CQLConfigType
  *   }
  * // baseURL is required for Live-Preview & SEO generation
  *   baseUrl: "http://localhost:3000"
- *   removeCollections: ["blogs"]
- *   removeGlobals: ["site-settings"]
  * });
  */
 
 const cqlConfig = (config: CQLConfigType) => {
-  const blocks = config.blocks || []
-
-  return baseConfig({
-    ...config,
-    defaultCollections: [Pages({ blocks }), Blogs, Tags, Media, Users],
-    defaultGlobals: [siteSettings],
-  })
+  return baseConfig(config)
 }
 
 export default cqlConfig

@@ -1,7 +1,7 @@
-import deepMerge from "deepmerge";
-import type { CustomField } from "../../../core/payload-overrides.js";
+import deepMerge from 'deepmerge'
+import { Field } from 'payload'
 
-import { LayoutField } from "./types.js";
+import { LayoutField } from './types.js'
 
 /**
  * Creates a configuration object for a "layout" field in Payload CMS with optional overrides.
@@ -10,8 +10,8 @@ import { LayoutField } from "./types.js";
  * It uses the `deepMerge` utility to combine default field settings with any provided overrides. The default configuration includes a minimum
  * of one block and utilizes pre-defined `blocks`.
  *
- * @param {Partial<CustomField>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
- * @returns {CustomField} - The complete field configuration object, including default settings and any provided overrides.
+ * @param {Partial<Field>} [overrides={}] - Optional overrides to customize the default field configuration. These overrides are merged with the default configuration.
+ * @returns {Field} - The complete field configuration object, including default settings and any provided overrides.
  *
  * @example
  * // Example with custom field settings and overrides
@@ -28,16 +28,16 @@ import { LayoutField } from "./types.js";
  * // including a custom label, minimum rows, and admin layout.
  */
 const layoutField: LayoutField = (overrides = {}) => {
-  return deepMerge<CustomField, Partial<CustomField>>(
+  return deepMerge<Field, Partial<Field>>(
     {
-      name: "layout",
-      label: "Page Layout",
-      type: "blocks",
+      name: 'layout',
+      label: 'Page Layout',
+      type: 'blocks',
       minRows: 1,
       blocks: [],
     },
-    overrides
-  );
-};
+    overrides,
+  )
+}
 
-export default layoutField;
+export default layoutField
