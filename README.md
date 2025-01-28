@@ -14,7 +14,14 @@ Add this code in your `payload.config.ts` file to get a base configuration
 
 ```ts
 import { cqlConfig } from '@contentql/core'
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import {
+  BlogsCollection,
+  MediaCollection,
+  PagesCollection,
+  SiteSettingsGlobal,
+  TagsCollection,
+  UsersCollection,
+} from '@contentql/core/blog'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -29,26 +36,40 @@ const finalPath = path.resolve(dirname, 'payload-types.ts')
 
 // Add the extra payload configuration you want!
 export default cqlConfig({
-  // baseURL is required for Live-Preview & SEO generation
   baseUrl: 'http://localhost:3000',
-  db: process.env.DATABASE_URI,
-  s3: {
-    bucket: process.env.S3_BUCKET,
-    accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-    region: process.env.S3_REGION,
-    endpoint: process.env.S3_ENDPOINT,
-  },
-  typescript: {
-    outputFile: finalPath,
-  },
   secret: process.env.PAYLOAD_SECRET,
   cors: [process.env.PAYLOAD_URL],
   csrf: [process.env.PAYLOAD_URL],
+  db: process.env.DATABASE_URI,
+  collections: [
+    UsersCollection,
+    MediaCollection,
+    PagesCollection,
+    TagsCollection,
+    BlogsCollection,
+  ],
+  globals: [SiteSettingsGlobal],
+  typescript: {
+    outputFile: finalPath,
+  },
   resend: {
     apiKey: process.env.RESEND_API_KEY,
     defaultFromAddress: process.env.RESEND_SENDER_EMAIL,
     defaultFromName: process.env.RESEND_SENDER_NAME,
+  },
+  s3: {
+    collections: {
+      media: true,
+    },
+    bucket: process.env.S3_BUCKET,
+    config: {
+      credentials: {
+        accessKeyId: process.env.S3_ACCESS_KEY_ID,
+        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      },
+      endpoint: process.env.S3_ENDPOINT,
+      region: process.env.S3_REGION,
+    },
   },
 })
 ```
@@ -59,29 +80,65 @@ By default `@contentql/core` supports Blog, Restaurant website configuration
 
 **Blog Configuration**
 
-- To use blog-configuration do this👇
+- You can import blog-related collections from `@contentql/core/blog` 👇
+- Select theme parameter as `blog` for enabling all blog-related plugins
 
 ```ts
 // payload.config.ts file
-// You'll get blog-configuration
+// Import all blog-collections
 import { cqlConfig } from '@contentql/core'
-```
+import {
+  BlogsCollection,
+  MediaCollection,
+  PagesCollection,
+  SiteSettingsGlobal,
+  TagsCollection,
+  UsersCollection,
+} from '@contentql/core/blog'
 
-- These collections are defaultly added <mark>users, pages, blogs, tags, media,
-  site-settings</mark> for blog-configuration
+export default cqlConfig({
+  theme: 'blog', // 👈 pass blog to enable blog related plugins
+  collections: [
+    UsersCollection,
+    MediaCollection,
+    PagesCollection,
+    TagsCollection,
+    BlogsCollection,
+  ],
+  globals: [SiteSettingsGlobal],
+})
+```
 
 **Restaurant Configuration**
 
-- To use restaurant-configuration do this👇
+- You can import restaurant-related collections from
+  `@contentql/core/restaurant`👇
+- Select theme parameter as `restaurant` for enabling all
+  restaurant-related-plugins.
 
 ```ts
 // payload.config.ts file
 // You'll get restaurant-configuration
-import { cqlConfig } from '@contentql/core/restaurant'
-```
+import { cqlConfig } from '@contentql/core'
+import {
+  CategoriesCollection,
+  MediaCollection,
+  PagesCollection,
+  SiteSettingsGlobal,
+  UsersCollection,
+} from '@contentql/core/restaurant'
 
-- These collections are defaultly added <mark>users, pages, media,
-  site-settings, categories, foodItems</mark> for restaurant-configuration
+export default cqlConfig({
+  theme: 'restaurant', // 👈 pass restaurant to enable restaurant related plugins
+  collections: [
+    UsersCollection,
+    MediaCollection,
+    PagesCollection,
+    CategoriesCollection,
+  ],
+  globals: [SiteSettingsGlobal],
+})
+```
 
 ## 🔋️Database Adapter
 

@@ -1,0 +1,5 @@
+export { Blogs as BlogsCollection } from '../../payload/collections/Blogs/index.js'
+export { Tags as TagsCollection } from '../../payload/collections/Tags/index.js'
+export { Users as UsersCollection } from '../../payload/collections/Users/index.js'
+export { siteSettings as SiteSettingsGlobal } from '../../payload/globals/SiteSettings/index.js'
+export * from '../shared/collections.js'

@@ -20,20 +20,21 @@
       "default": "./dist/index.js"
     },
     "./blog": {
-      "import": "./dist/exports/blogCollections.js",
-      "types": "./dist/exports/blogCollections.d.ts",
-      "default": "./dist/exports/blogCollections.js"
+      "import": "./dist/exports/blog/collections.js",
+      "types": "./dist/exports/blog/collections.d.ts",
+      "default": "./dist/exports/blog/collections.js"
     },
     "./restaurant": {
-      "import": "./dist/exports/restaurantCollections.js",
-      "types": "./dist/exports/restaurantCollections.d.ts",
-      "default": "./dist/exports/restaurantCollections.js"
+      "import": "./dist/exports/restaurant/collections.js",
+      "types": "./dist/exports/restaurant/collections.d.ts",
+      "default": "./dist/exports/restaurant/collections.js"
     },
     "./client": {
       "import": "./dist/exports/client.js",
       "types": "./dist/exports/client.d.ts",
       "default": "./dist/exports/client.js"
-    }
+    },
+    "./styles": "./dist/payload/styles/index.css"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -42,11 +43,12 @@
     "dist"
   ],
   "scripts": {
-    "build": "rimraf dist && swc ./src -d ./dist --config-file .swcrc --source-maps --strip-leading-paths && tsc --emitDeclarationOnly --outDir ./dist",
+    "build": "rimraf dist && swc ./src -d ./dist --config-file .swcrc --source-maps --strip-leading-paths && tsc --emitDeclarationOnly --outDir ./dist && pnpm styles",
     "lint": "tsc",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
-    "watch": "nodemon --watch 'src/**/*' --ext ts,tsx,js,jsx,json,scss --exec 'pnpm run build && yalc push'"
+    "watch": "nodemon --watch 'src/**/*' --ext ts,tsx,js,jsx,json,scss --exec 'pnpm run build && yalc push'",
+    "styles": "sass ./src/payload/styles/index.scss ./dist/payload/styles/index.css"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "^3.5.0",
