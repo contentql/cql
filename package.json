@@ -33,8 +33,7 @@
       "import": "./dist/exports/client.js",
       "types": "./dist/exports/client.d.ts",
       "default": "./dist/exports/client.js"
-    },
-    "./styles": "./dist/payload/themes/cql/index.css"
+    }
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -43,12 +42,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "rimraf dist && swc ./src -d ./dist --config-file .swcrc --source-maps --strip-leading-paths && tsc --emitDeclarationOnly --outDir ./dist && pnpm styles",
+    "build": "rimraf dist && swc ./src -d ./dist --config-file .swcrc --source-maps --strip-leading-paths && tsc --emitDeclarationOnly --outDir ./dist",
     "lint": "tsc",
     "format": "prettier . --check",
     "format:fix": "prettier . --write",
-    "watch": "nodemon --watch 'src/**/*' --ext ts,tsx,js,jsx,json,scss --exec 'pnpm run build && yalc push'",
-    "styles": "sass ./src/payload/themes/cql/index.scss ./dist/payload/themes/cql/index.css"
+    "watch": "nodemon --watch 'src/**/*' --ext ts,tsx,js,jsx,json,scss --exec 'pnpm run build && yalc push'"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "^3.5.0",
