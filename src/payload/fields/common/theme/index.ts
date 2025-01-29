@@ -71,6 +71,7 @@ const fontConfig = ({
 export const themeSettingsTab: Tab = {
   name: 'themeSettings',
   fields: [
+    // Colors
     {
       type: 'row',
       fields: [
@@ -78,17 +79,7 @@ export const themeSettingsTab: Tab = {
           type: 'group',
           name: 'lightMode',
           fields: [
-            {
-              type: 'text',
-              name: 'primary',
-              admin: {
-                components: {
-                  Field: '@contentql/core/client#ColorField',
-                },
-              },
-              required: true,
-              defaultValue: '#C084FC',
-            },
+            // background
             {
               type: 'text',
               name: 'background',
@@ -98,19 +89,9 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#F8FAFC',
+              defaultValue: '#ffffff',
             },
-            {
-              type: 'text',
-              name: 'text',
-              admin: {
-                components: {
-                  Field: '@contentql/core/client#ColorField',
-                },
-              },
-              required: true,
-              defaultValue: '#0F0F0F',
-            },
+            // foreground
             {
               type: 'text',
               name: 'foreground',
@@ -120,8 +101,57 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#E2E8F0',
+              defaultValue: '#0a0a0a',
             },
+            // primary
+            {
+              type: 'text',
+              name: 'primary',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#9372f7',
+            },
+            // primaryForeground
+            {
+              type: 'text',
+              name: 'primaryForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // card
+            {
+              type: 'text',
+              name: 'card',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#ffffff',
+            },
+            // cardForeground
+            {
+              type: 'text',
+              name: 'cardForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#0a0a0a',
+            },
+            // popover
             {
               type: 'text',
               name: 'popover',
@@ -131,8 +161,117 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#000000',
+              defaultValue: '#ffffff',
             },
+            // popoverForeground
+            {
+              type: 'text',
+              name: 'popoverForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#0a0a0a',
+            },
+            // secondary
+            {
+              type: 'text',
+              name: 'secondary',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#e2e8f0',
+            },
+            // secondaryForeground
+            {
+              type: 'text',
+              name: 'secondaryForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#1e293b',
+            },
+            // muted
+            {
+              type: 'text',
+              name: 'muted',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#e2e8f0',
+            },
+            // mutedForeground
+            {
+              type: 'text',
+              name: 'mutedForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#6b7280',
+            },
+            // accent
+            {
+              type: 'text',
+              name: 'accent',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#e2e8f0',
+            },
+            // accentForeground
+            {
+              type: 'text',
+              name: 'accentForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#1e293b',
+            },
+            // destructive
+            {
+              type: 'text',
+              name: 'destructive',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#ef4444',
+            },
+            // destructiveForeground
+            {
+              type: 'text',
+              name: 'destructiveForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // border
             {
               type: 'text',
               name: 'border',
@@ -142,7 +281,31 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#000000',
+              defaultValue: '#d1d5db',
+            },
+            // input
+            {
+              type: 'text',
+              name: 'input',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#d1d5db',
+            },
+            // ring
+            {
+              type: 'text',
+              name: 'ring',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#9372f7',
             },
           ],
         },
@@ -150,17 +313,7 @@ export const themeSettingsTab: Tab = {
           type: 'group',
           name: 'darkMode',
           fields: [
-            {
-              type: 'text',
-              name: 'primary',
-              admin: {
-                components: {
-                  Field: '@contentql/core/client#ColorField',
-                },
-              },
-              required: true,
-              defaultValue: '#60A5FA',
-            },
+            // background
             {
               type: 'text',
               name: 'background',
@@ -170,19 +323,9 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#0F172A',
+              defaultValue: '#0a0a0a',
             },
-            {
-              type: 'text',
-              name: 'text',
-              admin: {
-                components: {
-                  Field: '@contentql/core/client#ColorField',
-                },
-              },
-              required: true,
-              defaultValue: '#FFFAFA',
-            },
+            // foreground
             {
               type: 'text',
               name: 'foreground',
@@ -192,8 +335,57 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#1E293B',
+              defaultValue: '#f1f5f9',
             },
+            // primary
+            {
+              type: 'text',
+              name: 'primary',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#7158e2',
+            },
+            // primaryForeground
+            {
+              type: 'text',
+              name: 'primaryForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // card
+            {
+              type: 'text',
+              name: 'card',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#0a0a0a',
+            },
+            // cardForeground
+            {
+              type: 'text',
+              name: 'cardForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // popover
             {
               type: 'text',
               name: 'popover',
@@ -203,8 +395,117 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#000000',
+              defaultValue: '#0a0a0a',
             },
+            // popoverForeground
+            {
+              type: 'text',
+              name: 'popoverForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // secondary
+            {
+              type: 'text',
+              name: 'secondary',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#232c3a',
+            },
+            // secondaryForeground
+            {
+              type: 'text',
+              name: 'secondaryForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // muted
+            {
+              type: 'text',
+              name: 'muted',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#232c3a',
+            },
+            // mutedForeground
+            {
+              type: 'text',
+              name: 'mutedForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#a1a8c0',
+            },
+            // accent
+            {
+              type: 'text',
+              name: 'accent',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#232c3a',
+            },
+            // accentForeground
+            {
+              type: 'text',
+              name: 'accentForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // destructive
+            {
+              type: 'text',
+              name: 'destructive',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#752626',
+            },
+            // destructiveForeground
+            {
+              type: 'text',
+              name: 'destructiveForeground',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#f1f5f9',
+            },
+            // border
             {
               type: 'text',
               name: 'border',
@@ -214,12 +515,37 @@ export const themeSettingsTab: Tab = {
                 },
               },
               required: true,
-              defaultValue: '#000000',
+              defaultValue: '#232c3a',
+            },
+            // input
+            {
+              type: 'text',
+              name: 'input',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#232c3a',
+            },
+            // ring
+            {
+              type: 'text',
+              name: 'ring',
+              admin: {
+                components: {
+                  Field: '@contentql/core/client#ColorField',
+                },
+              },
+              required: true,
+              defaultValue: '#7158e2',
             },
           ],
         },
       ],
     },
+    // Fonts
     {
       type: 'group',
       name: 'fonts',
@@ -288,6 +614,7 @@ export const themeSettingsTab: Tab = {
         },
       ],
     },
+    // Radius
     {
       admin: {
         components: {
