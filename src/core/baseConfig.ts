@@ -41,7 +41,6 @@ export default function baseConfig({
   useVercelPostgresAdapter = false,
   syncDB,
   syncInterval,
-  seoPluginConfig,
   prodMigrations,
   sharp,
   ...config
