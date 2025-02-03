@@ -176,6 +176,31 @@ export const defaultPlugins = ({
     )
   }
 
+  // If searchPluginOptions is not false adding the plugin
+  if (searchPluginOptions !== false && theme === 'blog') {
+    defaultPlugins.push(
+      searchPlugin({
+        collections: [
+          collectionSlug['blogs'],
+          collectionSlug['tags'],
+          collectionSlug['users'],
+        ],
+        defaultPriorities: {
+          [collectionSlug['blogs']]: 10,
+          [collectionSlug['tags']]: 20,
+          [collectionSlug['users']]: 30,
+        },
+        beforeSync: BeforeSyncConfig,
+        searchOverrides: {
+          access: {
+            read: isAdmin,
+          },
+        },
+        ...searchPluginOptions,
+      }),
+    )
+  }
+
   switch (theme) {
     case 'blog':
       return [
@@ -206,25 +231,6 @@ export const defaultPlugins = ({
           generateDescription,
           generateImage,
           ...(seoPluginConfig ? seoPluginConfig : {}),
-        }),
-        searchPlugin({
-          collections: [
-            collectionSlug['blogs'],
-            collectionSlug['tags'],
-            collectionSlug['users'],
-          ],
-          defaultPriorities: {
-            [collectionSlug['blogs']]: 10,
-            [collectionSlug['tags']]: 20,
-            [collectionSlug['users']]: 30,
-          },
-          beforeSync: BeforeSyncConfig,
-          searchOverrides: {
-            access: {
-              read: isAdmin,
-            },
-          },
-          ...searchPluginOptions,
         }),
       ]
     case 'restaurant':

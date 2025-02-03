@@ -37,7 +37,7 @@ import { PluginTypes } from './types.js'
 const plugin =
   (options: PluginTypes): Plugin =>
   (incomingConfig: Config): Config => {
-    const { enabled = true, collections, position = 'sidebar' } = options
+    const { enabled = true, collections = [], position = 'sidebar' } = options
 
     if (!enabled) {
       return incomingConfig
