@@ -9,6 +9,13 @@ export interface CustomFormOverrides
   blocks?: Block[]
 }
 
+export interface CustomFormSubmissionsOverrides
+  extends Partial<Omit<CollectionConfig, 'fields'>> {
+  fields?: FieldsOverride
+  extraFields?: Field[]
+}
+
 export interface CustomFormBuilderPluginConfig extends FormBuilderPluginConfig {
   formOverrides?: CustomFormOverrides
+  formSubmissionOverrides?: CustomFormSubmissionsOverrides
 }

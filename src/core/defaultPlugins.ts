@@ -14,6 +14,7 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { searchPlugin } from '@payloadcms/plugin-search'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { Field } from 'payload'
 
 import { collectionSlug } from './collectionSlug.js'
 import { CQLConfigType } from './cqlConfig.js'
@@ -134,7 +135,7 @@ export const defaultPlugins = ({
     },
     formSubmissionOverrides: {
       fields: ({ defaultFields }) => {
-        return defaultFields.map(field => {
+        const updatedDefaultFields: Field[] = defaultFields.map(field => {
           if (field.type === 'array' && field.name === 'submissionData') {
             return {
               ...field,
@@ -151,6 +152,12 @@ export const defaultPlugins = ({
           }
           return field
         })
+
+        return [
+          ...updatedDefaultFields,
+          ...(formBuilderPluginOptions?.formSubmissionOverrides?.extraFields ||
+            []),
+        ]
       },
       ...(formBuilderPluginOptions?.formSubmissionOverrides || {}),
     },
